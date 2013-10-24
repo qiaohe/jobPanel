@@ -9,6 +9,8 @@
 #import "ContactsStatusViewController.h"
 #import "Contacts.h"
 
+static      NSMutableArray      *cellSource;
+
 @interface ContactsStatusViewController ()
 
 @end
@@ -30,14 +32,8 @@
 {
     self = [super init];
     if (self) {
-        _dataSource = [NSMutableArray array];
-        for (int i = 0; i<7; i++) {
-            NSInteger index = (arc4random() % 3) + 1;
-            NSString *imageName = [@"contact_item" stringByAppendingFormat:@"%d",index];
-            Contacts *contact   = [[Contacts alloc]init];
-            contact.title       = imageName;
-            [_dataSource addObject:contact];
-        }
+        cellSource = [NSMutableArray arrayWithArray:[Contacts getContactsWithNum:7]];
+        _dataSource = cellSource;
         [self setSubviewFrame];
     }
     return self;
@@ -64,8 +60,14 @@
     if (cell == nil) {
         cell = [[ContactsStatusCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifierString];
     }
-    Contacts *imageName = [_dataSource objectAtIndex:indexPath.row];
-    [cell setBackGroundImage:imageNameAndType(imageName.title, @"png")];
+    Contacts *contact = [_dataSource objectAtIndex:indexPath.row];
+    NSLog(@"icon name = %@",contact.userPicture);
+    [cell.leftImage setImage:imageNameAndType(contact.userPicture, nil)];
+    NSString *text = [contact.jobArray componentsJoinedByString:@"+"];
+    text = contact.title?[NSString stringWithFormat:@"%@:%@",contact.title,text]:text;
+    [cell.titleLabel setText:text];
+    [cell.locationLabel setText:contact.location];
+    [cell setBackGroundImage:imageNameAndType(@"information_backimage", nil)];
     
     return cell;
 }
@@ -114,7 +116,7 @@
     [self.contentView addSubview:searchBar];
     
     _theTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, controlYLength(searchBar), self.contentView.frame.size.width, self.contentView.frame.size.height - controlYLength(searchBar))];
-    [_theTableView setBackgroundColor:color(clearColor)];
+    [_theTableView setBackgroundColor:color(whiteColor)];
     [_theTableView setDelegate:self];
     [_theTableView setDataSource:self];
     [_theTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -133,8 +135,38 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     [self clearKeyBoard];
+    
+    if (textField == searchBar) {
+        [self searchInformation];
+    }
+    
     return YES;
 }
+
+
+- (void)searchInformation
+{
+    if (![Utils textIsEmpty:searchBar.text]) {
+        NSMutableArray *tempArray = [NSMutableArray array];
+        
+        for (Contacts *contact in cellSource) {
+            NSString *searchText = contact.title?contact.title:@"";
+            searchText = [searchText stringByAppendingString:([contact.jobArray componentsJoinedByString:@" "]?[contact.jobArray componentsJoinedByString:@" "]:@"")];
+            if ([[searchText uppercaseString] rangeOfString:[searchBar.text uppercaseString]].length > 0) {
+                [tempArray addObject:contact];
+            }
+        }
+        
+        _dataSource = tempArray;
+        [self.theTableView reloadData];
+    }else{
+        [[Model shareModel] showPromptText:@"搜索参数为空" model:YES];
+        _dataSource = cellSource;
+        [self.theTableView reloadData];
+    }
+    
+}
+
 
 - (BOOL)clearKeyBoard
 {
@@ -172,21 +204,26 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+        [self setSubviewFrame];
     }
     return self;
 }
 
 - (void)setSubviewFrame
 {
-    _leftImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, ContactsStatusCellHeight, ContactsStatusCellHeight)];
-    [_leftImage setBounds:CGRectMake(0, 0, _leftImage.frame.size.width * 0.8, _leftImage.frame.size.height * 0.8)];
+    [self setSelectionStyle:UITableViewCellSelectionStyleNone];
+    [self.contentView setBackgroundColor:color(clearColor)];
+    
+    _leftImage = [[UIImageView alloc]initWithFrame:CGRectMake(15, 0, ContactsStatusCellHeight, ContactsStatusCellHeight)];
+    [_leftImage setBounds:CGRectMake(0, 0, _leftImage.frame.size.width * 1.2, _leftImage.frame.size.height * 1.2)];
     [_leftImage setBackgroundColor:color(clearColor)];
     [self.contentView addSubview:_leftImage];
     
-    _titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(controlXLength(_leftImage) + 10, 10, appFrame.size.width - controlXLength(_leftImage) - 10, (ContactsStatusCellHeight - 20)*2/5)];
+    _titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(controlXLength(_leftImage), 10, appFrame.size.width - controlXLength(_leftImage) - 10, (ContactsStatusCellHeight - 20)*2/3)];
     [_titleLabel setBackgroundColor:color(clearColor)];
-    [_titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
+    [_titleLabel setNumberOfLines:0];
+    [_titleLabel setLineBreakMode:NSLineBreakByWordWrapping];
+    [_titleLabel setFont:[UIFont boldSystemFontOfSize:14]];
     [self.contentView addSubview:_titleLabel];
     
     _detailLabel = [[UILabel alloc]initWithFrame:CGRectMake(_titleLabel.frame.origin.x, controlYLength(_titleLabel), _titleLabel.frame.size.width, _titleLabel.frame.size.height)];
@@ -194,18 +231,23 @@
     [_detailLabel setFont:[UIFont boldSystemFontOfSize:13]];
     [self.contentView addSubview:_detailLabel];
     
-    _locationLabel = [[UILabel alloc]initWithFrame:CGRectMake(_detailLabel.frame.origin.x, controlYLength(_detailLabel), _detailLabel.frame.size.width, _detailLabel.frame.size.height/2)];
+    UIImageView *locationLeftImage = [[UIImageView alloc]initWithFrame:CGRectMake(_titleLabel.frame.origin.x, controlYLength(_titleLabel), 15, 15)];
+    [locationLeftImage setImage:imageNameAndType(@"resume_location", @"png")];
+    [self.contentView addSubview:locationLeftImage];
+    
+    _locationLabel = [[UILabel alloc]initWithFrame:CGRectMake(controlXLength(locationLeftImage), controlYLength(_titleLabel), _titleLabel.frame.size.width - locationLeftImage.frame.size.width, _titleLabel.frame.size.height/2)];
     [_locationLabel setBackgroundColor:color(clearColor)];
-    [_locationLabel setFont:[UIFont boldSystemFontOfSize:11]];
+    [_locationLabel setFont:[UIFont systemFontOfSize:11]];
+    [_locationLabel setTextColor:color(darkGrayColor)];
     [self.contentView addSubview:_locationLabel];
 }
 
 - (void)setBackGroundImage:(UIImage*)image
 {
     if (!_backGroundImageView) {
-        _backGroundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, appFrame.size.width, ContactsStatusCellHeight)];
+        _backGroundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, appFrame.size.width, ContactsStatusCellHeight + 1)];
         [_backGroundImageView setBackgroundColor:color(clearColor)];
-        [self insertSubview:_backGroundImageView aboveSubview:self.contentView];
+        [self insertSubview:_backGroundImageView belowSubview:self.contentView];
     }
     [_backGroundImageView setImage:image];
 }

@@ -10,10 +10,13 @@
 
 @interface Contacts : NSObject
 
+@property (strong, nonatomic) NSMutableArray            *jobArray;
 @property (strong, nonatomic) NSString                  *title;
 @property (strong, nonatomic) NSString                  *detail;
-@property (strong, nonatomic) UIImage                   *userPicture;
+@property (strong, nonatomic) NSString                  *userPicture;
 @property (strong, nonatomic) NSString                  *location;
 @property (assign, nonatomic) BOOL                      isUnfold;
+
++ (NSArray*)getContactsWithNum:(NSInteger)num;
 
 @end

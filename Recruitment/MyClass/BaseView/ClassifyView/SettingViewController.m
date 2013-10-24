@@ -48,7 +48,7 @@
     [self.view addSubview:returnButton];
     
     UIButton *accountManager = [UIButton buttonWithType:UIButtonTypeCustom];
-    [accountManager setFrame:CGRectMake(10, controlYLength(self.topBar) + 10, self.view.frame.size.width - 20, 40)];
+    [accountManager setFrame:CGRectMake(10, controlYLength(self.topBar) + 10, self.view.frame.size.width - 20, 50)];
     [accountManager setBackgroundColor:color(clearColor)];
     [accountManager setBackgroundImage:imageNameAndType(@"setting_item_normal", @"png") forState:UIControlStateNormal];
     [accountManager setBackgroundImage:imageNameAndType(@"setting_item_press", @"png") forState:UIControlStateHighlighted];

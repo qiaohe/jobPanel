@@ -36,7 +36,7 @@
 
 - (void)pressBottomLeftView:(UIButton*)sender
 {
-    [self jumpToClassifyView];
+    [[Model shareModel] showPromptText:@"prompt" model:YES];
 }
 
 - (void)pressBottomRightView:(UIButton*)sender
@@ -69,7 +69,7 @@
     UIButton *bottomRightView = [UIButton buttonWithType:UIButtonTypeCustom];
     [bottomRightView setFrame:CGRectMake(self.view.frame.size.width/2 + 0.75f, bottomLeftView.frame.origin.y, bottomLeftView.frame.size.width, bottomLeftView.frame.size.height)];
     [bottomRightView setBackgroundColor:[UIColor clearColor]];
-    [bottomLeftView addTarget:self action:@selector(pressBottomRightView:) forControlEvents:UIControlEventTouchUpInside];
+    [bottomRightView addTarget:self action:@selector(pressBottomRightView:) forControlEvents:UIControlEventTouchUpInside];
     [bottomRightView setImage:imageNameAndType(@"home_item2", @"png") forState:UIControlStateNormal];
     [bottomRightView setImage:imageNameAndType(@"home_item2", @"png") forState:UIControlStateDisabled];
     [self.view addSubview:bottomRightView];
@@ -92,7 +92,6 @@
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [super touchesEnded:touches withEvent:event];
-    [self jumpToClassifyView];
 }
 
 - (void)jumpToClassifyView

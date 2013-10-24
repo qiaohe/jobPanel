@@ -22,5 +22,5 @@
     #define         color(colorName)                [UIColor colorName]
     #define         stretchImage(name,type)         [imageNameAndType(name,type) stretchableImageWithLeftCapWidth:imageNameAndType(name,type).size.width/2 topCapHeight:imageNameAndType(name,type).size.height/2]
 
-
+    #define         ARC4RANDOM_MAX                  0x100000000
 #endif

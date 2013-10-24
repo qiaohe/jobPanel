@@ -56,8 +56,13 @@
     if (cell == nil) {
         cell = [[ContactsStatusCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifierString];
     }
-    Contacts *imageName = [_dataSource objectAtIndex:indexPath.row];
-    [cell setBackGroundImage:imageNameAndType(imageName.title, @"png")];
+    Contacts *contact = [_dataSource objectAtIndex:indexPath.row];
+    [cell setBackGroundImage:imageNameAndType(@"information_textbackimage", nil)];
+    [cell.leftImage setImage:imageNameAndType(contact.userPicture, @"png")];
+    NSString *text = [contact.jobArray componentsJoinedByString:@"+"];
+    text = contact.title?[NSString stringWithFormat:@"%@:%@",contact.title,text]:text;
+    [cell.titleLabel setText:text];
+    [cell.locationLabel setText:contact.location];
     
     return cell;
 }
@@ -70,9 +75,9 @@
 
 - (void)setSubviewFrame
 {
-    [self setBackGroundImage:imageNameAndType(@"subview_backimage", @"png")];
+    [self setBackGroundImage:imageNameAndType(@"information_backimage", @"png")];
     [self setTopBarBackGroundImage:imageNameAndType(@"topImage", @"png")];
-    [self setTitle:@"建立追踪"];
+    [self setTitle:@"简历追踪"];
     
     UIButton *returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [returnButton setBackgroundColor:[UIColor clearColor]];
@@ -87,9 +92,10 @@
     [button1 setBackgroundColor:color(colorWithRed:219 green:219 blue:219 alpha:1)];
     [button1 setTag:100];
     [button1 setFrame:CGRectMake(0, controlYLength(self.topBar), self.contentView.frame.size.width/4, 30)];
-    //[button1 setBackgroundImage:imageNameAndType(@"bottombar", @"png") forState:UIControlStateNormal];
+    [button1 setBackgroundImage:imageNameAndType(@"delivery_normal", @"png") forState:UIControlStateNormal];
+    [button1 setBackgroundImage:imageNameAndType(@"delivery_press", @"png") forState:UIControlStateSelected];
     //[button1 setAlpha:0.7];
-    [button1 setTitle:@"已投递" forState:UIControlStateNormal];
+    //[button1 setTitle:@"已投递" forState:UIControlStateNormal];
     [button1.titleLabel setFont:[UIFont systemFontOfSize:12]];
     [button1 setTitleColor:color(grayColor) forState:UIControlStateNormal];
     [button1 setTitleColor:color(blackColor) forState:UIControlStateSelected];
@@ -99,9 +105,10 @@
     [button2 setBackgroundColor:color(colorWithRed:219 green:219 blue:219 alpha:1)];
     [button2 setTag:101];
     [button2 setFrame:CGRectMake(controlXLength(button1), button1.frame.origin.y, button1.frame.size.width, button1.frame.size.height)];
-    //[button2 setBackgroundImage:imageNameAndType(@"bottombar", @"png") forState:UIControlStateNormal];
+    [button2 setBackgroundImage:imageNameAndType(@"readed_normal", @"png") forState:UIControlStateNormal];
+    [button2 setBackgroundImage:imageNameAndType(@"readed_press", @"png") forState:UIControlStateSelected];
     //[button2 setAlpha:0.7];
-    [button2 setTitle:@"已审阅" forState:UIControlStateNormal];
+    //[button2 setTitle:@"已审阅" forState:UIControlStateNormal];
     [button2.titleLabel setFont:[UIFont systemFontOfSize:12]];
     [button2 setTitleColor:color(grayColor) forState:UIControlStateNormal];
     [button2 setTitleColor:color(blackColor) forState:UIControlStateSelected];
@@ -111,9 +118,10 @@
     [button3 setBackgroundColor:color(colorWithRed:219 green:219 blue:219 alpha:1)];
     [button3 setTag:102];
     [button3 setFrame:CGRectMake(controlXLength(button2), button1.frame.origin.y, button1.frame.size.width, button1.frame.size.height)];
-    //[button3 setBackgroundImage:imageNameAndType(@"bottombar", @"png") forState:UIControlStateNormal];
+    [button3 setBackgroundImage:imageNameAndType(@"reject_normal", @"png") forState:UIControlStateNormal];
+    [button3 setBackgroundImage:imageNameAndType(@"reject_press", @"png") forState:UIControlStateSelected];
     //[button3 setAlpha:0.7];
-    [button3 setTitle:@"已拒绝" forState:UIControlStateNormal];
+    //[button3 setTitle:@"已拒绝" forState:UIControlStateNormal];
     [button3.titleLabel setFont:[UIFont systemFontOfSize:12]];
     [button3 setTitleColor:color(grayColor) forState:UIControlStateNormal];
     [button3 setTitleColor:color(blackColor) forState:UIControlStateSelected];
@@ -123,28 +131,14 @@
     [button4 setBackgroundColor:color(colorWithRed:219 green:219 blue:219 alpha:1)];
     [button4 setTag:103];
     [button4 setFrame:CGRectMake(controlXLength(button3), button1.frame.origin.y, button1.frame.size.width, button1.frame.size.height)];
-    //[button4 setBackgroundImage:imageNameAndType(@"bottombar", @"png") forState:UIControlStateNormal];
+    [button4 setBackgroundImage:imageNameAndType(@"notice_normal", @"png") forState:UIControlStateNormal];
+    [button4 setBackgroundImage:imageNameAndType(@"notice_press", @"png") forState:UIControlStateSelected];
     //[button4 setAlpha:0.7];
-    [button4 setTitle:@"通知面试" forState:UIControlStateNormal];
+    //[button4 setTitle:@"通知面试" forState:UIControlStateNormal];
     [button4.titleLabel setFont:[UIFont systemFontOfSize:12]];
     [button4 setTitleColor:color(grayColor) forState:UIControlStateNormal];
     [button4 setTitleColor:color(blackColor) forState:UIControlStateSelected];
     [self.contentView addSubview:button4];
-    
-    UIImageView *verticalLine1 = [[UIImageView alloc]initWithFrame:CGRectMake(controlXLength(button1), button1.frame.origin.y, 5, button1.frame.size.height)];
-    [verticalLine1 setBackgroundColor:color(clearColor)];
-    [verticalLine1 setImage:imageNameAndType(@"resume_line_vertical", @"png")];
-    [self.contentView addSubview:verticalLine1];
-    
-    UIImageView *verticalLine2 = [[UIImageView alloc]initWithFrame:CGRectMake(controlXLength(button2), button1.frame.origin.y, 5, button1.frame.size.height)];
-    [verticalLine2 setBackgroundColor:color(clearColor)];
-    [verticalLine2 setImage:imageNameAndType(@"resume_line_vertical", @"png")];
-    [self.contentView addSubview:verticalLine2];
-    
-    UIImageView *verticalLine3 = [[UIImageView alloc]initWithFrame:CGRectMake(controlXLength(button3), button1.frame.origin.y, 5, button1.frame.size.height)];
-    [verticalLine3 setBackgroundColor:color(clearColor)];
-    [verticalLine3 setImage:imageNameAndType(@"resume_line_vertical", @"png")];
-    [self.contentView addSubview:verticalLine3];
     
     _theTabBar = [[UITabBar alloc]initWithFrame:CGRectMake(0, controlYLength(self.topBar), self.view.frame.size.width, button1.frame.size.height)];
     [_theTabBar setBackgroundColor:color(clearColor)];

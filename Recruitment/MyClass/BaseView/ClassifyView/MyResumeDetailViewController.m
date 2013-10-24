@@ -49,7 +49,7 @@
     [self.view addSubview:returnButton];
     
     UIButton *workExperience = [UIButton buttonWithType:UIButtonTypeCustom];
-    [workExperience setFrame:CGRectMake(10, controlYLength(self.topBar) + 170, self.view.frame.size.width - 20, 40)];
+    [workExperience setFrame:CGRectMake(10, controlYLength(self.topBar) + 170, self.view.frame.size.width - 20, 45)];
     [workExperience setBackgroundColor:color(clearColor)];
     [workExperience setBackgroundImage:imageNameAndType(@"setting_item_normal", @"png") forState:UIControlStateNormal];
     [workExperience setBackgroundImage:imageNameAndType(@"setting_item_press", @"png") forState:UIControlStateHighlighted];

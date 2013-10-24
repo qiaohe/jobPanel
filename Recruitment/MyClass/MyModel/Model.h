@@ -15,5 +15,9 @@
 + (Model*)shareModel;
 
 @property (strong, nonatomic) BaseUIViewController      *mainView;
+@property (strong, nonatomic) UIWindow                  *subWindow;
+@property (nonatomic, retain) UIButton                  *tipView;
+
+- (void)showPromptText:(NSString*)text model:(BOOL)model;
 
 @end

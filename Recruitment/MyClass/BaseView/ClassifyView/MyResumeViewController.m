@@ -74,7 +74,9 @@
     }
     [cell.leftButton removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
     [cell.leftButton addTarget:self action:@selector(pressUserPicture:) forControlEvents:UIControlEventTouchUpInside];
+    [cell.rightButton addTarget:self action:@selector(pressRightButton:) forControlEvents:UIControlEventTouchUpInside];
     [cell.leftButton setIndexPath:indexPath];
+    [cell.rightButton setIndexPath:indexPath];
     
     return cell;
 }
@@ -96,6 +98,32 @@
         [imagePicker setAllowsEditing:NO];
         //imagePicker.allowsImageEditing = NO;
         [self presentViewController:imagePicker animated:YES completion:nil];
+    }
+}
+
+- (void)pressRightButton:(CustomButton*)sender
+{
+    MyResumeViewCell *cell = (MyResumeViewCell*)[_theTableView cellForRowAtIndexPath:sender.indexPath];
+
+    if (_type == MyResumeDeliver) {
+        if (![cell.rightButton.titleLabel.text isEqualToString:@"已投递"]) {
+            [[Model shareModel] showPromptText:@"投递成功" model:YES];
+            [cell.rightButton setTitle:@"已投递" forState:UIControlStateNormal];
+        }else{
+            [[Model shareModel] showPromptText:@"您已投递过" model:YES];
+        }
+    }else if (_type == MyResumeEdit){
+        [cell.titleLabel setEnabled:!cell.titleLabel.enabled];
+        if (cell.titleLabel.enabled) {
+            [cell.rightButton setTitle:@"确认" forState:UIControlStateNormal];
+            if ([cell.titleLabel canBecomeFirstResponder]) {
+                [cell.titleLabel becomeFirstResponder];
+            }
+        }else{
+            [cell.rightButton setTitle:@"修改名称" forState:UIControlStateNormal];
+        }
+    }else {
+        [[Model shareModel] showPromptText:@"错误！！！" model:YES];
     }
 }
 
@@ -183,13 +211,16 @@
     _leftButton.layer.cornerRadius = _leftButton.frame.size.width/2;
     [self.contentView addSubview:_leftButton];
     
-    _titleLabel =[[UILabel alloc]initWithFrame:CGRectMake(controlXLength(_leftButton) + 5, _leftButton.frame.origin.y + 5, _backGroundImage.frame.size.width - controlXLength(_leftButton) * 2, _leftButton.frame.size.height/4)];
+    _titleLabel =[[UITextField alloc]initWithFrame:CGRectMake(controlXLength(_leftButton) + 5, _leftButton.frame.origin.y, _backGroundImage.frame.size.width - controlXLength(_leftButton) * 2, _leftButton.frame.size.height/4)];
     [_titleLabel setBackgroundColor:color(clearColor)];
+    [_titleLabel setEnabled:NO];
+    [_titleLabel setDelegate:self];
+    [_titleLabel setReturnKeyType:UIReturnKeyDone];
     [_titleLabel setFont:[UIFont systemFontOfSize:14]];
     [_titleLabel setText:@"平面设计师"];
     [_backGroundImage addSubview:_titleLabel];
     
-    _detailLabel = [[UILabel alloc]initWithFrame:CGRectMake(_titleLabel.frame.origin.x, controlYLength(_titleLabel), _titleLabel.frame.size.width, _titleLabel.frame.size.height*2/3)];
+    _detailLabel = [[UILabel alloc]initWithFrame:CGRectMake(_titleLabel.frame.origin.x, controlYLength(_titleLabel) + 2.50f, _titleLabel.frame.size.width, _titleLabel.frame.size.height*2/3)];
     [_detailLabel setBackgroundColor:color(clearColor)];
     [_detailLabel setFont:[UIFont systemFontOfSize:10]];
     [_detailLabel setTextColor:color(darkGrayColor)];
@@ -224,7 +255,7 @@
     }else{
         rightButtonTitle = @"修改名称";
     }
-    _rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    _rightButton = [CustomButton buttonWithType:UIButtonTypeCustom];
     [_rightButton setBackgroundColor:color(clearColor)];
     [_rightButton setBackgroundImage:imageNameAndType(@"resume_button_normal", @"png") forState:UIControlStateNormal];
     [_rightButton setBackgroundImage:imageNameAndType(@"resume_button_press", @"png") forState:UIControlStateHighlighted];
@@ -233,6 +264,33 @@
     [_rightButton setTitleColor:color(blackColor) forState:UIControlStateNormal];
     [_rightButton setFrame:CGRectMake(controlXLength(_titleLabel) + 2.50f, _backGroundImage.frame.size.height/2 - 30.0/2, _leftButton.frame.size.width - 5, 30.0f)];
     [_backGroundImage addSubview:_rightButton];
+}
+
+- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    if (![self clearKeyBoard]) {
+        [super touchesEnded:touches withEvent:event];
+    }
+}
+
+- (BOOL)textFieldShouldReturn:(UITextField *)textField
+{
+    if ([textField isFirstResponder]) {
+        textField.enabled = NO;
+        [_rightButton setTitle:_cellType == MyResumeDeliver?@"投递简历":@"修改名称" forState:UIControlStateNormal];
+        [textField resignFirstResponder];
+    }
+    return YES;
+}
+
+- (BOOL)clearKeyBoard
+{
+    BOOL canResignFirstResponder = NO;
+    if ([_titleLabel isFirstResponder]) {
+        [_titleLabel resignFirstResponder];
+        canResignFirstResponder = YES;
+    }
+    return canResignFirstResponder;
 }
 
 @end

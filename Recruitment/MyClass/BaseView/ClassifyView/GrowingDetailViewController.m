@@ -7,10 +7,12 @@
 //
 
 #import "GrowingDetailViewController.h"
+#import "MyGrowing.h"
 #import <QuartzCore/QuartzCore.h>
 
 @interface GrowingDetailViewController ()
 
+@property (strong, nonatomic) UIImageView           *addResumeBackImage;
 
 @end
 
@@ -32,6 +34,52 @@
         [self setSubviewFrame];
     }
     return self;
+}
+
+- (id)initWithGrowDetail:(MyGrowing*)grow
+{
+    self = [super init];
+    if (self) {
+        _growDetail = grow;
+        [self setSubviewFrame];
+    }
+    return self;
+}
+
+- (id)initWithData:(NSMutableDictionary*)data
+{
+    self = [super init];
+    if (self) {
+        _dataSource = [NSMutableArray array];
+        NSMutableArray *array = [NSMutableArray arrayWithArray:[data allValues]];
+        for (NSArray *object in array) {
+            [_dataSource addObjectsFromArray:object];
+        }
+        NSLog(@" count = %u",[_dataSource count]);
+        [self setSubviewFrame];
+    }
+    return self;
+}
+
+- (void)pressDoneButton:(UIButton*)sender
+{
+    if (!_growDetail) {
+        _growDetail = [[MyGrowing alloc]init];
+        [_dataSource addObject:_growDetail];
+    }
+    _growDetail.date = _dateLabel.text;
+    _growDetail.title = _titleText.text;
+    _growDetail.detail = _detailText.text;
+    _growDetail.image = [_userPicture imageForState:UIControlStateNormal];
+    
+    [self popViewControllerTransitionType:TransitionMoveIn completionHandler:^{
+        [self.delegate reloadWithData:_dataSource];
+    }];
+}
+
+- (void)pressAddToResume:(UIButton*)sender
+{
+    [[Model shareModel]showPromptText:@"添加成功" model:YES];
 }
 
 - (void)setSubviewFrame
@@ -66,6 +114,13 @@
     [voiceButton addTarget:self action:@selector(pressVoiceButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:voiceButton];
     
+    UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc]
+                                             initWithTarget:self
+                                             action:@selector(pressVoiceButton:)];
+    // you can control how many seconds before the gesture is recognized
+    gesture.minimumPressDuration =  0;
+    [voiceButton addGestureRecognizer:gesture];
+    
     UIButton *homeButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [homeButton setBackgroundColor:color(clearColor)];
     [homeButton setTag:102];
@@ -76,7 +131,8 @@
     [self setBottomBarBackGroundImage:imageNameAndType(@"bottombar", @"png")];
     
     _dateLabel = [[UILabel alloc]initWithFrame:CGRectMake(20, controlYLength(self.topBar), self.view.frame.size.width - 40, 30)];
-    [_dateLabel setText:[Utils stringWithDate:[NSDate date] withFormat:@"MM月dd日 / HH:mm"]];
+    NSString *dateText = _growDetail?_growDetail.date:[Utils stringWithDate:[NSDate date] withFormat:@"yyyy年MM月dd日 / HH:mm"];
+    [_dateLabel setText:dateText];
     [_dateLabel setBackgroundColor:color(clearColor)];
     [_dateLabel setFont:[UIFont systemFontOfSize:13]];
     [self.contentView addSubview:_dateLabel];
@@ -86,52 +142,68 @@
     [line1 setImage:imageNameAndType(@"resume_line", @"png")];
     [self.contentView addSubview:line1];
     
-    _userPicture = [[UIImageView alloc]initWithFrame:[self frameWithRect:CGRectMake(_dateLabel.frame.origin.x, controlYLength(line1) + 15, _dateLabel.frame.size.width, line1.frame.size.width * 3/5) adaptWidthOrHeight:adaptWidth]];
+    _userPicture = [UIButton buttonWithType:UIButtonTypeCustom];
+    [_userPicture setFrame:CGRectMake(_dateLabel.frame.origin.x, controlYLength(line1) + 15, _dateLabel.frame.size.width, line1.frame.size.width * 3/5)];
     [_userPicture setBackgroundColor:color(clearColor)];
-    [_userPicture setImage:imageNameAndType(@"resume_item", @"png")];
+    [_userPicture addTarget:self action:@selector(pressUserPicture:) forControlEvents:UIControlEventTouchUpInside];
+    UIImage *userImage = _growDetail?_growDetail.image:imageNameAndType(@"resume_item", @"png");
+    [_userPicture setImage:userImage forState:UIControlStateNormal];
+    [_userPicture setImage:userImage forState:UIControlStateHighlighted];
     [self.contentView addSubview:_userPicture];
     
-    UIImageView *addResumeBackImage = [[UIImageView alloc]initWithFrame:CGRectMake(_userPicture.frame.origin.x, controlYLength(_userPicture) - 35, _userPicture.frame.size.width, 35)];
-    [addResumeBackImage setBackgroundColor:color(clearColor)];
-    [addResumeBackImage setUserInteractionEnabled:YES];
-    [addResumeBackImage setImage:imageNameAndType(@"resume_add_backimage", @"png")];
-    [self.contentView addSubview:addResumeBackImage];
+    _addResumeBackImage = [[UIImageView alloc]initWithFrame:CGRectMake(_userPicture.frame.origin.x, controlYLength(_userPicture) - 35/2, _userPicture.frame.size.width, 35)];
+    _addResumeBackImage.layer.anchorPoint = CGPointMake(0.5f, 1.0f);
+    [_addResumeBackImage setBackgroundColor:color(clearColor)];
+    [_addResumeBackImage setUserInteractionEnabled:YES];
+    [_addResumeBackImage setImage:imageNameAndType(@"resume_add_backimage", @"png")];
+    [self.contentView addSubview:_addResumeBackImage];
     
-    UIImageView *addLeftImage = [[UIImageView alloc]initWithFrame:CGRectMake(5, 0, addResumeBackImage.frame.size.height, addResumeBackImage.frame.size.height)];
-    [addLeftImage setFrame:CGRectMake(5, 0, addResumeBackImage.frame.size.height, addResumeBackImage.frame.size.height)];
+    UIImageView *addLeftImage = [[UIImageView alloc]initWithFrame:CGRectMake(5, 0, _addResumeBackImage.frame.size.height, _addResumeBackImage.frame.size.height)];
+    [addLeftImage setFrame:CGRectMake(5, 0, _addResumeBackImage.frame.size.height, _addResumeBackImage.frame.size.height)];
     [addLeftImage setBackgroundColor:color(clearColor)];
-    [addResumeBackImage addSubview:addLeftImage];
+    [addLeftImage setBounds:CGRectMake(0, 0, addLeftImage.frame.size.width * 0.4, addLeftImage.frame.size.height * 0.5)];
+    [addLeftImage setImage:imageNameAndType(@"resume_location", @"png")];
+    [_addResumeBackImage addSubview:addLeftImage];
     
-    UILabel *locationlabel = [[UILabel alloc]initWithFrame:CGRectMake(controlXLength(addLeftImage) + 5, 0, (addResumeBackImage.frame.size.width - controlXLength(addLeftImage) - 5 - 5)*2/3, addResumeBackImage.frame.size.height)];
+    UILabel *locationlabel = [[UILabel alloc]initWithFrame:CGRectMake(controlXLength(addLeftImage) + 5, 0, (_addResumeBackImage.frame.size.width - controlXLength(addLeftImage) - 5 - 5)*2/3, _addResumeBackImage.frame.size.height)];
     [locationlabel setBackgroundColor:color(clearColor)];
     [locationlabel setText:@"上海市"];
+    [locationlabel setTag:201];
     [locationlabel setFont:[UIFont systemFontOfSize:12]];
     [locationlabel setTextColor:color(whiteColor)];
-    [addResumeBackImage addSubview:locationlabel];
+    [_addResumeBackImage addSubview:locationlabel];
     
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setBackgroundColor:color(clearColor)];
-    [button setTitle:@"添加到简历" forState:UIControlStateNormal];
-    [button.titleLabel setFont:[UIFont systemFontOfSize:12]];
-    [button setTitleEdgeInsets:UIEdgeInsetsMake(5, 0, 0, 0)];
-    [button setFrame:CGRectMake(addResumeBackImage.frame.size.width - locationlabel.frame.size.width/2 - 10, 0, locationlabel.frame.size.width/2, addResumeBackImage.frame.size.height)];
-    [button setBackgroundImage:imageNameAndType(@"resume_add_normal", @"png") forState:UIControlStateNormal];
-    [button setBackgroundImage:imageNameAndType(@"resume_add_press", @"png") forState:UIControlStateHighlighted];
-    [addResumeBackImage addSubview:button];
+    UIButton *addToResume = [UIButton buttonWithType:UIButtonTypeCustom];
+    [addToResume setBackgroundColor:color(clearColor)];
+    [addToResume setTitle:@"添加到简历" forState:UIControlStateNormal];
+    [addToResume.titleLabel setFont:[UIFont systemFontOfSize:12]];
+    [addToResume setTitleEdgeInsets:UIEdgeInsetsMake(5, 0, 0, 0)];
+    [addToResume setTag:202];
+    [addToResume setFrame:CGRectMake(_addResumeBackImage.frame.size.width - locationlabel.frame.size.width/2 - 10, 0, locationlabel.frame.size.width/2, _addResumeBackImage.frame.size.height)];
+    [addToResume addTarget:self action:@selector(pressAddToResume:) forControlEvents:UIControlEventTouchUpInside];
+    [addToResume setBackgroundImage:imageNameAndType(@"resume_add_normal", @"png") forState:UIControlStateNormal];
+    [addToResume setBackgroundImage:imageNameAndType(@"resume_add_press", @"png") forState:UIControlStateHighlighted];
+    [_addResumeBackImage addSubview:addToResume];
+    
+    CGAffineTransform currentTransform = _addResumeBackImage.transform;
+    CGAffineTransform newTransform = CGAffineTransformScale(currentTransform, 1.0, 0.1);
+    [_addResumeBackImage setTransform:newTransform];
+    [_addResumeBackImage setHidden:YES];
         
     UIImageView *line2 = [[UIImageView alloc]initWithFrame:CGRectMake(line1.frame.origin.x, controlYLength(_userPicture) + 15, line1.frame.size.width, line1.frame.size.height)];
     [line2 setBackgroundColor:color(clearColor)];
     [line2 setImage:imageNameAndType(@"resume_line", @"png")];
     [self.contentView addSubview:line2];
     
-    UIImageView *titleTextBackImage = [[UIImageView alloc]initWithFrame:[self frameWithRect:CGRectMake(_dateLabel.frame.origin.x + 5, controlYLength(line2) + 10, self.view.frame.size.width/2, 35) adaptWidthOrHeight:adaptWidth]];
+    UIImageView *titleTextBackImage = [[UIImageView alloc]initWithFrame:CGRectMake(_dateLabel.frame.origin.x + 5, controlYLength(line2) + 10, self.view.frame.size.width/2, 35)];
     [titleTextBackImage setBackgroundColor:color(clearColor)];
-    [titleTextBackImage setImage:stretchImage(@"resume_textbackground", @"png")];
+    [titleTextBackImage setImage:stretchImage(@"resume_field_backimage", @"png")];
     [self.contentView addSubview:titleTextBackImage];
     
     _titleText = [[UITextField alloc]initWithFrame:CGRectMake(titleTextBackImage.frame.origin.x + 10, titleTextBackImage.frame.origin.y, titleTextBackImage.frame.size.width - 10, titleTextBackImage.frame.size.height)];
     [_titleText setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
     [_titleText setPlaceholder:@"标题"];
+    [_titleText setText:_growDetail?_growDetail.title:nil];
     [_titleText setDelegate:self];
     [_titleText setFont:[UIFont systemFontOfSize:14]];
     [self.contentView addSubview:_titleText];
@@ -145,6 +217,7 @@
     [_detailText setBackgroundColor:color(clearColor)];
     [_detailText setFont:[UIFont systemFontOfSize:14]];
     [_detailText setDelegate:self];
+    [_detailText setText:_growDetail?_growDetail.detail:nil];
     [self.contentView addSubview:_detailText];
     
     UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -153,15 +226,206 @@
     [doneButton setTitle:@"完成" forState:UIControlStateNormal];
     [doneButton setBackgroundImage:imageNameAndType(@"resume_done_normal", @"png") forState:UIControlStateNormal];
     [doneButton setBackgroundImage:imageNameAndType(@"resume_done_press", @"png") forState:UIControlStateHighlighted];
+    [doneButton addTarget:self action:@selector(pressDoneButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:doneButton];
 }
 
-- (void)pressCameraButton:(UIButton*)sender
+- (void)pressUserPicture:(UIButton*)sender
 {
-    
+    BOOL hidden = _addResumeBackImage.hidden?NO:YES;
+    if (hidden) {
+        [UIView animateWithDuration:0.15
+                         animations:^{
+                             CGAffineTransform currentTransform = _addResumeBackImage.transform;
+                             CGAffineTransform newTransform = CGAffineTransformScale(currentTransform, 1.0, 0.1);
+                             [_addResumeBackImage setTransform:newTransform];
+                         }completion:^(BOOL finished){
+                             _addResumeBackImage.hidden = hidden;
+                         }];
+    }else{
+        _addResumeBackImage.hidden = hidden;
+        [UIView animateWithDuration:0.15
+                         animations:^{
+                             CGAffineTransform currentTransform = _addResumeBackImage.transform;
+                             CGAffineTransform newTransform = CGAffineTransformScale(currentTransform, 1.0, 10);
+                             [_addResumeBackImage setTransform:newTransform];
+                         }completion:^(BOOL finished){
+                             
+                         }];
+    }
 }
 
-- (void)pressVoiceButton:(UIButton*)sender
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
+    [_userPicture setImage:image forState:UIControlStateNormal];
+    [_userPicture setImage:image forState:UIControlStateHighlighted];
+    
+    [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+
+- (void)pressCameraButton:(UIButton*)sender
+{
+    UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"拍照",@"从相册中选择", nil];
+    alertView.tag = 101;
+    [alertView show];
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 101) {
+        switch (buttonIndex) {
+            case 1:{
+                UIImagePickerController *imagePicker = [[UIImagePickerController alloc]init];
+                if ([UIImagePickerController isSourceTypeAvailable:
+                     UIImagePickerControllerSourceTypeCamera]) {
+                    imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
+                    imagePicker.delegate = self;
+                    [imagePicker setAllowsEditing:NO];
+                    //imagePicker.allowsImageEditing = NO;
+                    [self presentViewController:imagePicker animated:YES completion:nil];
+                }
+
+                break;
+            }
+            case 2:{
+                UIImagePickerController *imagePicker = [[UIImagePickerController alloc]init];
+                if ([UIImagePickerController isSourceTypeAvailable:
+                     UIImagePickerControllerSourceTypePhotoLibrary]) {
+                    imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+                    imagePicker.delegate = self;
+                    [imagePicker setAllowsEditing:NO];
+                    //imagePicker.allowsImageEditing = NO;
+                    [self presentViewController:imagePicker animated:YES completion:nil];
+                }
+
+                break;
+            }
+            default:
+                break;
+        }
+    }else if (alertView.tag == 102){
+        switch (buttonIndex) {
+            case 1:{
+                [[Model shareModel] showPromptText:@"录音中..." model:YES];
+                break;
+            }case 2:{
+                [[Model shareModel] showPromptText:@"播放录音" model:YES];
+                break;
+            }
+            default:
+                break;
+        }
+    }
+}
+
+- (void)pressVoiceButton:(UILongPressGestureRecognizer *)gesture
+{
+    UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"录音",@"播放录音", nil];
+    [alertView setTag:102];
+    [alertView show];
+    /*
+    if (gesture.state == UIGestureRecognizerStateBegan) {
+        NSLog(@"Touch down");
+        
+        [self startRecording];
+    }
+    if (gesture.state == UIGestureRecognizerStateEnded) {
+        NSLog(@"Long press Ended");
+        
+        [self stopRecording];
+    }*/
+}
+
+- (void)startRecording
+{
+    NSMutableDictionary *recordSettings = [[NSMutableDictionary alloc] initWithCapacity:10];
+    if(recordEncoding == ENC_PCM)
+    {
+        [recordSettings setObject:[NSNumber numberWithInt: kAudioFormatLinearPCM] forKey: AVFormatIDKey];
+        [recordSettings setObject:[NSNumber numberWithFloat:44100.0] forKey: AVSampleRateKey];
+        [recordSettings setObject:[NSNumber numberWithInt:2] forKey:AVNumberOfChannelsKey];
+        [recordSettings setObject:[NSNumber numberWithInt:16] forKey:AVLinearPCMBitDepthKey];
+        [recordSettings setObject:[NSNumber numberWithBool:NO] forKey:AVLinearPCMIsBigEndianKey];
+        [recordSettings setObject:[NSNumber numberWithBool:NO] forKey:AVLinearPCMIsFloatKey];
+    }
+    else
+    {
+        NSNumber *formatObject;
+        
+        switch (recordEncoding) {
+            case (ENC_AAC):
+                formatObject = [NSNumber numberWithInt: kAudioFormatMPEG4AAC];
+                break;
+            case (ENC_ALAC):
+                formatObject = [NSNumber numberWithInt: kAudioFormatAppleLossless];
+                break;
+            case (ENC_IMA4):
+                formatObject = [NSNumber numberWithInt: kAudioFormatAppleIMA4];
+                break;
+            case (ENC_ILBC):
+                formatObject = [NSNumber numberWithInt: kAudioFormatiLBC];
+                break;
+            case (ENC_ULAW):
+                formatObject = [NSNumber numberWithInt: kAudioFormatULaw];
+                break;
+            default:
+                formatObject = [NSNumber numberWithInt: kAudioFormatAppleIMA4];
+        }
+        
+        [recordSettings setObject:formatObject forKey: AVFormatIDKey];
+        [recordSettings setObject:[NSNumber numberWithFloat:44100.0] forKey: AVSampleRateKey];
+        [recordSettings setObject:[NSNumber numberWithInt:2] forKey:AVNumberOfChannelsKey];
+        [recordSettings setObject:[NSNumber numberWithInt:12800] forKey:AVEncoderBitRateKey];
+        [recordSettings setObject:[NSNumber numberWithInt:16] forKey:AVLinearPCMBitDepthKey];
+        [recordSettings setObject:[NSNumber numberWithInt: AVAudioQualityHigh] forKey: AVEncoderAudioQualityKey];
+    }
+    
+    NSString *soundFilePath = nil;
+    
+    {
+        NSFileManager *fileManager = [NSFileManager defaultManager];
+        BOOL isDirectory = false;
+        if (![fileManager fileExistsAtPath:DOCUMENTS_FOLDER_AUDIO isDirectory:&isDirectory]) {
+            NSError *error = nil;
+            BOOL createDone = [fileManager createDirectoryAtPath:DOCUMENTS_FOLDER_AUDIO withIntermediateDirectories:YES attributes:nil error:&error];
+            if (!createDone) {
+                NSLog(@"error = %@",error);
+                [[Model shareModel] showPromptText:@"创建本地音频库失败" model:YES];
+                return;
+            }
+        }
+        soundFilePath = [DOCUMENTS_FOLDER_AUDIO stringByAppendingPathComponent:@"recordFile"];
+    }
+    
+    NSLog(@"path = %@",soundFilePath);
+    
+    NSURL *url = [NSURL fileURLWithPath:soundFilePath];
+    
+    NSError *error = nil;
+    audioRecorder = [[ AVAudioRecorder alloc] initWithURL:url settings:recordSettings error:&error];
+    audioRecorder.meteringEnabled = YES;
+    if ([audioRecorder prepareToRecord] == YES){
+        audioRecorder.meteringEnabled = YES;
+        [audioRecorder record];
+        timerForPitch =[NSTimer scheduledTimerWithTimeInterval:0.01 target: self selector: @selector(levelTimerCallback:) userInfo:nil repeats:YES];
+    }else {
+        int errorCode = CFSwapInt32HostToBig ([error code]);
+        NSLog(@"Error: %@ [%4.4s])" , [error localizedDescription], (char*)&errorCode);
+        
+    }
+}
+
+- (void) stopRecording
+{
+    NSLog(@"stopRecording");
+    [audioRecorder stop];
+    [timerForPitch invalidate];
+    timerForPitch = nil;
+}
+
+- (void)levelTimerCallback:(id)userInfo
 {
     
 }
@@ -231,8 +495,8 @@
         responder = _detailText;
     }
     if (responder) {
-        if (responder.frame.origin.y + 40 - self.contentView.contentOffset.y > self.view.frame.size.height - frame.size.height) {
-            CGFloat changeY = responder.frame.origin.y + 40 - self.contentView.contentOffset.y - (self.view.frame.size.height - frame.size.height);
+        if (controlYLength(responder) - self.contentView.contentOffset.y > self.view.frame.size.height - frame.size.height) {
+            CGFloat changeY = controlYLength(responder) - self.contentView.contentOffset.y - (self.view.frame.size.height - frame.size.height);
             changeY = changeY >= 0?changeY:0;
             [UIView animateWithDuration:duration
                              animations:^{

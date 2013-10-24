@@ -8,10 +8,11 @@
 
 #import "BaseUIViewController.h"
 
-@interface RegisterViewController : BaseUIViewController<UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
+@interface RegisterViewController : BaseUIViewController<UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIScrollViewDelegate>
 
 @property (strong, nonatomic) UIButton              *userPicture;
 @property (strong, nonatomic) UIView                *currentSubview;
+@property (strong, nonatomic) UIScrollView          *scrollView;
 
 @property (strong, nonatomic) UITextField           *userName;
 @property (strong, nonatomic) UITextField           *phoneNum;
@@ -21,5 +22,8 @@
 @property (strong, nonatomic) UITextField           *currentPosition;
 @property (strong, nonatomic) UITextField           *currentCompany;
 @property (strong, nonatomic) UITextField           *goalCompany;
+
+@property (strong, nonatomic) NSMutableArray        *dataSource;
+@property (strong ,nonatomic) NSMutableArray        *selectDataSource;
 
 @end

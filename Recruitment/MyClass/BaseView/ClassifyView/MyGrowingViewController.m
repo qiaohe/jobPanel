@@ -7,7 +7,8 @@
 //
 
 #import "MyGrowingViewController.h"
-#import "GrowingDetailViewController.h"
+#import "MyGrowing.h"
+#import "CustomButton.h"
 
 @interface MyGrowingViewController ()
 
@@ -33,8 +34,8 @@
 {
     self = [super init];
     if (self) {
-        self.dataSource = [NSMutableArray arrayWithArray:@[@"grow_item1",@"grow_item2",@"grow_item1"]];
-        self.subDataSource = [NSMutableArray arrayWithArray:@[@"grow_item2",@"grow_item1",@"grow_item2"]];
+        subDataSource = [NSMutableDictionary dictionaryWithDictionary:[self getGrowingDataFromArray:[MyGrowing getMyGrowsWithNum:14]]];
+        
         [self setSubviewFrame];
     }
     return self;
@@ -55,10 +56,26 @@
     }
 }
 
+- (void)pressCellItem:(CustomButton*)sender
+{
+    NSLog(@"press item");
+    if (![self clearKeyBoard]) {
+        NSArray *array = [subDataSource objectForKey:[dataSource objectAtIndex:sender.indexPath.section]];
+        MyGrowing *growDetail = [array objectAtIndex:sender.indexPath.row];
+        GrowingDetailViewController *growingDetailView = [[GrowingDetailViewController alloc]initWithGrowDetail:growDetail];
+        growingDetailView.delegate = self;
+        [self.navigationController pushViewController:growingDetailView animated:YES];
+    }
+}
+
 #pragma mark - table view handle
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
-    return [self createHeaderView];
+    UIView *titleView   = [self createHeaderView];
+    UILabel *titleLabel = (UILabel*)[titleView viewWithTag:101];
+    NSString *key = [dataSource objectAtIndex:section];
+    [titleLabel setText:key];
+    return titleView;
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section
@@ -73,18 +90,13 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 2;
+    return [dataSource count];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    NSLog(@"number of lines = %u",[dataSource count]/2 + (([dataSource count]%2 != 0)?1:0));
-    if (section == 0) {
-        return [dataSource count]/2 + (([dataSource count]%2 != 0)?1:0);
-    }else if (section == 1){
-        return [subDataSource count]/2 + (([subDataSource count]%2 != 0)?1:0);
-    }else
-        return 0;
+    NSArray *array = [subDataSource objectForKey:[dataSource objectAtIndex:section]];
+    return [array count]/2 + (([array count]%2 != 0)?1:0);
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -94,10 +106,13 @@
     if (cell == nil) {
         cell = [[MyGrowingViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifierString];
     }
-    if (indexPath.section == 0) {
-        [cell createSubviewWithParams:dataSource indexPath:indexPath];
-    }else if (indexPath.section == 1){
-        [cell createSubviewWithParams:subDataSource indexPath:indexPath];
+    NSArray *array = [subDataSource objectForKey:[dataSource objectAtIndex:indexPath.section]];
+    [cell createSubviewWithParams:array indexPath:indexPath];
+    UIButton *button1 = (UIButton*)cell.cellItem1;
+    [button1 addTarget:self action:@selector(pressCellItem:) forControlEvents:UIControlEventTouchUpInside];
+    if (cell.cellItem2) {
+        UIButton *button2 = (UIButton*)cell.cellItem2;
+        [button2 addTarget:self action:@selector(pressCellItem:) forControlEvents:UIControlEventTouchUpInside];
     }
     
     return cell;
@@ -135,11 +150,53 @@
     [titleLabel setTag:101];
     [titleLabel setText:[Utils stringWithDate:[NSDate date] withFormat:@"yyyy年MM月"]];
     [titleLabel setTextAlignment:NSTextAlignmentCenter];
-    [titleLabel setTextColor:color(darkGrayColor)];
-    [titleLabel setFont:[UIFont systemFontOfSize:13]];
+    [titleLabel setTextColor:color(grayColor)];
+    [titleLabel setFont:[UIFont systemFontOfSize:12]];
     [headerView addSubview:titleLabel];
     
     return headerView;
+}
+
+- (NSDictionary*)getGrowingDataFromArray:(NSArray*)array
+{
+    NSMutableDictionary *dictionary = [NSMutableDictionary dictionary];
+    for (MyGrowing *growing in array) {
+        NSString *key = [Utils stringWithDate:[Utils dateWithString:growing.date withFormat:@"yyyy年MM月dd日 / HH:mm"] withFormat:@"yyyy年MM月"];
+        if ([dictionary.allKeys containsObject:key]) {
+            NSMutableArray *array = [dictionary objectForKey:key];
+            [array addObject:growing];
+        }else{
+            NSMutableArray *array = [NSMutableArray array];
+            [array addObject:growing];
+            [dictionary setObject:array forKey:key];
+        }
+    }
+    dataSource = [NSMutableArray arrayWithArray:dictionary.allKeys];
+    [self sortArray:dataSource];
+    return dictionary;
+}
+
+- (void)sortArray:(NSMutableArray*)array
+{
+    [array sortUsingComparator:^(NSString *growDate1,NSString *growDate2){
+        double date1 = [[Utils dateWithString:growDate1 withFormat:@"yyyy年MM月"] timeIntervalSince1970];
+        double date2 = [[Utils dateWithString:growDate2 withFormat:@"yyyy年MM月"] timeIntervalSince1970];
+        if (date1 >= date2) {
+            return NSOrderedDescending;
+        }else{
+            return NSOrderedAscending;
+        }
+    }];
+}
+
+#pragma mark - Growing delegate method
+- (void)reloadWithData:(NSArray*)data
+{
+    if (data) {
+        subDataSource = [NSMutableDictionary dictionaryWithDictionary:[self getGrowingDataFromArray:data]];
+    }
+    
+    [self.theTableView reloadData];
 }
 
 #pragma mark - view init
@@ -221,7 +278,8 @@
 
 - (void)pressRightButton:(UIButton*)sender
 {
-    GrowingDetailViewController *growingDetailView = [[GrowingDetailViewController alloc]init];
+    GrowingDetailViewController *growingDetailView = [[GrowingDetailViewController alloc]initWithData:subDataSource];
+    growingDetailView.delegate = self;
     if (self.navigationController) {
         [self.navigationController pushViewController:growingDetailView animated:YES];
     }
@@ -232,7 +290,46 @@
     if ([textField isFirstResponder]) {
         [textField resignFirstResponder];
     }
+    
+    if (textField == searchBar) {
+        [self searchGrowNote];
+    }
+    
     return YES;
+}
+
+- (void)searchGrowNote
+{
+    NSMutableArray *array = [NSMutableArray arrayWithArray:[subDataSource allValues]];
+    NSMutableArray *tempArray = [NSMutableArray array];
+    for (NSArray *object in array) {
+        [tempArray addObjectsFromArray:object];
+    }
+    
+    if (![Utils textIsEmpty:searchBar.text]) {
+
+        
+        if ([dataSource count] != 0) {
+            [dataSource removeAllObjects];
+        }
+        
+        for (MyGrowing *grow in tempArray) {
+            NSLog(@"title = %@",grow.title);
+            if ([grow.title rangeOfString:searchBar.text].length != 0 || [grow.date rangeOfString:searchBar.text].length != 0) {
+                [dataSource addObject:grow];
+            }
+        }
+        for (MyGrowing *grow in dataSource) {
+            NSLog(@"data title = %@",grow.title);
+        }
+        
+        [self getGrowingDataFromArray:dataSource];
+        [self.theTableView reloadData];
+    }else{
+        [[Model shareModel] showPromptText:@"搜索条件为空" model:YES];
+        [self getGrowingDataFromArray:tempArray];
+        [self.theTableView reloadData];
+    }
 }
 
 - (void)viewDidLoad
@@ -278,13 +375,24 @@
 {
     if ([params count] >= indexPath.row * 2 + 1) {
         if (!_cellItem1) {
-            NSString *imageName = [params objectAtIndex:indexPath.row * 2];
-            UIView *subview = [self createSubview];
-            subview.frame = CGRectMake(0, 0, subview.frame.size.width, subview.frame.size.height);
-            UIImageView *detailImage = (UIImageView*)[subview viewWithTag:102];
-            [detailImage setImage:imageNameAndType(imageName, @"jpg")];
+            CustomButton *subview = [self createSubview];
+
             _cellItem1 = subview;
         }
+        _cellItem1.frame = CGRectMake(0, 0, _cellItem1.frame.size.width, _cellItem1.frame.size.height);
+
+        MyGrowing *grow = [params objectAtIndex:indexPath.row * 2 + 0];
+        UILabel     *titleLabel  = (UILabel*)[_cellItem1 viewWithTag:101];
+        UIImageView *detailImage = (UIImageView*)[_cellItem1 viewWithTag:102];
+        
+        NSString *titleText = @"";
+        titleText = grow.date?[titleText stringByAppendingString:[Utils stringWithDate:[Utils dateWithString:grow.date withFormat:@"yyyy年MM月dd日 / HH:mm"] withFormat:@"yyyy年MM月dd日"]]:titleText;
+        titleText = grow.title?(titleText?[titleText stringByAppendingFormat:@" %@",grow.title]:[titleText stringByAppendingString:grow.title]):titleText;
+        
+        [titleLabel setText:titleText];
+        [detailImage setImage:grow.image];
+        
+        _cellItem1.indexPath = [NSIndexPath indexPathForRow:indexPath.row * 2 + 0 inSection:indexPath.section];
         if (!_cellItem1.superview) {
             [self.contentView addSubview:_cellItem1];
         }
@@ -295,13 +403,24 @@
     }
     if ([params count] >= indexPath.row * 2 + 2){
         if (!_cellItem2) {
-            NSString *imageName = [params objectAtIndex:indexPath.row * 2 + 1];
-            UIView *subview = [self createSubview];
-            subview.frame = CGRectMake(controlXLength(_cellItem1), 0, subview.frame.size.width, subview.frame.size.height);
-            UIImageView *detailImage = (UIImageView*)[subview viewWithTag:102];
-            [detailImage setImage:imageNameAndType(imageName, @"jpg")];
+            CustomButton *subview = [self createSubview];
+
             _cellItem2 = subview;
         }
+        _cellItem2.frame = CGRectMake(controlXLength(_cellItem1), 0, _cellItem2.frame.size.width, _cellItem2.frame.size.height);
+
+        MyGrowing *grow = [params objectAtIndex:indexPath.row * 2 + 1];
+        UILabel     *titleLabel  = (UILabel*)[_cellItem2 viewWithTag:101];
+        UIImageView *detailImage = (UIImageView*)[_cellItem2 viewWithTag:102];
+        
+        NSString *titleText = @"";
+        titleText = grow.date?[titleText stringByAppendingString:[Utils stringWithDate:[Utils dateWithString:grow.date withFormat:@"yyyy年MM月dd日 / HH:mm"] withFormat:@"yyyy年MM月dd日"]]:titleText;
+        titleText = grow.title?(titleText?[titleText stringByAppendingFormat:@" %@",grow.title]:[titleText stringByAppendingString:grow.title]):titleText;
+        
+        [titleLabel setText:titleText];
+        [detailImage setImage:grow.image];
+        
+        _cellItem2.indexPath = [NSIndexPath indexPathForRow:indexPath.row * 2 + 1 inSection:indexPath.section];
         if (!_cellItem2.superview) {
             [self.contentView addSubview:_cellItem2];
         }
@@ -312,19 +431,20 @@
     }
 }
 
-- (UIView*)createSubview
+- (CustomButton*)createSubview
 {
-    UIView *subview = [[UIView alloc]initWithFrame:CGRectMake(0, 0, appFrame.size.width/2, appFrame.size.width/2)];
+    CustomButton *subview = [CustomButton buttonWithType:UIButtonTypeCustom];
+    [subview setFrame:CGRectMake(0, 0, appFrame.size.width/2, appFrame.size.width/2)];
     [subview setBackgroundColor:color(clearColor)];
     
-    UIImageView *backImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, subview.frame.size.width, subview.frame.size.height - 10)];
+    UIImageView *backImage = [[UIImageView alloc]initWithFrame:CGRectMake(5, 0, subview.frame.size.width - 10, subview.frame.size.height - 10)];
     [backImage setBackgroundColor:color(clearColor)];
     [backImage setImage:imageNameAndType(@"growing_item", @"png")];
     [subview addSubview:backImage];
     
     UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 15, backImage.frame.size.width - 30, 30)];
     [titleLabel setBackgroundColor:color(clearColor)];
-    [titleLabel setText:[Utils stringWithDate:[NSDate date] withFormat:@"yyyy年MM月  我的成长"]];
+    //[titleLabel setText:[Utils stringWithDate:[NSDate date] withFormat:@"yyyy年MM月  我的成长"]];
     [titleLabel setAdjustsFontSizeToFitWidth:YES];
     [titleLabel setAdjustsLetterSpacingToFitWidth:YES];
     [titleLabel setBaselineAdjustment:UIBaselineAdjustmentNone];
@@ -333,7 +453,7 @@
     [titleLabel setTag:101];
     [subview addSubview:titleLabel];
     
-    UIImageView *detailImage = [[UIImageView alloc]initWithFrame:CGRectMake(titleLabel.frame.origin.x, controlYLength(titleLabel), titleLabel.frame.size.width, subview.frame.size.height*2/5)];
+    UIImageView *detailImage = [[UIImageView alloc]initWithFrame:CGRectMake(titleLabel.frame.origin.x + 1.0f, controlYLength(titleLabel), titleLabel.frame.size.width+ 3.0f, subview.frame.size.height*2/5)];
     [detailImage setBackgroundColor:color(clearColor)];
     [detailImage setTag:102];
     [subview addSubview:detailImage];

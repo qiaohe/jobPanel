@@ -43,9 +43,9 @@
     return dateString;
 }
 
-+ (float)heightForRect:(CGRect)rect text:(NSString *)strText font:(UIFont*)font{
++ (float)heightForWidth:(CGFloat)textViewWidth text:(NSString *)strText font:(UIFont*)font{
     float fPadding = 16.0; // 8.0px x 2
-    CGSize constraint = CGSizeMake(rect.size.width - fPadding, CGFLOAT_MAX);
+    CGSize constraint = CGSizeMake(textViewWidth - fPadding, CGFLOAT_MAX);
     
     CGSize size = [strText sizeWithFont:font constrainedToSize:constraint lineBreakMode:NSLineBreakByWordWrapping];
     

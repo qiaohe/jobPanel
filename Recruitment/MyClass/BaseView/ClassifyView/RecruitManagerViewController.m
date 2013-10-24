@@ -71,7 +71,7 @@
     [self setReturnButton:returnButton];
     [self.view addSubview:returnButton];
     
-    UIImageView *resumeLeft = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 40, 40)];
+    UIImageView *resumeLeft = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 50, 50)];
     [resumeLeft setBackgroundColor:color(clearColor)];
     [resumeLeft setImage:imageNameAndType(@"myresume", @"png")];
     UIButton *myResume = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -89,7 +89,7 @@
     [myResume addSubview:resumeLeft];
     [self.contentView addSubview:myResume];
     
-    UIImageView *collectLeft = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 35, 35)];
+    UIImageView *collectLeft = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, resumeLeft.frame.size.width, resumeLeft.frame.size.height)];
     [collectLeft setBackgroundColor:color(clearColor)];
     [collectLeft setImage:imageNameAndType(@"mycollect", @"png")];
     UIButton *myCollect = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -107,7 +107,7 @@
     [myCollect addSubview:collectLeft];
     [self.contentView addSubview:myCollect];
     
-    UIImageView *traceLeft = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, 35, 35)];
+    UIImageView *traceLeft = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, resumeLeft.frame.size.width, resumeLeft.frame.size.height)];
     [traceLeft setBackgroundColor:color(clearColor)];
     [traceLeft setImage:imageNameAndType(@"recruittrace", @"png")];
     UIButton *recruitTrace = [UIButton buttonWithType:UIButtonTypeCustom];

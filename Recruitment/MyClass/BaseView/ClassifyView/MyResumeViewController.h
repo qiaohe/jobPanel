@@ -27,16 +27,16 @@ typedef NS_OPTIONS(NSInteger, MyResumeInitType){
 
 @end
 
-@interface MyResumeViewCell : UITableViewCell
+@interface MyResumeViewCell : UITableViewCell<UITextFieldDelegate>
 
 @property (strong, nonatomic) UIImageView               *backGroundImage;
 @property (strong, nonatomic) CustomButton              *leftButton;
-@property (strong, nonatomic) UILabel                   *titleLabel;
+@property (strong, nonatomic) UITextField               *titleLabel;
 @property (strong, nonatomic) UILabel                   *detailLabel;
 @property (strong, nonatomic) UIImageView               *locationImage;
 @property (strong, nonatomic) UILabel                   *locationLabel;
 @property (strong, nonatomic) UIImageView               *timeImage;
 @property (strong, nonatomic) UILabel                   *timeLabel;
-@property (strong, nonatomic) UIButton                  *rightButton;
+@property (strong, nonatomic) CustomButton              *rightButton;
 
 @end

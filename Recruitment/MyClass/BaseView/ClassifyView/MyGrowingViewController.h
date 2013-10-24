@@ -7,11 +7,15 @@
 //
 
 #import "BaseUIViewController.h"
+#import "GrowingDetailViewController.h"
+
+
+@class CustomButton;
 
 @interface MyGrowingViewCell : UITableViewCell
 
-@property (strong, nonatomic) UIView                *cellItem1;
-@property (strong, nonatomic) UIView                *cellItem2;
+@property (strong, nonatomic) CustomButton          *cellItem1;
+@property (strong, nonatomic) CustomButton          *cellItem2;
 
 - (void)createSubviewWithParams:(NSArray*)params indexPath:(NSIndexPath*)indexPath;
 
@@ -20,11 +24,11 @@
 #define         MyGrowingHeaderViewHeight               35.0f
 #define         MyGrowingCellHeight                     appFrame.size.width/2
 
-@interface MyGrowingViewController : BaseUIViewController<UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,UITextFieldDelegate>
+@interface MyGrowingViewController : BaseUIViewController<UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,UITextFieldDelegate,GrowingDetailDelegate>
 
 @property (strong, nonatomic) UITextField           *searchBar;
 @property (strong, nonatomic) UITableView           *theTableView;
 @property (strong, nonatomic) NSMutableArray        *dataSource;
-@property (strong, nonatomic) NSMutableArray        *subDataSource;
+@property (strong, nonatomic) NSMutableDictionary   *subDataSource;
 
 @end

@@ -42,6 +42,8 @@
 - (id)init
 {
     if (self = [super init]) {
+        _dataSource = [NSMutableArray arrayWithArray:@[@"欧美公司",@"国有企业",@"管理职位",@"技术职位",@"要创业",@"有激情"]];
+        _selectDataSource = [NSMutableArray array];
         [self setViewFrame];
     }
     return self;
@@ -49,24 +51,11 @@
 
 - (void)pressNextButton:(UIButton*)sender
 {
-    if (currentSubview.tag == 101) {
-        UIView *subview = [self createRegisterDetailView];
-        sender.enabled = NO;
-        subview.frame = CGRectMake(currentSubview.frame.size.width, currentSubview.frame.origin.y, subview.frame.size.width, subview.frame.size.height);
-        [_detailView addSubview:subview];
-        [UIView animateWithDuration:0.35f
-                         animations:^{
-                             currentSubview.frame = CGRectMake(-currentSubview.frame.size.width, currentSubview.frame.origin.y, currentSubview.frame.size.width, currentSubview.frame.size.height);
-                             subview.frame = CGRectMake(0, currentSubview.frame.origin.y, subview.frame.size.width, subview.frame.size.height);
-                         }completion:^(BOOL finished){
-                             [currentSubview removeFromSuperview];
-                             self.currentSubview = subview;
-                             sender.enabled = YES;
-                         }];
-    }else if (currentSubview.tag == 102){
+    if (currentSubview.tag != 302) {
+        [_scrollView setContentOffset:CGPointMake(_scrollView.contentOffset.x + _scrollView.frame.size.width, _scrollView.contentOffset.y) animated:YES];
+    }else {
         HomeViewController *homeView = [[HomeViewController alloc]init];
-        
-        [self.navigationController pushViewController:homeView animated:YES];
+        [self pushViewController:homeView transitionType:TransitionPush completionHandler:nil];
     }
 }
 
@@ -98,13 +87,6 @@
 {
     [self setBackGroundImage:imageNameAndType(@"register_back", @"png")];
     
-    _detailView = [[UIView alloc]initWithFrame:CGRectMake(0, 0, appFrame.size.width, appFrame.size.height)];
-    [_detailView setBackgroundColor:[UIColor clearColor]];
-    [self.view addSubview:_detailView];
-    
-    self.currentSubview = [self createRegisterView];
-    [_detailView addSubview:self.currentSubview];
-    
     userPicture = [UIButton buttonWithType:UIButtonTypeCustom];
     [userPicture setFrame:rect(CGRectMake(self.view.frame.size.width/2 - 50, 40, 100, 100), adaptWidth)];
     [userPicture setBackgroundColor:[UIColor clearColor]];
@@ -114,7 +96,43 @@
     [userPicture addTarget:self action:@selector(pressUserPicture:) forControlEvents:UIControlEventTouchUpInside];
     userPicture.layer.masksToBounds = YES;
     userPicture.layer.cornerRadius = userPicture.frame.size.width/2;
-    [self.view addSubview:userPicture];
+    [self.contentView addSubview:userPicture];
+    
+    _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, controlYLength(userPicture) + 35, self.view.frame.size.width, self.view.frame.size.height - 45 - controlYLength(userPicture))];
+    [_scrollView setBackgroundColor:color(clearColor)];
+    [_scrollView setShowsHorizontalScrollIndicator:NO];
+    [_scrollView setShowsVerticalScrollIndicator:NO];
+    [_scrollView setPagingEnabled:YES];
+    [_scrollView setDelegate:self];
+    [_scrollView setBounces:NO];
+    [self.contentView addSubview:_scrollView];
+    
+    [_scrollView setContentSize:CGSizeMake(_scrollView.frame.size.width * 3, _scrollView.frame.size.height)];
+    for (int i = 0; i<3; i++) {
+        switch (i) {
+            case 0:{
+                UIView *subView = [self createRegisterView1];
+                subView.tag = 300 + i;
+                subView.frame = CGRectMake(_scrollView.frame.size.width * i, 0, subView.frame.size.width, subView.frame.size.height);
+                [_scrollView addSubview:subView];
+                break;
+            }case 1:{
+                UIView *subView = [self createRegisterView2];
+                subView.tag = 300 + i;
+                subView.frame = CGRectMake(_scrollView.frame.size.width * i, 0, subView.frame.size.width, subView.frame.size.height);
+                [_scrollView addSubview:subView];
+                break;
+            }case 2:{
+                UIView *subView = [self createRegisterView3];
+                subView.tag = 300 + i;
+                subView.frame = CGRectMake(_scrollView.frame.size.width * i, 0, subView.frame.size.width, subView.frame.size.height);
+                [_scrollView addSubview:subView];
+                break;
+            }
+            default:
+                break;
+        }
+    }
     
     UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [nextButton setTag:103];
@@ -127,10 +145,43 @@
     [nextButton setImage:imageNameAndType(@"register_next_press", @"png") forState:UIControlStateHighlighted];
     [nextButton setImage:imageNameAndType(@"register_next_press", @"png") forState:UIControlStateDisabled];
     [nextButton addTarget:self action:@selector(pressNextButton:) forControlEvents:UIControlEventTouchUpInside];
-    [self.view addSubview:nextButton];
+    [self.contentView addSubview:nextButton];
 }
 
-- (UIView*)createRegisterView
+- (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
+{
+    [self scrollViewDidEndScroll:scrollView];
+}
+
+- (void)scrollViewDidEndScrollingAnimation:(UIScrollView *)scrollView
+{
+    [self scrollViewDidEndScroll:scrollView];
+}
+
+- (void)scrollViewDidEndScroll:(UIScrollView*)scrollView
+{
+    UIButton *button = (UIButton*)[self.contentView viewWithTag:103];
+    
+    NSInteger currentViewTag = scrollView.contentOffset.x / scrollView.frame.size.width + 300;
+    currentSubview = [_scrollView viewWithTag:currentViewTag];
+    NSLog(@"tag = %d",currentSubview.tag);
+    
+    if (scrollView.contentOffset.x >= scrollView.contentSize.width - scrollView.frame.size.width) {
+        if (button) {
+            [button setTitle:@"进入应用" forState:UIControlStateNormal];
+            [button setImage:nil forState:UIControlStateNormal];
+            [button setImage:nil forState:UIControlStateHighlighted];
+            [button setImage:nil forState:UIControlStateDisabled];
+        }
+    }else {
+        [button setTitle:nil forState:UIControlStateNormal];
+        [button setImage:imageNameAndType(@"register_next_normal", @"png") forState:UIControlStateNormal];
+        [button setImage:imageNameAndType(@"register_next_press", @"png") forState:UIControlStateHighlighted];
+        [button setImage:imageNameAndType(@"register_next_press", @"png") forState:UIControlStateDisabled];
+    }
+}
+
+- (UIView*)createRegisterView1
 {
     UIView *subview = [[UIView alloc]initWithFrame:[self frameWithRect:CGRectMake(0, 165, 320, 45 * 4 + 4) adaptWidthOrHeight:adaptWidth]];
     [subview setBackgroundColor:[UIColor clearColor]];
@@ -211,7 +262,7 @@
     return subview;
 }
 
-- (UIView*)createRegisterDetailView
+- (UIView*)createRegisterView2
 {
     UIView *subview = [[UIView alloc]initWithFrame:[self frameWithRect:CGRectMake(0, 165, 320, 45 * 4 + 4) adaptWidthOrHeight:adaptWidth]];
     [subview setBackgroundColor:[UIColor clearColor]];
@@ -253,14 +304,46 @@
     [currentCompany setDelegate:self];
     [subview addSubview:currentCompany];
     
-    goalCompany = [[UITextField alloc]initWithFrame:CGRectMake(currentCompany.frame.origin.x, currentCompany.frame.origin.y + currentCompany.frame.size.height + 1, currentCompany.frame.size.width, currentCompany.frame.size.height)];
+    
+    
+    return subview;
+}
+
+- (UIView*)createRegisterView3
+{
+    UIView *subview = [[UIView alloc]initWithFrame:[self frameWithRect:CGRectMake(0, 165, 320, 45 * 2+ 4 + 20 + 45) adaptWidthOrHeight:adaptWidth]];
+    [subview setBackgroundColor:[UIColor clearColor]];
+    subview.tag = 103;
+    
+    for (int i = 0; i<6; i++) {
+        NSInteger x = i%3;
+        NSInteger y = i/3;
+        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, (subview.frame.size.width  - 20)/3, 45)];
+        [imageView setCenter:CGPointMake(subview.frame.size.width/6 + (subview.frame.size.width/3) * x, (subview.frame.size.height - 20 - 45)/4 + ((subview.frame.size.height - 20 - 45)/2) * y)];
+        [imageView setImage:imageNameAndType(@"register_item_select", nil)];
+        [imageView setHighlightedImage:imageNameAndType(@"register_item_normal", nil)];
+        [imageView setTag:400 + i];
+        [subview addSubview:imageView];
+        
+        UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+        [button setFrame:imageView.frame];
+        button.tag = 300 + i;
+        [button.titleLabel setFont:[UIFont systemFontOfSize:15]];
+        [button setBackgroundColor:color(clearColor)];
+        [button setTitleColor:color(blackColor) forState:UIControlStateNormal];
+        [button addTarget:self action:@selector(selectGoalJob:) forControlEvents:UIControlEventTouchUpInside];
+        [button setTitle:[_dataSource objectAtIndex:i] forState:UIControlStateNormal];
+        [subview addSubview:button];
+    }
+    
+    goalCompany = [[UITextField alloc]initWithFrame:CGRectMake(0, subview.frame.size.height - 45, self.view.frame.size.width, 45)];
     [goalCompany setBackgroundColor:[UIColor clearColor]];
     [goalCompany setTag:206];
     [goalCompany setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
     [goalCompany setBackground:imageNameAndType(@"register_textback", @"png")];
     UIButton *goalCompanyLeft = [UIButton buttonWithType:UIButtonTypeCustom];
     [goalCompanyLeft setBackgroundColor:[UIColor clearColor]];
-    [goalCompanyLeft setFrame:CGRectMake(0, 0, goalCompany.frame.size.width/4, goalCompany.frame.size.height)];
+    [goalCompanyLeft setFrame:CGRectMake(0, 0, goalCompany.frame.size.width/4 + 15, goalCompany.frame.size.height)];
     [goalCompanyLeft setTitle:@"我的职位期望" forState:UIControlStateNormal];
     [goalCompanyLeft.titleLabel setFont:[UIFont systemFontOfSize:13]];
     [goalCompanyLeft addTarget:self action:@selector(clearKeyBoard) forControlEvents:UIControlEventTouchUpInside];
@@ -268,6 +351,7 @@
     goalCompanyLeft.titleLabel.adjustsLetterSpacingToFitWidth = YES;
     goalCompanyLeft.titleLabel.baselineAdjustment = UIBaselineAdjustmentNone;
     goalCompanyLeft.titleLabel.minimumScaleFactor = 0.5;
+    [goalCompanyLeft setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
     [goalCompanyLeft setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [goalCompany setLeftView:goalCompanyLeft];
     [goalCompany setLeftViewMode:UITextFieldViewModeAlways];
@@ -276,6 +360,30 @@
     [subview addSubview:goalCompany];
     
     return subview;
+}
+
+- (void)selectGoalJob:(UIButton*)sender
+{
+    if (![self clearKeyBoard]) {
+        NSInteger index = sender.tag - 300;
+        UIImageView *imageView = (UIImageView*)[currentSubview viewWithTag:sender.tag + 100];
+        imageView.highlighted = imageView.highlighted?NO:YES;
+        NSObject *object = [_dataSource objectAtIndex:index];
+        
+        if (imageView.highlighted) {
+            if (![_selectDataSource containsObject:object]) {
+                [sender setTitleColor:color(whiteColor) forState:UIControlStateNormal];
+                [_selectDataSource addObject:[_dataSource objectAtIndex:index]];
+            } 
+        }else{
+            if ([_selectDataSource containsObject:object]){
+                [sender setTitleColor:color(blackColor) forState:UIControlStateNormal];
+                [_selectDataSource removeObject:object];
+            }
+        }
+    }
+    //NSString *goalText = [_selectDataSource componentsJoinedByString:@","];
+    //[goalCompany setText:goalText];
 }
 
 - (void)viewDidLoad
@@ -290,7 +398,7 @@
     
     if (keyBoard) {
         CGRect frame = keyBoard.frame;
-        CGFloat changeY = controlYLength(textField) + currentSubview.frame.origin.y + 1 - (self.view.frame.size.height - frame.size.height);
+        CGFloat changeY = _scrollView.frame.origin.y + controlYLength(textField) + 1 - (self.view.frame.size.height - frame.size.height);
         changeY = changeY >= 0?changeY:0;
         [UIView animateWithDuration:0.35f
                          animations:^{
@@ -307,12 +415,12 @@
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
     if (textField.tag >= 200 && textField.tag <203) {
-        UIControl *control = (UIControl*)[_detailView viewWithTag:textField.tag + 1];
+        UIControl *control = (UIControl*)[_scrollView viewWithTag:textField.tag + 1];
         if ([control canBecomeFirstResponder]) {
             [control becomeFirstResponder];
         }
     }else if (textField.tag >= 204 && textField.tag < 206){
-        UIControl *control = (UIControl*)[_detailView viewWithTag:textField.tag + 1];
+        UIControl *control = (UIControl*)[_scrollView viewWithTag:textField.tag + 1];
         if ([control canBecomeFirstResponder]) {
             [control becomeFirstResponder];
         }
@@ -415,8 +523,8 @@
         responder = goalCompany;
     }
     if (responder) {
-        if (controlYLength(responder) + currentSubview.frame.origin.y + 1.0f> self.view.frame.size.height - frame.size.height) {
-            CGFloat changeY = controlYLength(responder) + currentSubview.frame.origin.y + 1 - (self.view.frame.size.height - frame.size.height);
+        if (_scrollView.frame.origin.y + controlYLength(responder) + 1.0f> self.view.frame.size.height - frame.size.height) {
+            CGFloat changeY = _scrollView.frame.origin.y + controlYLength(responder) + 1 - (self.view.frame.size.height - frame.size.height);
             changeY = changeY >= 0?changeY:0;
             [UIView animateWithDuration:duration
                              animations:^{

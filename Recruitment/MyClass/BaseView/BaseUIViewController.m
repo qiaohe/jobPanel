@@ -282,9 +282,9 @@
 - (void)popViewControllerTransitionType:(TransitionType)_transitionType completionHandler:(void (^) (void))_compleHandler
 {
     if (self.navigationController) {
-        [self.navigationController popViewControllerAnimated:NO];
-        CATransition *transition = [Utils getAnimation:_transitionType subType:DirectionLeft];
-        [self.navigationController.view.layer addAnimation:transition forKey:@"viewtransition"];
+        [self.navigationController popViewControllerAnimated:YES];
+        //CATransition *transition = [Utils getAnimation:_transitionType subType:DirectionLeft];
+        //[self.navigationController.view.layer addAnimation:transition forKey:@"viewtransition"];
         [self performSelector:@selector(completionHandler:) withObject:_compleHandler afterDelay:transitionDuration];
     }
 }
@@ -323,7 +323,6 @@
 
 - (void)addSubview:(UIView *)view
 {
-    NSLog(@"view x = %f,y = %f",controlXLength(view),controlYLength(view));
     [super addSubview:view];
     if (!_largeHeight ) {
         _largeHeight = self;
@@ -341,8 +340,6 @@
 {
     [subview removeFromSuperview];
     [self resetContentSize];
-    
-    NSLog(@"x = %f,y = %f",self.contentSize.width,self.contentSize.height);
 }
 
 - (void)resetContentSize
@@ -366,9 +363,7 @@
     NSArray *array = [self.subviews sortedArrayUsingComparator:cmptr];
     
     _largeWidth = [array lastObject];
-    
-    NSLog(@"view width = %f,height = %f",_largeWidth.frame.size.width,_largeWidth.frame.size.height);
-    
+        
     CGFloat contentWidth = controlXLength(_largeWidth) > self.frame.size.width?controlXLength(_largeWidth) + 10:self.frame.size.width;
 
     [self setContentSize:CGSizeMake(contentWidth,self.contentSize.height)];

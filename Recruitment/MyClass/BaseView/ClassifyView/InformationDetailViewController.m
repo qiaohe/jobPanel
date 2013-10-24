@@ -34,7 +34,7 @@
 
 - (void)setSubviewFrame
 {
-    [self setBackGroundImage:imageNameAndType(@"subview_backimage", @"png")];
+    [self setBackGroundImage:imageNameAndType(@"information_backimage", @"png")];
     [self setTopBarBackGroundImage:imageNameAndType(@"topImage", @"png")];
     [self setTitle:@"公司详情"];
     
