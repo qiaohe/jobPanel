@@ -227,7 +227,7 @@
     [_detailLabel setText:@"Jason Singer"];
     [_backGroundImage addSubview:_detailLabel];
     
-    _locationImage = [[UIImageView alloc]initWithFrame:CGRectMake(_titleLabel.frame.origin.x, controlYLength(_detailLabel) + 8.5, _detailLabel.frame.size.height, _detailLabel.frame.size.height)];
+    _locationImage = [[UIImageView alloc]initWithFrame:CGRectMake(_titleLabel.frame.origin.x, controlYLength(_detailLabel) + 8.5, 25, 20)];
     [_locationImage setBackgroundColor:color(clearColor)];
     [_locationImage setImage:imageNameAndType(@"resume_location", @"png")];
     [_backGroundImage addSubview:_locationImage];

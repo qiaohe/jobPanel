@@ -8,7 +8,7 @@
 
 #import "BaseUIViewController.h"
 
-@interface HomeViewController : BaseUIViewController
+@interface HomeViewController : BaseUIViewController<UIGestureRecognizerDelegate>
 
 
 

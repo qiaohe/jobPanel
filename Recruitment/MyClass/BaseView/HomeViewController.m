@@ -36,12 +36,12 @@
 
 - (void)pressBottomLeftView:(UIButton*)sender
 {
-    [[Model shareModel] showPromptText:@"prompt" model:YES];
+    //[[Model shareModel] showPromptText:@"prompt" model:YES];
 }
 
 - (void)pressBottomRightView:(UIButton*)sender
 {
-    [self jumpToClassifyView];
+    //[self jumpToClassifyView];
 }
 
 - (void)pressPromptButton:(UIButton*)sender
@@ -50,37 +50,102 @@
     [self.navigationController pushViewController:resumeTraceView animated:YES];
 }
 
+- (void)panning:(UISwipeGestureRecognizer*)gestureRecognizer
+{
+    ClassifyViewController *viewController = [[ClassifyViewController alloc]init];
+    Direction direction;
+    switch (gestureRecognizer.direction) {
+        case UISwipeGestureRecognizerDirectionUp:{
+            direction = DirectionTop;
+            break;
+        }case UISwipeGestureRecognizerDirectionDown:{
+            direction = DirectionBottom;
+            break;
+        }case UISwipeGestureRecognizerDirectionLeft:{
+            direction = DirectionRight;
+            break;
+        }case UISwipeGestureRecognizerDirectionRight:{
+            direction = DirectionLeft;
+            break;
+        }
+        default:
+            direction = DirectionRight;
+            break;
+    }
+    [Model shareModel].mainView = viewController;
+    [self pushViewController:viewController transitionType:TransitionMoveIn Direction:direction completionHandler:nil];
+}
+
 - (void)setViewFrame
 {
     [self setBackGroundImage:imageNameAndType(@"home_blackback", @"png")];
-    UIImageView *topImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height*5/7)];
+    UIImageView *topImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0,
+                                                                             0,
+                                                                             self.view.frame.size.width,
+                                                                             self.view.frame.size.height*5/7)];
     [topImageView setBackgroundColor:[UIColor clearColor]];
     [topImageView setImage:imageNameAndType(@"home_backimage", @"png")];
     [self.view addSubview:topImageView];
     
     UIButton *bottomLeftView = [UIButton buttonWithType:UIButtonTypeCustom];
-    [bottomLeftView setFrame:CGRectMake(1.50f, self.view.frame.size.height*5/7, topImageView.frame.size.width/2 - 2.25f, self.view.frame.size.height - topImageView.frame.size.height )];
+    [bottomLeftView setFrame:CGRectMake(1.50f,
+                                        self.view.frame.size.height*5/7,
+                                        topImageView.frame.size.width/2 - 2.25f,
+                                        self.view.frame.size.height - topImageView.frame.size.height )];
     [bottomLeftView setBackgroundColor:[UIColor clearColor]];
-    [bottomLeftView addTarget:self action:@selector(pressBottomLeftView:) forControlEvents:UIControlEventTouchUpInside];
-    [bottomLeftView setImage:imageNameAndType(@"home_item1", @"png") forState:UIControlStateNormal];
-    [bottomLeftView setImage:imageNameAndType(@"home_item1", @"png") forState:UIControlStateDisabled];
+    [bottomLeftView addTarget:self
+                       action:@selector(pressBottomLeftView:)
+             forControlEvents:UIControlEventTouchUpInside];
+    [bottomLeftView setImage:imageNameAndType(@"home_item1", @"png")
+                    forState:UIControlStateNormal];
+    [bottomLeftView setImage:imageNameAndType(@"home_item1", @"png")
+                    forState:UIControlStateDisabled];
     [self.view addSubview:bottomLeftView];
     
     UIButton *bottomRightView = [UIButton buttonWithType:UIButtonTypeCustom];
-    [bottomRightView setFrame:CGRectMake(self.view.frame.size.width/2 + 0.75f, bottomLeftView.frame.origin.y, bottomLeftView.frame.size.width, bottomLeftView.frame.size.height)];
+    [bottomRightView setFrame:CGRectMake(self.view.frame.size.width/2 + 0.75f,
+                                         bottomLeftView.frame.origin.y,
+                                         bottomLeftView.frame.size.width,
+                                         bottomLeftView.frame.size.height)];
     [bottomRightView setBackgroundColor:[UIColor clearColor]];
-    [bottomRightView addTarget:self action:@selector(pressBottomRightView:) forControlEvents:UIControlEventTouchUpInside];
-    [bottomRightView setImage:imageNameAndType(@"home_item2", @"png") forState:UIControlStateNormal];
-    [bottomRightView setImage:imageNameAndType(@"home_item2", @"png") forState:UIControlStateDisabled];
+    [bottomRightView addTarget:self action:@selector(pressBottomRightView:)
+              forControlEvents:UIControlEventTouchUpInside];
+    [bottomRightView setImage:imageNameAndType(@"home_item2", @"png")
+                     forState:UIControlStateNormal];
+    [bottomRightView setImage:imageNameAndType(@"home_item2", @"png")
+                     forState:UIControlStateDisabled];
     [self.view addSubview:bottomRightView];
     
     UIButton *promptButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [promptButton setBackgroundColor:color(clearColor)];
-    [promptButton setBackgroundImage:imageNameAndType(@"home_prompt", @"png") forState:UIControlStateNormal];
-    [promptButton setTitle:@"3" forState:UIControlStateNormal];
+    [promptButton setBackgroundImage:imageNameAndType(@"home_prompt", @"png")
+                            forState:UIControlStateNormal];
+    [promptButton setTitle:@"3"
+                  forState:UIControlStateNormal];
     [promptButton setFrame:CGRectMake(bottomRightView.frame.size.width - 5 - 35, 0 + 30, 35, 35)];
-    [promptButton addTarget:self action:@selector(pressPromptButton:) forControlEvents:UIControlEventTouchUpInside];
+    [promptButton addTarget:self
+                     action:@selector(pressPromptButton:)
+           forControlEvents:UIControlEventTouchUpInside];
     [bottomRightView addSubview:promptButton];
+    
+    UISwipeGestureRecognizer *upSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self
+                                                                                              action:@selector(panning:)];
+    [upSwipeGestureRecognizer setDirection:UISwipeGestureRecognizerDirectionUp];
+    [upSwipeGestureRecognizer setDelegate:self];
+    
+    UISwipeGestureRecognizer *downSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self
+                                                                                                  action:@selector(panning:)];
+    [downSwipeGestureRecognizer setDirection:UISwipeGestureRecognizerDirectionDown];
+    [downSwipeGestureRecognizer setDelegate:self];
+    
+    UISwipeGestureRecognizer *leftSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self
+                                                                                                  action:@selector(panning:)];
+    [leftSwipeGestureRecognizer setDirection:UISwipeGestureRecognizerDirectionLeft];
+    [leftSwipeGestureRecognizer setDelegate:self];
+    
+    [self.view addGestureRecognizer:upSwipeGestureRecognizer];
+    [self.view addGestureRecognizer:downSwipeGestureRecognizer];
+    [self.view addGestureRecognizer:leftSwipeGestureRecognizer];
 }
 
 - (void)viewDidLoad

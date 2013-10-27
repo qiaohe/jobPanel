@@ -69,7 +69,8 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    InformationDetailViewController *informationDetail = [[InformationDetailViewController alloc]init];
+    CompanyDetail *information = [_dataSource objectAtIndex:indexPath.row];
+    InformationDetailViewController *informationDetail = [[InformationDetailViewController alloc]initWithObject:information];
     [self.navigationController pushViewController:informationDetail animated:YES];
 }
 

@@ -7,10 +7,14 @@
 //
 
 #import "MyGrowingViewController.h"
+#import "CustomLongPressGestureRecognizer.h"
+#import "CustomAlertView.h"
 #import "MyGrowing.h"
 #import "CustomButton.h"
 
 @interface MyGrowingViewController ()
+
+@property (assign, nonatomic) BOOL          alertShow;
 
 @end
 
@@ -34,7 +38,9 @@
 {
     self = [super init];
     if (self) {
-        subDataSource = [NSMutableDictionary dictionaryWithDictionary:[self getGrowingDataFromArray:[MyGrowing getMyGrowsWithNum:14]]];
+        _alertShow = NO;
+        
+        subDataSource = [NSMutableDictionary dictionaryWithDictionary:[self getGrowingDataFromArray:[MyGrowing getMyGrowsWithNum:12]]];
         
         [self setSubviewFrame];
     }
@@ -65,6 +71,40 @@
         GrowingDetailViewController *growingDetailView = [[GrowingDetailViewController alloc]initWithGrowDetail:growDetail];
         growingDetailView.delegate = self;
         [self.navigationController pushViewController:growingDetailView animated:YES];
+    }
+}
+
+- (void)longPress:(CustomLongPressGestureRecognizer*)longPress
+{
+    if (!_alertShow) {
+        _alertShow = YES;
+        CustomAlertView *alertView = [[CustomAlertView alloc]initWithTitle:nil message:@"删除内容?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        [alertView setTag:102];
+        [alertView setIndexPath:longPress.indexPath];
+        [alertView show];
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    _alertShow = NO;
+    if (alertView.tag == 102) {
+        switch (buttonIndex) {
+            case 1:{
+                CustomAlertView *customAlert = (CustomAlertView*)alertView;
+                NSMutableArray *array = [subDataSource objectForKey:[dataSource objectAtIndex:customAlert.indexPath.section]];
+                if ([array count] > customAlert.indexPath.row) {
+                    [array removeObjectAtIndex:customAlert.indexPath.row];
+                }
+                if ([array count] == 0) {
+                    [dataSource removeObjectAtIndex:customAlert.indexPath.section];
+                }
+                [theTableView reloadData];
+                break;
+            }
+            default:
+                break;
+        }
     }
 }
 
@@ -108,11 +148,21 @@
     }
     NSArray *array = [subDataSource objectForKey:[dataSource objectAtIndex:indexPath.section]];
     [cell createSubviewWithParams:array indexPath:indexPath];
-    UIButton *button1 = (UIButton*)cell.cellItem1;
+    CustomButton *button1 = (CustomButton*)cell.cellItem1;
     [button1 addTarget:self action:@selector(pressCellItem:) forControlEvents:UIControlEventTouchUpInside];
+    CustomLongPressGestureRecognizer *longPress1 = [[CustomLongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPress:)];
+    [longPress1 setMinimumPressDuration:1.0f];
+    [longPress1 setDelegate:self];
+    [longPress1 setIndexPath:button1.indexPath];
+    [button1 addGestureRecognizer:longPress1];
     if (cell.cellItem2) {
-        UIButton *button2 = (UIButton*)cell.cellItem2;
+        CustomButton *button2 = (CustomButton*)cell.cellItem2;
         [button2 addTarget:self action:@selector(pressCellItem:) forControlEvents:UIControlEventTouchUpInside];
+        CustomLongPressGestureRecognizer *longPress2 = [[CustomLongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPress:)];
+        [longPress2 setMinimumPressDuration:1.0f];
+        [longPress2 setDelegate:self];
+        [longPress2 setIndexPath:button2.indexPath];
+        [button2 addGestureRecognizer:longPress2];
     }
     
     return cell;
@@ -336,6 +386,12 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[Model shareModel] showPromptText:@"长按删除成长内容" model:YES];
 }
 
 - (BOOL)clearKeyBoard

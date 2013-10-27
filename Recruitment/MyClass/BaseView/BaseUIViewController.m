@@ -279,6 +279,17 @@
     }
 }
 
+- (void)pushViewController:(BaseUIViewController*)_viewController transitionType:(TransitionType)_transitionType Direction:(Direction)_direction completionHandler:(void (^) (void))_compleHandler
+{
+    if (self.navigationController) {
+        [self.navigationController pushViewController:_viewController animated:NO];
+        CATransition *transition = [Utils getAnimation:_transitionType subType:_direction];
+        [self.navigationController.view.layer addAnimation:transition forKey:@"viewtransition"];
+        [self performSelector:@selector(completionHandler:) withObject:_compleHandler afterDelay:transitionDuration];
+    }
+}
+
+
 - (void)popViewControllerTransitionType:(TransitionType)_transitionType completionHandler:(void (^) (void))_compleHandler
 {
     if (self.navigationController) {

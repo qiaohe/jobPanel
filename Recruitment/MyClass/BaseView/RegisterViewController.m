@@ -51,6 +51,7 @@
 
 - (void)pressNextButton:(UIButton*)sender
 {
+    sender.enabled = NO;
     if (currentSubview.tag != 302) {
         [_scrollView setContentOffset:CGPointMake(_scrollView.contentOffset.x + _scrollView.frame.size.width, _scrollView.contentOffset.y) animated:YES];
     }else {
@@ -179,6 +180,7 @@
         [button setImage:imageNameAndType(@"register_next_press", @"png") forState:UIControlStateHighlighted];
         [button setImage:imageNameAndType(@"register_next_press", @"png") forState:UIControlStateDisabled];
     }
+    button.enabled = YES;
 }
 
 - (UIView*)createRegisterView1
@@ -201,7 +203,7 @@
     [pictureLeft setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [userName setLeftView:pictureLeft];
     [userName setLeftViewMode:UITextFieldViewModeAlways];
-    [userName setReturnKeyType:UIReturnKeyDone];
+    [userName setReturnKeyType:UIReturnKeyNext];
     [userName setDelegate:self];
     [subview addSubview:userName];
     
@@ -219,7 +221,7 @@
     [phoneNumLeft setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [phoneNum setLeftView:phoneNumLeft];
     [phoneNum setLeftViewMode:UITextFieldViewModeAlways];
-    [phoneNum setReturnKeyType:UIReturnKeyDone];
+    [phoneNum setReturnKeyType:UIReturnKeyNext];
     [phoneNum setDelegate:self];
     [subview addSubview:phoneNum];
     
@@ -237,7 +239,7 @@
     [emailLeft setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [email setLeftView:emailLeft];
     [email setLeftViewMode:UITextFieldViewModeAlways];
-    [email setReturnKeyType:UIReturnKeyDone];
+    [email setReturnKeyType:UIReturnKeyNext];
     [email setDelegate:self];
     [subview addSubview:email];
     
@@ -282,7 +284,7 @@
     [currentPositionLeft setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [currentPosition setLeftView:currentPositionLeft];
     [currentPosition setLeftViewMode:UITextFieldViewModeAlways];
-    [currentPosition setReturnKeyType:UIReturnKeyDone];
+    [currentPosition setReturnKeyType:UIReturnKeyNext];
     [currentPosition setDelegate:self];
     [subview addSubview:currentPosition];
     
@@ -419,7 +421,7 @@
         if ([control canBecomeFirstResponder]) {
             [control becomeFirstResponder];
         }
-    }else if (textField.tag >= 204 && textField.tag < 206){
+    }else if (textField.tag >= 204 && textField.tag < 205){
         UIControl *control = (UIControl*)[_scrollView viewWithTag:textField.tag + 1];
         if ([control canBecomeFirstResponder]) {
             [control becomeFirstResponder];

@@ -24,7 +24,7 @@
 #define         MyGrowingHeaderViewHeight               35.0f
 #define         MyGrowingCellHeight                     appFrame.size.width/2
 
-@interface MyGrowingViewController : BaseUIViewController<UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,UITextFieldDelegate,GrowingDetailDelegate>
+@interface MyGrowingViewController : BaseUIViewController<UITableViewDataSource,UITableViewDelegate,UIScrollViewDelegate,UITextFieldDelegate,GrowingDetailDelegate,UIGestureRecognizerDelegate,UIAlertViewDelegate>
 
 @property (strong, nonatomic) UITextField           *searchBar;
 @property (strong, nonatomic) UITableView           *theTableView;

@@ -9,7 +9,7 @@
 #import "InformationViewController.h"
 #import "ContactsStatusViewController.h"
 #import "InformationDetailViewController.h"
-#import "JobInformation.h"
+#import "companyDetail.h"
 
 static      NSMutableArray          *cellSource;
 
@@ -34,7 +34,7 @@ static      NSMutableArray          *cellSource;
 {
     self = [super init];
     if (self) {
-        cellSource = [NSMutableArray arrayWithArray:[JobInformation getCommentDataWithNum:7]];
+        cellSource = [NSMutableArray arrayWithArray:[CompanyDetail getCommentDataWithNum:7]];
         self.dataSource = cellSource;
         _type = type;
         
@@ -47,7 +47,7 @@ static      NSMutableArray          *cellSource;
 {
     self = [super init];
     if (self) {
-        cellSource = [NSMutableArray arrayWithArray:[JobInformation getCommentDataWithNum:7]];
+        cellSource = [NSMutableArray arrayWithArray:[CompanyDetail getCommentDataWithNum:7]];
         self.dataSource = cellSource;
         
         [self setSubviewFrame];
@@ -131,8 +131,8 @@ static      NSMutableArray          *cellSource;
     if (cell == nil) {
         cell = [[ContactsStatusCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifierString];
     }
-    JobInformation *jobDetail = [_dataSource objectAtIndex:indexPath.row];
-    [cell.leftImage setImage:imageNameAndType(jobDetail.jobIcon, nil)];
+    CompanyDetail *jobDetail = [_dataSource objectAtIndex:indexPath.row];
+    [cell.leftImage setImage:imageNameAndType(jobDetail.companyLogo, nil)];
     NSString *text = [jobDetail.jobArray componentsJoinedByString:@"+"];
     text = jobDetail.title?[NSString stringWithFormat:@"%@:%@",jobDetail.title,text]:text;
     [cell.titleLabel setText:text];
@@ -146,7 +146,8 @@ static      NSMutableArray          *cellSource;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (![self clearKeyBoard]) {
-        InformationDetailViewController *informationDetail = [[InformationDetailViewController alloc]init];
+        CompanyDetail *information = [_dataSource objectAtIndex:indexPath.row];
+        InformationDetailViewController *informationDetail = [[InformationDetailViewController alloc]initWithObject:information];
         [self.navigationController pushViewController:informationDetail animated:YES];
     }
 }
@@ -169,7 +170,7 @@ static      NSMutableArray          *cellSource;
     if (![Utils textIsEmpty:_searchBar.text]) {
         NSMutableArray *tempArray = [NSMutableArray array];
         
-        for (JobInformation *information in cellSource) {
+        for (CompanyDetail *information in cellSource) {
             NSString *searchText = information.title?information.title:@"";
             searchText = [searchText stringByAppendingString:([information.jobArray componentsJoinedByString:@" "]?[information.jobArray componentsJoinedByString:@" "]:@"")];
             if ([[searchText uppercaseString] rangeOfString:[_searchBar.text uppercaseString]].length > 0) {
