@@ -49,6 +49,7 @@
 		CE166450180935DE00559CA6 /* RecommendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE16644F180935DE00559CA6 /* RecommendViewController.m */; };
 		CE166452180939BF00559CA6 /* topImage.png in Resources */ = {isa = PBXBuildFile; fileRef = CE166451180939BF00559CA6 /* topImage.png */; };
 		CE16645B1809462D00559CA6 /* CustomButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CE16645A1809462D00559CA6 /* CustomButton.m */; };
+		CE2D85E4181DEF3000A76CB3 /* RecommendJob.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2D85E3181DEF3000A76CB3 /* RecommendJob.m */; };
 		CE5A7971180E28DF00C9331B /* Model.m in Sources */ = {isa = PBXBuildFile; fileRef = CE5A7970180E28DF00C9331B /* Model.m */; };
 		CE5A7974180E290200C9331B /* Contacts.m in Sources */ = {isa = PBXBuildFile; fileRef = CE5A7973180E290200C9331B /* Contacts.m */; };
 		CE5A7977180E3CBD00C9331B /* InformationViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE5A7976180E3CBD00C9331B /* InformationViewController.m */; };
@@ -219,6 +220,8 @@
 		CE166451180939BF00559CA6 /* topImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topImage.png; sourceTree = "<group>"; };
 		CE1664591809462D00559CA6 /* CustomButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomButton.h; sourceTree = "<group>"; };
 		CE16645A1809462D00559CA6 /* CustomButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomButton.m; sourceTree = "<group>"; };
+		CE2D85E2181DEF3000A76CB3 /* RecommendJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecommendJob.h; sourceTree = "<group>"; };
+		CE2D85E3181DEF3000A76CB3 /* RecommendJob.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RecommendJob.m; sourceTree = "<group>"; };
 		CE5A796F180E28DF00C9331B /* Model.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Model.h; sourceTree = "<group>"; };
 		CE5A7970180E28DF00C9331B /* Model.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Model.m; sourceTree = "<group>"; };
 		CE5A7972180E290200C9331B /* Contacts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Contacts.h; sourceTree = "<group>"; };
@@ -481,6 +484,8 @@
 				CE725A48181D145900ADC7CB /* CustomLongPressGestureRecognizer.m */,
 				CE725A4A181D17B300ADC7CB /* CustomAlertView.h */,
 				CE725A4B181D17B400ADC7CB /* CustomAlertView.m */,
+				CE2D85E2181DEF3000A76CB3 /* RecommendJob.h */,
+				CE2D85E3181DEF3000A76CB3 /* RecommendJob.m */,
 			);
 			path = MyModel;
 			sourceTree = "<group>";
@@ -963,6 +968,7 @@
 				CEBA3917181A559B00BDC0A9 /* CompanyDetail.m in Sources */,
 				CE725A49181D145900ADC7CB /* CustomLongPressGestureRecognizer.m in Sources */,
 				CE725A4C181D17B400ADC7CB /* CustomAlertView.m in Sources */,
+				CE2D85E4181DEF3000A76CB3 /* RecommendJob.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

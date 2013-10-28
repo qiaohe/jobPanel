@@ -34,7 +34,7 @@
     if (self) {
         _type = type;
         _dataSource = [NSMutableArray array];
-        for (int i = 0; i<3; i++) {
+        for (int i = 0; i<8; i++) {
             MyResumeDetail *detail = [[MyResumeDetail alloc]init];
             [detail setTitle:@"resume_selectimage_normal"];
             [_dataSource addObject:detail];
@@ -211,20 +211,46 @@
     _leftButton.layer.cornerRadius = _leftButton.frame.size.width/2;
     [self.contentView addSubview:_leftButton];
     
+    NSInteger random = arc4random()%3;
+    
     _titleLabel =[[UITextField alloc]initWithFrame:CGRectMake(controlXLength(_leftButton) + 5, _leftButton.frame.origin.y, _backGroundImage.frame.size.width - controlXLength(_leftButton) * 2, _leftButton.frame.size.height/4)];
     [_titleLabel setBackgroundColor:color(clearColor)];
     [_titleLabel setEnabled:NO];
     [_titleLabel setDelegate:self];
     [_titleLabel setReturnKeyType:UIReturnKeyDone];
     [_titleLabel setFont:[UIFont systemFontOfSize:14]];
-    [_titleLabel setText:@"平面设计师"];
+    switch (random) {
+        case 0:
+            [_titleLabel setText:@"UI设计师"];
+            break;
+        case 1:
+            [_titleLabel setText:@"平面设计师"];
+            break;
+        case 2:
+            [_titleLabel setText:@"前端开发工程师"];
+            break;
+        default:
+            break;
+    }
     [_backGroundImage addSubview:_titleLabel];
     
     _detailLabel = [[UILabel alloc]initWithFrame:CGRectMake(_titleLabel.frame.origin.x, controlYLength(_titleLabel) + 2.50f, _titleLabel.frame.size.width, _titleLabel.frame.size.height*2/3)];
     [_detailLabel setBackgroundColor:color(clearColor)];
     [_detailLabel setFont:[UIFont systemFontOfSize:10]];
     [_detailLabel setTextColor:color(darkGrayColor)];
-    [_detailLabel setText:@"Jason Singer"];
+    switch (random) {
+        case 0:
+            [_detailLabel setText:@"郑爽"];
+            break;
+        case 1:
+            [_detailLabel setText:@"赵军"];
+            break;
+        case 2:
+            [_detailLabel setText:@"李杰"];
+            break;
+        default:
+            break;
+    }
     [_backGroundImage addSubview:_detailLabel];
     
     _locationImage = [[UIImageView alloc]initWithFrame:CGRectMake(_titleLabel.frame.origin.x, controlYLength(_detailLabel) + 8.5, 25, 20)];
@@ -234,7 +260,20 @@
     _locationLabel = [[UILabel alloc]initWithFrame:CGRectMake(controlXLength(_locationImage) + 5, _locationImage.frame.origin.y, _detailLabel.frame.size.width/2 - _locationImage.frame.size.width - 5, _locationImage.frame.size.height)];
     [_locationLabel setBackgroundColor:color(clearColor)];
     [_locationLabel setFont:[UIFont systemFontOfSize:11]];
-    [_locationLabel setText:@"普陀区"];
+    switch (random) {
+        case 0:
+            [_locationLabel setText:@"普陀区"];
+            break;
+        case 1:
+            [_locationLabel setText:@"浦东新区"];
+            break;
+        case 2:
+            [_locationLabel setText:@"海淀区"];
+            break;
+        default:
+            break;
+    }
+    
     [_backGroundImage addSubview:_locationLabel];
     
     _timeImage = [[UIImageView alloc]initWithFrame:CGRectMake(controlXLength(_locationLabel), _locationImage.frame.origin.y, _locationImage.frame.size.width, _locationImage.frame.size.height)];

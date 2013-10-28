@@ -222,6 +222,7 @@
     [phoneNum setLeftView:phoneNumLeft];
     [phoneNum setLeftViewMode:UITextFieldViewModeAlways];
     [phoneNum setReturnKeyType:UIReturnKeyNext];
+    [phoneNum setKeyboardType:UIKeyboardTypeNumbersAndPunctuation];
     [phoneNum setDelegate:self];
     [subview addSubview:phoneNum];
     
@@ -240,12 +241,14 @@
     [email setLeftView:emailLeft];
     [email setLeftViewMode:UITextFieldViewModeAlways];
     [email setReturnKeyType:UIReturnKeyNext];
+    [email setKeyboardType:UIKeyboardTypeEmailAddress];
     [email setDelegate:self];
     [subview addSubview:email];
     
     password = [[UITextField alloc]initWithFrame:CGRectMake(email.frame.origin.x, email.frame.origin.y + email.frame.size.height + 1, email.frame.size.width, email.frame.size.height)];
     [password setBackgroundColor:[UIColor clearColor]];
     [password setTag:203];
+    [password setSecureTextEntry:YES];
     [password setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
     [password setBackground:imageNameAndType(@"register_textback", @"png")];
     UIButton *passwordLeft = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -258,6 +261,7 @@
     [password setLeftView:passwordLeft];
     [password setLeftViewMode:UITextFieldViewModeAlways];
     [password setReturnKeyType:UIReturnKeyDone];
+    [password setKeyboardType:UIKeyboardTypeNamePhonePad];
     [password setDelegate:self];
     [subview addSubview:password];
     

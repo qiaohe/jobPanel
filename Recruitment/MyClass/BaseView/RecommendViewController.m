@@ -10,6 +10,7 @@
 #import "InformationViewController.h"
 #import "MyResumeViewController.h"
 #import "CustomButton.h"
+#import "RecommendJob.h"
 
 @interface RecommendViewCell ()
 
@@ -45,6 +46,33 @@
     [selectStatus setImage:imageNameAndType(@"recommend_item_normal", @"png")];
     [selectStatus setHighlightedImage:imageNameAndType(@"recommend_item_select", @"png")];
     [self.detailView addSubview:selectStatus];
+    
+    _leftImage = [[UIImageView alloc]initWithFrame:CGRectMake(controlXLength(selectStatus), 0, RecommendViewCellHeight, RecommendViewCellHeight)];
+    [_leftImage setBounds:CGRectMake(0, 0, _leftImage.frame.size.width * 0.7, _leftImage.frame.size.height * 0.7)];
+    [_leftImage setBackgroundColor:color(clearColor)];
+    [self.contentView addSubview:_leftImage];
+    
+    _titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(controlXLength(_leftImage), 10, appFrame.size.width - controlXLength(_leftImage) - 10, (RecommendViewCellHeight - 20)*2/3)];
+    [_titleLabel setBackgroundColor:color(clearColor)];
+    [_titleLabel setNumberOfLines:0];
+    [_titleLabel setLineBreakMode:NSLineBreakByWordWrapping];
+    [_titleLabel setFont:[UIFont boldSystemFontOfSize:14]];
+    [self.contentView addSubview:_titleLabel];
+    
+    _detailLabel = [[UILabel alloc]initWithFrame:CGRectMake(_titleLabel.frame.origin.x, controlYLength(_titleLabel), _titleLabel.frame.size.width, _titleLabel.frame.size.height)];
+    [_detailLabel setBackgroundColor:color(clearColor)];
+    [_detailLabel setFont:[UIFont boldSystemFontOfSize:13]];
+    [self.contentView addSubview:_detailLabel];
+    
+    UIImageView *locationLeftImage = [[UIImageView alloc]initWithFrame:CGRectMake(_titleLabel.frame.origin.x, controlYLength(_titleLabel), 15, 15)];
+    [locationLeftImage setImage:imageNameAndType(@"resume_location", @"png")];
+    [self.contentView addSubview:locationLeftImage];
+    
+    _locationLabel = [[UILabel alloc]initWithFrame:CGRectMake(controlXLength(locationLeftImage), controlYLength(_titleLabel), _titleLabel.frame.size.width - locationLeftImage.frame.size.width, _titleLabel.frame.size.height/2)];
+    [_locationLabel setBackgroundColor:color(clearColor)];
+    [_locationLabel setFont:[UIFont systemFontOfSize:11]];
+    [_locationLabel setTextColor:color(darkGrayColor)];
+    [self.contentView addSubview:_locationLabel];
     
     progressBar = [[UIImageView alloc]initWithFrame:CGRectMake(appFrame.size.width - 85 - 5, RecommendViewCellHeight - 15 - 5, 85, 15)];
     [progressBar setBackgroundColor:[UIColor clearColor]];
@@ -97,8 +125,7 @@
 {
     self = [super init];
     if (self) {
-        NSArray *array = @[@"classify_item1",@"classify_item2",@"classify_item3",@"classify_item1",@"classify_item2",@"classify_item3"];
-        self.dataSource = [NSMutableArray arrayWithArray:array];
+        self.dataSource = [NSMutableArray arrayWithArray:[RecommendJob getCommentDataWithNum:10]];
 
         [self setViewFrame];
     }
@@ -122,11 +149,30 @@
             [self.navigationController pushViewController:myResumeView animated:YES];
             break;
         }case 103:{
-            
+            UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:@"分享到" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"腾讯微博",@"新浪微博", nil];
+            [alertView setTag:301];
+            [alertView show];
             break;
         }
         default:
             break;
+    }
+}
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
+{
+    if (alertView.tag == 301) {
+        switch (buttonIndex) {
+            case 1:{
+                [[Model shareModel] showPromptText:@"分享到腾讯微博成功" model:YES];
+                break;
+            }case 2:{
+                [[Model shareModel] showPromptText:@"分享到新浪微博成功" model:YES];
+                break;
+            }
+            default:
+                break;
+        }
     }
 }
 
@@ -148,8 +194,14 @@
     if (cell == nil) {
         cell = [[RecommendViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifierStr];
     }
-    NSString *imageName = [dataSource objectAtIndex:indexPath.row];
-    [cell setBackgroundImage:imageNameAndType(imageName, @"png")];
+    RecommendJob *jobDetail = [dataSource objectAtIndex:indexPath.row];
+    [cell.leftImage setImage:imageNameAndType(jobDetail.companyLogo, nil)];
+    NSString *text = [jobDetail.jobArray componentsJoinedByString:@"+"];
+    text = jobDetail.title?[NSString stringWithFormat:@"%@:%@",jobDetail.title,text]:text;
+    [cell.titleLabel setText:text];
+    [cell.detailLabel setText:jobDetail.detail];
+    [cell.locationLabel setText:jobDetail.location];
+    [cell setBackgroundImage:imageNameAndType(@"information_backimage", nil)];
     
     return cell;
 }

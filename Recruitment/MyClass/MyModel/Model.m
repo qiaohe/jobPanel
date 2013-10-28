@@ -65,7 +65,7 @@ static      Model       *shareModel;
     }
     CGFloat height = [Utils heightForWidth:appFrame.size.width*2/3 - 10 text:text font:_tipView.titleLabel.font];
     _tipView.frame = CGRectMake(0, 0, appFrame.size.width*2/3, height + 10);
-    _tipView.center = CGPointMake(appFrame.size.width/2, appFrame.size.height/2);
+    _tipView.center = CGPointMake(appFrame.size.width/2, appFrame.size.height*2/3);
     [_tipView setTitle:text forState:UIControlStateNormal];
         
     if (_showCoverView) {
