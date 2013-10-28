@@ -95,7 +95,7 @@ static      NSMutableArray          *cellSource;
         [self setTitle:@"收藏职位"];
     }
     
-    _theTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, _searchBar?controlYLength(_searchBar):controlYLength(self.topBar), self.view.frame.size.width, self.view.frame.size.height - controlYLength(self.topBar))];
+    _theTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, _searchBar?controlYLength(_searchBar):controlYLength(self.topBar), self.view.frame.size.width, self.view.frame.size.height - (_searchBar?controlYLength(_searchBar):controlYLength(self.topBar)))];
     [_theTableView setBackgroundColor:color(whiteColor)];
     [_theTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [_theTableView setDelegate:self];
@@ -138,7 +138,7 @@ static      NSMutableArray          *cellSource;
     [cell.titleLabel setText:text];
     [cell.detailLabel setText:jobDetail.detail];
     [cell.locationLabel setText:jobDetail.location];
-    [cell setBackGroundImage:imageNameAndType(@"information_backimage", nil)];
+    [cell setBackGroundImage:imageNameAndType(@"information_textbackimage", nil)];
     
     return cell;
 }

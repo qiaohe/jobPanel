@@ -9,6 +9,9 @@
 #import "BaseUIViewController.h"
 
 #define             ContactsStatusCellHeight                75.0f
+#define             ContactsUnfoldCellHeight                200.0f
+
+@class Contacts;
 
 @interface ContactsStatusViewController : BaseUIViewController<UITextFieldDelegate,UITableViewDataSource,UITableViewDelegate>
 
@@ -18,7 +21,7 @@
 
 @end
 
-@interface ContactsStatusCell : UITableViewCell
+@interface ContactsStatusCell : UITableViewCell<BaseContentViewDelegate>
 
 @property (strong, nonatomic) UIImageView               *leftImage;
 @property (strong, nonatomic) UILabel                   *titleLabel;
@@ -27,6 +30,7 @@
 @property (strong, nonatomic) UIImageView               *rightImage;
 
 - (void)setBackGroundImage:(UIImage*)image;
+- (void)subjoinviewShow:(Contacts *)param;
 
 @end
 

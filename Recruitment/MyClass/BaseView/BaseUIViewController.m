@@ -289,6 +289,22 @@
     }
 }
 
+- (void)pushViewControllers:(NSArray*)viewControllers transitionType:(TransitionType)_transitionType completionHandler:(void (^) (void))_compleHandler
+{
+    for (UIViewController *_viewController in viewControllers) {
+        if (viewControllers.lastObject != _viewController) {
+            if (self.navigationController) {
+                [self.navigationController pushViewController:_viewController animated:NO];
+            }
+        }else{
+            [self.navigationController pushViewController:_viewController animated:NO];
+            CATransition *transition = [Utils getAnimation:_transitionType subType:DirectionRight];
+            [self.navigationController.view.layer addAnimation:transition forKey:@"viewtransition"];
+            [self performSelector:@selector(completionHandler:) withObject:_compleHandler afterDelay:transitionDuration];
+        }
+    }
+}
+
 
 - (void)popViewControllerTransitionType:(TransitionType)_transitionType completionHandler:(void (^) (void))_compleHandler
 {
@@ -332,6 +348,15 @@
 
 @implementation BaseContentView
 
+- (id)initWithFrame:(CGRect)frame
+{
+    self = [super initWithFrame:frame];
+    if (self) {
+        _baseRect = frame;
+    }
+    return self;
+}
+
 - (void)addSubview:(UIView *)view
 {
     [super addSubview:view];
@@ -353,6 +378,14 @@
     [self resetContentSize];
 }
 
+- (void)removeAllSubview
+{
+    for (UIView *subview in self.subviews) {
+        [subview removeFromSuperview];
+    }
+    [self resetContentSize];
+}
+
 - (void)resetContentSize
 {
     [self setXSize];
@@ -361,44 +394,52 @@
 
 - (void)setXSize
 {
-    NSComparator cmptr = ^(UIView *obj1, UIView *obj2){
-        if (controlXLength(obj1) >= controlXLength(obj2)) {
-            return (NSComparisonResult)NSOrderedDescending;
-        }
+    if ([self.subviews count] != 0) {
+        NSComparator cmptr = ^(UIView *obj1, UIView *obj2){
+            if (controlXLength(obj1) >= controlXLength(obj2)) {
+                return (NSComparisonResult)NSOrderedDescending;
+            }
+            
+            if (controlXLength(obj1) < controlXLength(obj2)) {
+                return (NSComparisonResult)NSOrderedAscending;
+            }
+            return (NSComparisonResult)NSOrderedSame;
+        };
+        NSArray *array = [self.subviews sortedArrayUsingComparator:cmptr];
         
-        if (controlXLength(obj1) < controlXLength(obj2)) {
-            return (NSComparisonResult)NSOrderedAscending;
-        }
-        return (NSComparisonResult)NSOrderedSame;
-    };
-    NSArray *array = [self.subviews sortedArrayUsingComparator:cmptr];
-    
-    _largeWidth = [array lastObject];
+        _largeWidth = [array lastObject];
         
-    CGFloat contentWidth = controlXLength(_largeWidth) > self.frame.size.width?controlXLength(_largeWidth) + 10:self.frame.size.width;
-
-    [self setContentSize:CGSizeMake(contentWidth,self.contentSize.height)];
+        CGFloat contentWidth = controlXLength(_largeWidth) > self.frame.size.width?controlXLength(_largeWidth) + 10:self.frame.size.width;
+        
+        [self setContentSize:CGSizeMake(contentWidth,self.contentSize.height)];
+    }else{
+        [self setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height)];
+    }
 }
 
 - (void)setYSize
 {
-    NSComparator cmptr = ^(UIView *obj1, UIView *obj2){
-        if (controlYLength(obj1) >= controlYLength(obj2)) {
-            return (NSComparisonResult)NSOrderedDescending;
-        }
+    if ([self.subviews count] != 0) {
+        NSComparator cmptr = ^(UIView *obj1, UIView *obj2){
+            if (controlYLength(obj1) >= controlYLength(obj2)) {
+                return (NSComparisonResult)NSOrderedDescending;
+            }
+            
+            if (controlYLength(obj1) < controlYLength(obj2)) {
+                return (NSComparisonResult)NSOrderedAscending;
+            }
+            return (NSComparisonResult)NSOrderedSame;
+        };
+        NSArray *array = [self.subviews sortedArrayUsingComparator:cmptr];
         
-        if (controlYLength(obj1) < controlYLength(obj2)) {
-            return (NSComparisonResult)NSOrderedAscending;
-        }
-        return (NSComparisonResult)NSOrderedSame;
-    };
-    NSArray *array = [self.subviews sortedArrayUsingComparator:cmptr];
-    
-    _largeHeight = [array lastObject];
-    
-    CGFloat contentHeight = controlYLength(_largeHeight) > self.frame.size.width?controlYLength(_largeHeight) + 40:self.frame.size.width;
-    
-    [self setContentSize:CGSizeMake(self.contentSize.width, contentHeight)];
+        _largeHeight = [array lastObject];
+        
+        CGFloat contentHeight = controlYLength(_largeHeight) > self.frame.size.width?controlYLength(_largeHeight) + 40:self.frame.size.width;
+        
+        [self setContentSize:CGSizeMake(self.contentSize.width, contentHeight)];
+    }else{
+        [self setContentSize:CGSizeMake(self.frame.size.width, self.frame.size.height)];
+    }
 }
 
 - (NSInteger)getXPageNum:(UIView*)view

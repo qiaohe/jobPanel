@@ -7,6 +7,7 @@
 //
 
 #import "Contacts.h"
+#import "MyGrowing.h"
 
 @implementation Contacts
 
@@ -40,6 +41,7 @@
             }
                 
         }
+        _myGrowings = [NSMutableArray arrayWithArray:[MyGrowing getMyGrowsWithNum:index]];
     }
     return self;
 }

@@ -132,15 +132,11 @@
     return self;
 }
 
-- (void)pressLeftButton:(CustomButton*)sender
-{
-    
-}
-
 - (void)pressBottomBarItem:(UIButton*)sender
 {
     switch (sender.tag) {
         case 101:{
+            [[Model shareModel] showPromptText:@"收藏成功" model:YES];
             InformationViewController *informationView = [[InformationViewController alloc]initWithType:Informationcollect];
             [self.navigationController pushViewController:informationView animated:YES];
             break;
@@ -201,7 +197,7 @@
     [cell.titleLabel setText:text];
     [cell.detailLabel setText:jobDetail.detail];
     [cell.locationLabel setText:jobDetail.location];
-    [cell setBackgroundImage:imageNameAndType(@"information_backimage", nil)];
+    [cell setBackgroundImage:imageNameAndType(@"information_textbackimage", nil)];
     
     return cell;
 }
@@ -291,6 +287,20 @@
 - (void)pressReturnButton:(UIButton*)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [NSTimer scheduledTimerWithTimeInterval:2.50f target:self selector:@selector(playImage:) userInfo:nil repeats:YES];
+}
+
+- (void)playImage:(NSTimer*)timer
+{
+    CGPoint point = CGPointMake(scrollView.contentOffset.x + scrollView.frame.size.width, scrollView.contentOffset.y);
+    if (point.x >= scrollView.contentSize.width) {
+        point.x = 0;
+    }
+    [scrollView setContentOffset:point animated:YES];
 }
 
 - (void)viewDidLoad

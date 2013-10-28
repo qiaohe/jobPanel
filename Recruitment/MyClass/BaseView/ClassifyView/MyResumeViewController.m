@@ -280,7 +280,7 @@
     [_timeImage setBackgroundColor:color(clearColor)];
     [_timeImage setImage:imageNameAndType(@"resume_time", @"png")];
     [_backGroundImage addSubview:_timeImage];
-    _timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(controlXLength(_timeImage) + 5, _locationLabel.frame.origin.y, _locationLabel.frame.size.width, _locationLabel.frame.size.height)];
+    _timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(controlXLength(_timeImage) + 5, _locationLabel.frame.origin.y, appFrame.size.width - controlXLength(_timeImage) - 10, _locationLabel.frame.size.height)];
     [_timeLabel setBackgroundColor:color(clearColor)];
     [_timeLabel setFont:[UIFont systemFontOfSize:11]];
     [_timeLabel setText:[Utils stringWithDate:[NSDate date] withFormat:@"yyyy/MM/dd"]];

@@ -11,6 +11,7 @@
 #import "InformationDetailViewController.h"
 #import "ContactsStatusViewController.h"
 #import "Contacts.h"
+#import "CompanyDetail.h"
 
 @interface ResumeTraceViewController ()
 
@@ -56,13 +57,13 @@
     if (cell == nil) {
         cell = [[ContactsStatusCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifierString];
     }
-    Contacts *contact = [_dataSource objectAtIndex:indexPath.row];
+    CompanyDetail *detail = [_dataSource objectAtIndex:indexPath.row];
     [cell setBackGroundImage:imageNameAndType(@"information_textbackimage", nil)];
-    [cell.leftImage setImage:imageNameAndType(contact.userPicture, @"png")];
-    NSString *text = [contact.jobArray componentsJoinedByString:@"+"];
-    text = contact.title?[NSString stringWithFormat:@"%@:%@",contact.title,text]:text;
+    [cell.leftImage setImage:imageNameAndType(detail.companyLogo, @"png")];
+    NSString *text = [detail.jobArray componentsJoinedByString:@"+"];
+    text = detail.title?[NSString stringWithFormat:@"%@:%@",detail.title,text]:text;
     [cell.titleLabel setText:text];
-    [cell.locationLabel setText:contact.location];
+    [cell.locationLabel setText:detail.location];
     
     return cell;
 }
@@ -205,13 +206,9 @@
             break;
     }
     [self.dataSource removeAllObjects];
-    for (int i = 0; i<itemNum; i++) {
-        NSInteger index = (arc4random() % 4) + 1;
-        NSString *imageName = [@"information_item" stringByAppendingFormat:@"%d",index];
-        Contacts *contact   = [[Contacts alloc]init];
-        contact.title       = imageName;
-        [_dataSource addObject:contact];
-    }
+    
+    [self.dataSource addObjectsFromArray:[CompanyDetail getCommentDataWithNum:itemNum]];
+    
     [_theTableView reloadData];
 }
 

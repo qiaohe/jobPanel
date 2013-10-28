@@ -32,5 +32,6 @@
 @property (strong, nonatomic) NSMutableArray        *dataSource;
 @property (strong, nonatomic) UITableView           *theTableView;
 @property (strong, nonatomic) UIScrollView          *scrollView;
+@property (strong, nonatomic) NSTimer               *timer;
 
 @end

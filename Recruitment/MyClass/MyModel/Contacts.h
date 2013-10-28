@@ -11,6 +11,7 @@
 @interface Contacts : NSObject
 
 @property (strong, nonatomic) NSMutableArray            *jobArray;
+@property (strong, nonatomic) NSMutableArray            *myGrowings;
 @property (strong, nonatomic) NSString                  *title;
 @property (strong, nonatomic) NSString                  *detail;
 @property (strong, nonatomic) NSString                  *userPicture;

@@ -70,7 +70,7 @@
                                        CGRectMake(0,
                                                   controlYLength(self.topBar),
                                                   self.contentView.frame.size.width,
-                                                  self.contentView.frame.size.width * 2/3)];
+                                                  self.contentView.frame.size.width * 3/5)];
     NSString *imageName = arc4random()%2 == 0?@"detail_item1":@"detail_item2";
     [companyDetailImage setImage:imageNameAndType(imageName, @"png")];
     [companyDetailImage setBackgroundColor:color(clearColor)];
@@ -118,9 +118,9 @@
     
     UILabel     *companyNameLabel = [[UILabel alloc]initWithFrame:
                                      CGRectMake(controlXLength(companyLogoImage) + 5,
-                                                companyLogoImage.frame.origin.y + 15,
+                                                companyLogoImage.frame.origin.y + 5,
                                                 self.contentView.frame.size.width - controlXLength(companyLogoImage) - 5,
-                                                (companyLogoImage.frame.size.height - 15)/3)];
+                                                (companyLogoImage.frame.size.height - 5)/3)];
     [companyNameLabel setBackgroundColor:color(clearColor)];
     [companyNameLabel setText:_companyDetail.title];
     [companyNameLabel setFont:[UIFont boldSystemFontOfSize:14]];
@@ -132,6 +132,12 @@
                                                   companyNameLabel.frame.size.width,
                                                   companyNameLabel.frame.size.height)];
     [companyDetailLabel setBackgroundColor:color(clearColor)];
+    [companyDetailLabel setNumberOfLines:0];
+    [companyDetailLabel setLineBreakMode:NSLineBreakByWordWrapping];
+    [companyDetailLabel setAdjustsFontSizeToFitWidth:YES];
+    [companyDetailLabel setAdjustsLetterSpacingToFitWidth:YES];
+    [companyDetailLabel setBaselineAdjustment:UIBaselineAdjustmentAlignBaselines];
+    [companyDetailLabel setMinimumScaleFactor:0.5];
     [companyDetailLabel setText:_companyDetail.companyDetail];
     [companyDetailLabel setFont:[UIFont systemFontOfSize:12]];
     [self.contentView addSubview:companyDetailLabel];

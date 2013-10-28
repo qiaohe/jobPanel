@@ -8,6 +8,7 @@
 
 #import "ContactsStatusViewController.h"
 #import "Contacts.h"
+#import "MyGrowing.h"
 
 static      NSMutableArray      *cellSource;
 
@@ -43,7 +44,7 @@ static      NSMutableArray      *cellSource;
 {
     Contacts *imageName = [_dataSource objectAtIndex:indexPath.row];
     if (imageName.isUnfold) {
-        return ContactsStatusCellHeight * 2;
+        return ContactsUnfoldCellHeight;
     }else
         return ContactsStatusCellHeight;
 }
@@ -67,7 +68,8 @@ static      NSMutableArray      *cellSource;
     text = contact.title?[NSString stringWithFormat:@"%@:%@",contact.title,text]:text;
     [cell.titleLabel setText:text];
     [cell.locationLabel setText:contact.location];
-    [cell setBackGroundImage:imageNameAndType(@"information_backimage", nil)];
+    [cell subjoinviewShow:contact];
+    [cell setBackGroundImage:imageNameAndType(@"information_textbackimage", nil)];
     
     return cell;
 }
@@ -90,13 +92,20 @@ static      NSMutableArray      *cellSource;
     UIButton *returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [returnButton setBackgroundColor:[UIColor clearColor]];
     [returnButton setFrame:CGRectMake(5, 0, 40, 40)];
-    [returnButton setImage:imageNameAndType(@"return_normal", @"png") forState:UIControlStateNormal];
-    [returnButton setImage:imageNameAndType(@"return_press", @"png") forState:UIControlStateSelected];
-    [returnButton setImage:imageNameAndType(@"return_press", @"png") forState:UIControlStateHighlighted];
+    [returnButton setImage:imageNameAndType(@"return_normal", @"png")
+                  forState:UIControlStateNormal];
+    [returnButton setImage:imageNameAndType(@"return_press", @"png")
+                  forState:UIControlStateSelected];
+    [returnButton setImage:imageNameAndType(@"return_press", @"png")
+                  forState:UIControlStateHighlighted];
     [self setReturnButton:returnButton];
     [self.view addSubview:returnButton];
     
-    UIImageView *searchBarBackImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, controlYLength(self.topBar), self.view.frame.size.width, 35)];
+    UIImageView *searchBarBackImage = [[UIImageView alloc]initWithFrame:
+                                       CGRectMake(0,
+                                                  controlYLength(self.topBar),
+                                                  self.view.frame.size.width,
+                                                  35)];
     [searchBarBackImage setBackgroundColor:color(clearColor)];
     [searchBarBackImage setImage:imageNameAndType(@"searchBar", @"png")];
     [self.contentView addSubview:searchBarBackImage];
@@ -115,8 +124,12 @@ static      NSMutableArray      *cellSource;
     [searchBar setLeftViewMode:UITextFieldViewModeAlways];
     [self.contentView addSubview:searchBar];
     
-    _theTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, controlYLength(searchBar), self.contentView.frame.size.width, self.contentView.frame.size.height - controlYLength(searchBar))];
-    [_theTableView setBackgroundColor:color(whiteColor)];
+    _theTableView = [[UITableView alloc]initWithFrame:
+                     CGRectMake(0,
+                                controlYLength(searchBar),
+                                self.contentView.frame.size.width,
+                                self.contentView.frame.size.height - controlYLength(searchBar))];
+    [_theTableView setBackgroundColor:color(clearColor)];
     [_theTableView setDelegate:self];
     [_theTableView setDataSource:self];
     [_theTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -125,8 +138,10 @@ static      NSMutableArray      *cellSource;
     UIButton *homeButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [homeButton setBackgroundColor:color(clearColor)];
     [homeButton setTag:102];
-    [homeButton setImage:imageNameAndType(@"returnhome_normal", @"png") forState:UIControlStateNormal];
-    [homeButton setImage:imageNameAndType(@"returnhome_press", @"png") forState:UIControlStateHighlighted];
+    [homeButton setImage:imageNameAndType(@"returnhome_normal", @"png")
+                forState:UIControlStateNormal];
+    [homeButton setImage:imageNameAndType(@"returnhome_press", @"png")
+                forState:UIControlStateHighlighted];
     [self setPopToMainViewButton:homeButton];
     [self setBottomBarItems:@[homeButton]];
     [self setBottomBarBackGroundImage:imageNameAndType(@"bottombar", @"png")];
@@ -231,15 +246,66 @@ static      NSMutableArray      *cellSource;
     [_detailLabel setFont:[UIFont boldSystemFontOfSize:13]];
     [self.contentView addSubview:_detailLabel];
     
-    UIImageView *locationLeftImage = [[UIImageView alloc]initWithFrame:CGRectMake(_titleLabel.frame.origin.x, controlYLength(_titleLabel), 15, 15)];
+    UIImageView *locationLeftImage = [[UIImageView alloc]initWithFrame:
+                                      CGRectMake(_titleLabel.frame.origin.x,
+                                                 controlYLength(_titleLabel),
+                                                 15,
+                                                 15)];
     [locationLeftImage setImage:imageNameAndType(@"resume_location", @"png")];
     [self.contentView addSubview:locationLeftImage];
     
-    _locationLabel = [[UILabel alloc]initWithFrame:CGRectMake(controlXLength(locationLeftImage), controlYLength(_titleLabel), _titleLabel.frame.size.width - locationLeftImage.frame.size.width, _titleLabel.frame.size.height/2)];
+    _locationLabel = [[UILabel alloc]initWithFrame:CGRectMake(controlXLength(locationLeftImage),
+                                                              controlYLength(_titleLabel),
+                                                              _titleLabel.frame.size.width - locationLeftImage.frame.size.width,
+                                                              _titleLabel.frame.size.height/2)];
     [_locationLabel setBackgroundColor:color(clearColor)];
     [_locationLabel setFont:[UIFont systemFontOfSize:11]];
     [_locationLabel setTextColor:color(darkGrayColor)];
     [self.contentView addSubview:_locationLabel];
+    
+    [self setSubjoinviewFrame];
+}
+
+- (void)setSubjoinviewFrame
+{
+    UIView *subjoinView = [[UIView alloc]initWithFrame:CGRectMake(0, ContactsStatusCellHeight, appFrame.size.width, ContactsUnfoldCellHeight - ContactsStatusCellHeight)];
+    [subjoinView setBackgroundColor:color(clearColor)];
+    [subjoinView setTag:100];
+    [subjoinView setHidden:YES];
+    [self.contentView addSubview:subjoinView];
+    
+    UILabel *promptLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, subjoinView.frame.size.width - 10, 25)];
+    [promptLabel setBackgroundColor:color(clearColor)];
+    [promptLabel setText:@"我的作品:"];
+    [promptLabel setFont:[UIFont systemFontOfSize:13]];
+    [subjoinView addSubview:promptLabel];
+        
+    BaseContentView *subjoinScorllView = [[BaseContentView alloc]initWithFrame:CGRectMake(0, controlYLength(promptLabel), subjoinView.frame.size.width, subjoinView.frame.size.height - controlYLength(promptLabel))];
+    [subjoinScorllView setSuperResponder:self];
+    [subjoinScorllView setPagingEnabled:NO];
+    [subjoinScorllView setShowsHorizontalScrollIndicator:NO];
+    [subjoinScorllView setShowsVerticalScrollIndicator:NO];
+    [subjoinScorllView setTag:101];
+    [subjoinScorllView setBackgroundColor:color(clearColor)];
+    [subjoinView addSubview:subjoinScorllView];
+}
+
+- (void)subjoinviewShow:(Contacts *)param
+{
+    UIView *tempView = [self.contentView viewWithTag:100];
+    BaseContentView *subjoinView = (BaseContentView*)[tempView viewWithTag:101];
+    [subjoinView removeAllSubview];
+    
+    if ([param.myGrowings count] != 0) {
+        for (int i = 0;i<[param.myGrowings count];i++) {
+            MyGrowing *growing = [param.myGrowings objectAtIndex:i];
+            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(appFrame.size.width*i/2, 0, appFrame.size.width/2, ContactsUnfoldCellHeight - ContactsStatusCellHeight - 35)];
+            [imageView setBounds:CGRectMake(0, 0, imageView.frame.size.width*0.8, imageView.frame.size.height)];
+            [imageView setImage:growing.image];
+            [subjoinView addSubview:imageView];
+        }
+    }
+    tempView.hidden = !param.isUnfold;
 }
 
 - (void)setBackGroundImage:(UIImage*)image

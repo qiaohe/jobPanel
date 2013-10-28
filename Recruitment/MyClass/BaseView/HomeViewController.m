@@ -9,6 +9,8 @@
 #import "HomeViewController.h"
 #import "ClassifyViewController.h"
 #import "ResumeTraceViewController.h"
+#import "RecommendViewController.h"
+#import "ContactsStatusViewController.h"
 
 @interface HomeViewController ()
 
@@ -37,17 +39,30 @@
 - (void)pressBottomLeftView:(UIButton*)sender
 {
     //[[Model shareModel] showPromptText:@"prompt" model:YES];
+    ClassifyViewController *viewController= [[ClassifyViewController alloc]init];
+    [Model shareModel].mainView = viewController;
+    
+    RecommendViewController *recommendView = [[RecommendViewController alloc]init];
+    [self pushViewControllers:@[viewController,recommendView] transitionType:TransitionPush completionHandler:nil];
 }
 
 - (void)pressBottomRightView:(UIButton*)sender
 {
     //[self jumpToClassifyView];
+    ClassifyViewController *viewController= [[ClassifyViewController alloc]init];
+    [Model shareModel].mainView = viewController;
+    
+    ContactsStatusViewController *contactsView = [[ContactsStatusViewController alloc]init];
+    [self pushViewControllers:@[viewController,contactsView] transitionType:TransitionPush completionHandler:nil];
 }
 
 - (void)pressPromptButton:(UIButton*)sender
 {
+    ClassifyViewController *viewController= [[ClassifyViewController alloc]init];
+    [Model shareModel].mainView = viewController;
+    
     ResumeTraceViewController *resumeTraceView = [[ResumeTraceViewController alloc]init];
-    [self.navigationController pushViewController:resumeTraceView animated:YES];
+    [self pushViewControllers:@[viewController,resumeTraceView] transitionType:TransitionFade completionHandler:nil];
 }
 
 - (void)panning:(UISwipeGestureRecognizer*)gestureRecognizer

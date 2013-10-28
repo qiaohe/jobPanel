@@ -113,13 +113,13 @@
     [voiceButton setImage:imageNameAndType(@"resume_voice_press", @"png") forState:UIControlStateNormal];
     [voiceButton addTarget:self action:@selector(pressVoiceButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:voiceButton];
-    
+    /*
     UILongPressGestureRecognizer *gesture = [[UILongPressGestureRecognizer alloc]
                                              initWithTarget:self
                                              action:@selector(pressVoiceButton:)];
     // you can control how many seconds before the gesture is recognized
     gesture.minimumPressDuration =  0;
-    [voiceButton addGestureRecognizer:gesture];
+    [voiceButton addGestureRecognizer:gesture];*/
     
     UIButton *homeButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [homeButton setBackgroundColor:color(clearColor)];
@@ -161,7 +161,7 @@
     UIImageView *addLeftImage = [[UIImageView alloc]initWithFrame:CGRectMake(5, 0, _addResumeBackImage.frame.size.height, _addResumeBackImage.frame.size.height)];
     [addLeftImage setFrame:CGRectMake(5, 0, _addResumeBackImage.frame.size.height, _addResumeBackImage.frame.size.height)];
     [addLeftImage setBackgroundColor:color(clearColor)];
-    [addLeftImage setBounds:CGRectMake(0, 0, addLeftImage.frame.size.width * 0.4, addLeftImage.frame.size.height * 0.5)];
+    [addLeftImage setBounds:CGRectMake(0, 0, addLeftImage.frame.size.width * 0.5, addLeftImage.frame.size.height * 0.5)];
     [addLeftImage setImage:imageNameAndType(@"resume_location", @"png")];
     [_addResumeBackImage addSubview:addLeftImage];
     
@@ -268,13 +268,13 @@
 - (void)pressCameraButton:(UIButton*)sender
 {
     UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"拍照",@"从相册中选择", nil];
-    alertView.tag = 101;
+    alertView.tag = 301;
     [alertView show];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (alertView.tag == 101) {
+    if (alertView.tag == 301) {
         switch (buttonIndex) {
             case 1:{
                 UIImagePickerController *imagePicker = [[UIImagePickerController alloc]init];
@@ -305,7 +305,7 @@
             default:
                 break;
         }
-    }else if (alertView.tag == 102){
+    }else if (alertView.tag == 302){
         switch (buttonIndex) {
             case 1:{
                 [[Model shareModel] showPromptText:@"录音中..." model:YES];
@@ -323,7 +323,7 @@
 - (void)pressVoiceButton:(UILongPressGestureRecognizer *)gesture
 {
     UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"录音",@"播放录音", nil];
-    [alertView setTag:102];
+    [alertView setTag:302];
     [alertView show];
     /*
     if (gesture.state == UIGestureRecognizerStateBegan) {

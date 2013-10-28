@@ -55,19 +55,24 @@ typedef NS_OPTIONS(NSInteger, adaptType){
 - (CGRect)frameWithRect:(CGRect)rect adaptWidthOrHeight:(adaptType)adapt;
 
 - (void)pushViewController:(BaseUIViewController*)_viewController transitionType:(TransitionType)_transitionType completionHandler:(void (^) (void))_compleHandler;
-- (void)pushViewController:(BaseUIViewController*)_viewController transitionType:(TransitionType)_transitionType Direction:(Direction)_direction completionHandler:(void (^) (void))_compleHandler;
 - (void)popViewControllerTransitionType:(TransitionType)_transitionType completionHandler:(void (^) (void))_compleHandler;
 - (void)popToMainViewControllerTransitionType:(TransitionType)_transitionType completionHandler:(void (^) (void))_compleHandler;
+
+- (void)pushViewController:(BaseUIViewController*)_viewController transitionType:(TransitionType)_transitionType Direction:(Direction)_direction completionHandler:(void (^) (void))_compleHandler;
+
+- (void)pushViewControllers:(NSArray*)viewControllers transitionType:(TransitionType)_transitionType completionHandler:(void (^) (void))_compleHandler;
 
 @end
 
 @interface BaseContentView : UIScrollView
 
 @property (assign, nonatomic) id <BaseContentViewDelegate>      superResponder;
+@property (assign, nonatomic) CGRect                            baseRect;
 @property (strong, nonatomic) UIView                            *largeWidth;
 @property (strong, nonatomic) UIView                            *largeHeight;
 
 - (void)removeSubview:(UIView*)subview;
+- (void)removeAllSubview;
 
 @end
 
