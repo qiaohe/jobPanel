@@ -34,9 +34,6 @@
 		CE1664231808E51600559CA6 /* classify_topbar.png in Resources */ = {isa = PBXBuildFile; fileRef = CE1664091808E51600559CA6 /* classify_topbar.png */; };
 		CE1664241808E51600559CA6 /* setting_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = CE16640A1808E51600559CA6 /* setting_normal.png */; };
 		CE1664251808E51600559CA6 /* setting_press.png in Resources */ = {isa = PBXBuildFile; fileRef = CE16640B1808E51600559CA6 /* setting_press.png */; };
-		CE1664321808E61B00559CA6 /* classify_item1.png in Resources */ = {isa = PBXBuildFile; fileRef = CE1664271808E61B00559CA6 /* classify_item1.png */; };
-		CE1664331808E61B00559CA6 /* classify_item2.png in Resources */ = {isa = PBXBuildFile; fileRef = CE1664281808E61B00559CA6 /* classify_item2.png */; };
-		CE1664341808E61B00559CA6 /* classify_item3.png in Resources */ = {isa = PBXBuildFile; fileRef = CE1664291808E61B00559CA6 /* classify_item3.png */; };
 		CE1664351808E61B00559CA6 /* recommend_compatibility.png in Resources */ = {isa = PBXBuildFile; fileRef = CE16642A1808E61B00559CA6 /* recommend_compatibility.png */; };
 		CE1664361808E61B00559CA6 /* recommend_item_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = CE16642B1808E61B00559CA6 /* recommend_item_normal.png */; };
 		CE1664371808E61B00559CA6 /* recommend_item_select.png in Resources */ = {isa = PBXBuildFile; fileRef = CE16642C1808E61B00559CA6 /* recommend_item_select.png */; };
@@ -201,9 +198,6 @@
 		CE1664091808E51600559CA6 /* classify_topbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = classify_topbar.png; sourceTree = "<group>"; };
 		CE16640A1808E51600559CA6 /* setting_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = setting_normal.png; sourceTree = "<group>"; };
 		CE16640B1808E51600559CA6 /* setting_press.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = setting_press.png; sourceTree = "<group>"; };
-		CE1664271808E61B00559CA6 /* classify_item1.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = classify_item1.png; sourceTree = "<group>"; };
-		CE1664281808E61B00559CA6 /* classify_item2.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = classify_item2.png; sourceTree = "<group>"; };
-		CE1664291808E61B00559CA6 /* classify_item3.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = classify_item3.png; sourceTree = "<group>"; };
 		CE16642A1808E61B00559CA6 /* recommend_compatibility.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = recommend_compatibility.png; sourceTree = "<group>"; };
 		CE16642B1808E61B00559CA6 /* recommend_item_normal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = recommend_item_normal.png; sourceTree = "<group>"; };
 		CE16642C1808E61B00559CA6 /* recommend_item_select.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = recommend_item_select.png; sourceTree = "<group>"; };
@@ -439,9 +433,6 @@
 			isa = PBXGroup;
 			children = (
 				CE166451180939BF00559CA6 /* topImage.png */,
-				CE1664271808E61B00559CA6 /* classify_item1.png */,
-				CE1664281808E61B00559CA6 /* classify_item2.png */,
-				CE1664291808E61B00559CA6 /* classify_item3.png */,
 				CE16642A1808E61B00559CA6 /* recommend_compatibility.png */,
 				CE16642B1808E61B00559CA6 /* recommend_item_normal.png */,
 				CE16642C1808E61B00559CA6 /* recommend_item_select.png */,
@@ -831,9 +822,6 @@
 				CE1664231808E51600559CA6 /* classify_topbar.png in Resources */,
 				CE1664241808E51600559CA6 /* setting_normal.png in Resources */,
 				CE1664251808E51600559CA6 /* setting_press.png in Resources */,
-				CE1664321808E61B00559CA6 /* classify_item1.png in Resources */,
-				CE1664331808E61B00559CA6 /* classify_item2.png in Resources */,
-				CE1664341808E61B00559CA6 /* classify_item3.png in Resources */,
 				CE1664351808E61B00559CA6 /* recommend_compatibility.png in Resources */,
 				CE1664361808E61B00559CA6 /* recommend_item_normal.png in Resources */,
 				CE1664371808E61B00559CA6 /* recommend_item_select.png in Resources */,

@@ -91,9 +91,10 @@
     userPicture = [UIButton buttonWithType:UIButtonTypeCustom];
     [userPicture setFrame:rect(CGRectMake(self.view.frame.size.width/2 - 50, 40, 100, 100), adaptWidth)];
     [userPicture setBackgroundColor:[UIColor clearColor]];
-    [userPicture setImage:imageNameAndType(@"register_selectpicture_normal", @"png") forState:UIControlStateNormal];
-    [userPicture setImage:imageNameAndType(@"register_selectpicture_press", @"png") forState:UIControlStateHighlighted];
-    [userPicture setImage:imageNameAndType(@"register_selectpicture_press", @"png") forState:UIControlStateSelected];
+    [userPicture setContentEdgeInsets:UIEdgeInsetsMake(10, 10, 0, 0)];
+    [userPicture setBackgroundImage:imageNameAndType(@"register_selectpicture_normal", @"png") forState:UIControlStateNormal];
+    [userPicture setBackgroundImage:imageNameAndType(@"register_selectpicture_press", @"png") forState:UIControlStateHighlighted];
+    [userPicture setBackgroundImage:imageNameAndType(@"register_selectpicture_press", @"png") forState:UIControlStateSelected];
     [userPicture addTarget:self action:@selector(pressUserPicture:) forControlEvents:UIControlEventTouchUpInside];
     userPicture.layer.masksToBounds = YES;
     userPicture.layer.cornerRadius = userPicture.frame.size.width/2;
@@ -138,7 +139,7 @@
     UIButton *nextButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [nextButton setTag:103];
     [nextButton setBackgroundColor:[UIColor clearColor]];
-    [nextButton setFrame:CGRectMake(0, appFrame.size.height - 45, appFrame.size.width, 45)];
+    [nextButton setFrame:CGRectMake(0, self.view.frame.size.height - 45, appFrame.size.width, 45)];
     [nextButton setBackgroundImage:imageNameAndType(@"register_bottom_line", @"png") forState:UIControlStateNormal];
     [nextButton setBackgroundImage:imageNameAndType(@"register_bottom_line", @"png") forState:UIControlStateHighlighted];
     [nextButton setBackgroundImage:imageNameAndType(@"register_bottom_line", @"png") forState:UIControlStateDisabled];

@@ -21,6 +21,8 @@
     viewController= [[RegisterViewController alloc]init];
     UINavigationController *navigationController = [[UINavigationController alloc]initWithRootViewController:viewController];
     navigationController.navigationBarHidden = YES;
+    navigationController.navigationBar.translucent = NO;
+
     self.window.rootViewController = navigationController;
     self.window.backgroundColor = [UIColor whiteColor];
     [self.window makeKeyAndVisible];

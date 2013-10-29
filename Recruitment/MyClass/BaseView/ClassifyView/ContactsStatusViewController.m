@@ -229,6 +229,10 @@ static      NSMutableArray      *cellSource;
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     [self.contentView setBackgroundColor:color(clearColor)];
     
+    _backGroundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, appFrame.size.width, ContactsStatusCellHeight + 1)];
+    [_backGroundImageView setBackgroundColor:color(clearColor)];
+    [self.contentView addSubview:_backGroundImageView];
+    
     _leftImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, ContactsStatusCellHeight, ContactsStatusCellHeight)];
     [_leftImage setBounds:CGRectMake(0, 0, _leftImage.frame.size.width * 0.7, _leftImage.frame.size.height * 0.7)];
     [_leftImage setBackgroundColor:color(clearColor)];
@@ -238,12 +242,12 @@ static      NSMutableArray      *cellSource;
     [_titleLabel setBackgroundColor:color(clearColor)];
     [_titleLabel setNumberOfLines:0];
     [_titleLabel setLineBreakMode:NSLineBreakByWordWrapping];
-    [_titleLabel setFont:[UIFont boldSystemFontOfSize:14]];
+    [_titleLabel setFont:[UIFont boldSystemFontOfSize:13]];
     [self.contentView addSubview:_titleLabel];
     
     _detailLabel = [[UILabel alloc]initWithFrame:CGRectMake(_titleLabel.frame.origin.x, controlYLength(_titleLabel), _titleLabel.frame.size.width, _titleLabel.frame.size.height)];
     [_detailLabel setBackgroundColor:color(clearColor)];
-    [_detailLabel setFont:[UIFont boldSystemFontOfSize:13]];
+    [_detailLabel setFont:[UIFont boldSystemFontOfSize:12]];
     [self.contentView addSubview:_detailLabel];
     
     UIImageView *locationLeftImage = [[UIImageView alloc]initWithFrame:

@@ -32,6 +32,7 @@
 {
     self = [super init];
     if (self) {
+        
         self.view.frame = CGRectMake(0, 0, appFrame.size.width, appFrame.size.height);
         _contentView = [[BaseContentView alloc]initWithFrame:self.view.frame];
         _contentView.superResponder = self;
@@ -164,6 +165,16 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+//    
+//    if (deviceVersion >= 7.0) {
+//        if (self.navigationController) {
+//            [self.navigationController setEdgesForExtendedLayout:UIRectEdgeNone];
+//        }else if (self.tabBarController){
+//            [self.tabBarController setEdgesForExtendedLayout:UIRectEdgeNone];
+//        }else{
+//            [self setEdgesForExtendedLayout:UIRectEdgeNone];
+//        }
+//    }
 	// Do any additional setup after loading the view.
 }
 
