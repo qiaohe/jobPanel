@@ -25,6 +25,15 @@
 
     self.window.rootViewController = navigationController;
     self.window.backgroundColor = [UIColor whiteColor];
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
+        
+        [application setStatusBarStyle:UIStatusBarStyleLightContent];
+        
+        self.window.clipsToBounds =YES;
+        
+        self.window.frame =  CGRectMake(0,20,self.window.frame.size.width,self.window.frame.size.height-20);
+    }
+
     [self.window makeKeyAndVisible];
     return YES;
 }

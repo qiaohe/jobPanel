@@ -272,12 +272,17 @@
     [rightButton setImage:imageNameAndType(@"growing_add_press", @"png") forState:UIControlStateNormal];
     [rightButton addTarget:self action:@selector(pressRightButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:rightButton];
+<<<<<<< HEAD
     NSLog(@"version = %f",deviceVersion);
     UIImageView *searchBarBackImage = [[UIImageView alloc]initWithFrame:
                                        CGRectMake(0,
                                                   controlYLength(self.topBar) - (deviceVersion > 7.0?20:0),
                                                   self.view.frame.size.width,
                                                   35)];
+=======
+    
+    UIImageView *searchBarBackImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, controlYLength(self.topBar) - 20, self.view.frame.size.width, 35)];
+>>>>>>> c4803c56fc74a6a38479f2624543cb33140a49cd
     [searchBarBackImage setBackgroundColor:color(clearColor)];
     [searchBarBackImage setImage:imageNameAndType(@"searchBar", @"png")];
     [self.contentView addSubview:searchBarBackImage];

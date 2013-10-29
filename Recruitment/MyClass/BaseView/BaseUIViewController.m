@@ -165,6 +165,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+<<<<<<< HEAD
 //    
 //    if (deviceVersion >= 7.0) {
 //        if (self.navigationController) {
@@ -176,6 +177,9 @@
 //        }
 //    }
 	// Do any additional setup after loading the view.
+=======
+   	// Do any additional setup after loading the view.
+>>>>>>> c4803c56fc74a6a38479f2624543cb33140a49cd
 }
 
 - (void)didReceiveMemoryWarning
