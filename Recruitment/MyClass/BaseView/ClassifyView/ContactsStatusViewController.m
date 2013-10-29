@@ -229,6 +229,10 @@ static      NSMutableArray      *cellSource;
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     [self.contentView setBackgroundColor:color(clearColor)];
     
+    _backGroundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, appFrame.size.width, ContactsStatusCellHeight + 1)];
+    [_backGroundImageView setBackgroundColor:color(clearColor)];
+    [self.contentView addSubview:_backGroundImageView];
+    
     _leftImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, ContactsStatusCellHeight, ContactsStatusCellHeight)];
     [_leftImage setBounds:CGRectMake(0, 0, _leftImage.frame.size.width * 0.7, _leftImage.frame.size.height * 0.7)];
     [_leftImage setBackgroundColor:color(clearColor)];
