@@ -7,6 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		04D018D4182163600030119A /* OpportunityViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D018D3182163600030119A /* OpportunityViewController.m */; };
+		04D018D9182167810030119A /* near_company.png in Resources */ = {isa = PBXBuildFile; fileRef = 04D018D6182167810030119A /* near_company.png */; };
+		04D018DA182167810030119A /* opportunity_list.png in Resources */ = {isa = PBXBuildFile; fileRef = 04D018D7182167810030119A /* opportunity_list.png */; };
+		04D018DE182169B10030119A /* ShakeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04D018DD182169B10030119A /* ShakeViewController.m */; };
+		04D018E218216A690030119A /* shake_icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 04D018DF18216A690030119A /* shake_icon.png */; };
+		04D018E318216A690030119A /* shake_img.png in Resources */ = {isa = PBXBuildFile; fileRef = 04D018E018216A690030119A /* shake_img.png */; };
+		04D018E418216A690030119A /* shake_view_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = 04D018E118216A690030119A /* shake_view_bg.png */; };
+		04D018E6182173200030119A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D018E5182173200030119A /* AudioToolbox.framework */; };
+		04D018E81821733C0030119A /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D018E71821733C0030119A /* CoreFoundation.framework */; };
+		04D018EA182173CE0030119A /* message.wav in Resources */ = {isa = PBXBuildFile; fileRef = 04D018E9182173CD0030119A /* message.wav */; };
 		CE1663D81808DB5600559CA6 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1663D71808DB5600559CA6 /* HomeViewController.m */; };
 		CE16640C1808E51600559CA6 /* home_backimage.png in Resources */ = {isa = PBXBuildFile; fileRef = CE1663F01808E51600559CA6 /* home_backimage.png */; };
 		CE16640D1808E51600559CA6 /* home_blackback.png in Resources */ = {isa = PBXBuildFile; fileRef = CE1663F11808E51600559CA6 /* home_blackback.png */; };
@@ -170,6 +180,18 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		04D018D2182163600030119A /* OpportunityViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpportunityViewController.h; sourceTree = "<group>"; };
+		04D018D3182163600030119A /* OpportunityViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OpportunityViewController.m; sourceTree = "<group>"; };
+		04D018D6182167810030119A /* near_company.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = near_company.png; sourceTree = "<group>"; };
+		04D018D7182167810030119A /* opportunity_list.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = opportunity_list.png; sourceTree = "<group>"; };
+		04D018DC182169B10030119A /* ShakeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShakeViewController.h; sourceTree = "<group>"; };
+		04D018DD182169B10030119A /* ShakeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShakeViewController.m; sourceTree = "<group>"; };
+		04D018DF18216A690030119A /* shake_icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shake_icon.png; sourceTree = "<group>"; };
+		04D018E018216A690030119A /* shake_img.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shake_img.png; sourceTree = "<group>"; };
+		04D018E118216A690030119A /* shake_view_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = shake_view_bg.png; sourceTree = "<group>"; };
+		04D018E5182173200030119A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
+		04D018E71821733C0030119A /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
+		04D018E9182173CD0030119A /* message.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = message.wav; sourceTree = "<group>"; };
 		CE1663D61808DB5600559CA6 /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
 		CE1663D71808DB5600559CA6 /* HomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
 		CE1663F01808E51600559CA6 /* home_backimage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = home_backimage.png; sourceTree = "<group>"; };
@@ -369,6 +391,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				04D018E81821733C0030119A /* CoreFoundation.framework in Frameworks */,
+				04D018E6182173200030119A /* AudioToolbox.framework in Frameworks */,
 				CEABCA4E1818F79A00BB9997 /* AVFoundation.framework in Frameworks */,
 				CE9DBC961808CF9E0055A7BE /* QuartzCore.framework in Frameworks */,
 				CE9DBC6E1808CD700055A7BE /* UIKit.framework in Frameworks */,
@@ -380,6 +404,18 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		04D018D5182167810030119A /* Opportunity */ = {
+			isa = PBXGroup;
+			children = (
+				04D018DF18216A690030119A /* shake_icon.png */,
+				04D018E018216A690030119A /* shake_img.png */,
+				04D018E118216A690030119A /* shake_view_bg.png */,
+				04D018D6182167810030119A /* near_company.png */,
+				04D018D7182167810030119A /* opportunity_list.png */,
+			);
+			path = Opportunity;
+			sourceTree = "<group>";
+		};
 		CE1663EF1808E51600559CA6 /* HomeResource */ = {
 			isa = PBXGroup;
 			children = (
@@ -418,6 +454,8 @@
 		CE1664001808E51600559CA6 /* SubResource */ = {
 			isa = PBXGroup;
 			children = (
+				04D018E9182173CD0030119A /* message.wav */,
+				04D018D5182167810030119A /* Opportunity */,
 				CE5A7981180E41EB00C9331B /* subview_backimage.png */,
 				CE5EC3DB180FC4F1004E6924 /* MyResume */,
 				CE5A7978180E3EE500C9331B /* Information */,
@@ -578,6 +616,10 @@
 				CE908B721810E54300A1FA33 /* MyResumeDetailViewController.m */,
 				CE908B7618111C6800A1FA33 /* ResumeTraceViewController.h */,
 				CE908B7718111C6A00A1FA33 /* ResumeTraceViewController.m */,
+				04D018D2182163600030119A /* OpportunityViewController.h */,
+				04D018D3182163600030119A /* OpportunityViewController.m */,
+				04D018DC182169B10030119A /* ShakeViewController.h */,
+				04D018DD182169B10030119A /* ShakeViewController.m */,
 			);
 			path = ClassifyView;
 			sourceTree = "<group>";
@@ -607,6 +649,8 @@
 		CE9DBC6C1808CD700055A7BE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				04D018E71821733C0030119A /* CoreFoundation.framework */,
+				04D018E5182173200030119A /* AudioToolbox.framework */,
 				CE9DBC951808CF9E0055A7BE /* QuartzCore.framework */,
 				CE9DBC6D1808CD700055A7BE /* UIKit.framework */,
 				CE9DBC6F1808CD700055A7BE /* Foundation.framework */,
@@ -794,10 +838,12 @@
 			files = (
 				CE9DBC781808CD700055A7BE /* InfoPlist.strings in Resources */,
 				CE9DBC801808CD700055A7BE /* Default.png in Resources */,
+				04D018EA182173CE0030119A /* message.wav in Resources */,
 				CE9DBC821808CD700055A7BE /* Default@2x.png in Resources */,
 				CE9DBC841808CD700055A7BE /* Default-568h@2x.png in Resources */,
 				CE16640C1808E51600559CA6 /* home_backimage.png in Resources */,
 				CE16640D1808E51600559CA6 /* home_blackback.png in Resources */,
+				04D018E418216A690030119A /* shake_view_bg.png in Resources */,
 				CE16640E1808E51600559CA6 /* home_prompt.png in Resources */,
 				CE16640F1808E51600559CA6 /* home_item1.png in Resources */,
 				CE1664101808E51600559CA6 /* home_item2.png in Resources */,
@@ -808,11 +854,13 @@
 				CE1664151808E51600559CA6 /* register_next_normal.png in Resources */,
 				CE1664161808E51600559CA6 /* register_next_press.png in Resources */,
 				CE1664171808E51600559CA6 /* register_selected.png in Resources */,
+				04D018E318216A690030119A /* shake_img.png in Resources */,
 				CE1664181808E51600559CA6 /* register_selectpicture_normal.png in Resources */,
 				CE1664191808E51600559CA6 /* register_selectpicture_press.png in Resources */,
 				CE16641A1808E51600559CA6 /* register_textback.png in Resources */,
 				CE16641B1808E51600559CA6 /* register_unselected.png in Resources */,
 				CE16641C1808E51600559CA6 /* classify_backimage.png in Resources */,
+				04D018E218216A690030119A /* shake_icon.png in Resources */,
 				CE16641D1808E51600559CA6 /* classify_Industryinformation.png in Resources */,
 				CE16641E1808E51600559CA6 /* classify_mygrew.png in Resources */,
 				CE16641F1808E51600559CA6 /* classify_opportunity.png in Resources */,
@@ -873,6 +921,7 @@
 				CE5A7995180E6A5600C9331B /* detail_item2.png in Resources */,
 				CE5A7997180E72AA00C9331B /* resume_add_backimage.png in Resources */,
 				CE5A79A2180E8E4400C9331B /* mycollect.png in Resources */,
+				04D018D9182167810030119A /* near_company.png in Resources */,
 				CE5A79A3180E8E4400C9331B /* myresume.png in Resources */,
 				CE5A79A4180E8E4400C9331B /* recruittrace.png in Resources */,
 				CE5A79A5180E8E4400C9331B /* setting_item.png in Resources */,
@@ -895,6 +944,7 @@
 				CEABCA481818C5AF00BB9997 /* information_backimage.png in Resources */,
 				CEABCA511818F9BD00BB9997 /* grow_item1.png in Resources */,
 				CEABCA521818F9BD00BB9997 /* grow_item2.png in Resources */,
+				04D018DA182167810030119A /* opportunity_list.png in Resources */,
 				CEABCA541818FA9D00BB9997 /* information_textbackimage.png in Resources */,
 				CEABCA571818FE4600BB9997 /* register_item_normal.png in Resources */,
 				CEABCA581818FE4600BB9997 /* register_item_select.png in Resources */,
@@ -954,6 +1004,8 @@
 				CEAAD30C1816628800A33236 /* MyGrowing.m in Sources */,
 				CEABCA4C1818CB2E00BB9997 /* F3BarGauge.m in Sources */,
 				CEBA3917181A559B00BDC0A9 /* CompanyDetail.m in Sources */,
+				04D018DE182169B10030119A /* ShakeViewController.m in Sources */,
+				04D018D4182163600030119A /* OpportunityViewController.m in Sources */,
 				CE725A49181D145900ADC7CB /* CustomLongPressGestureRecognizer.m in Sources */,
 				CE725A4C181D17B400ADC7CB /* CustomAlertView.m in Sources */,
 				CE2D85E4181DEF3000A76CB3 /* RecommendJob.m in Sources */,

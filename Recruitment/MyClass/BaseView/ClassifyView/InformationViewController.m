@@ -32,12 +32,10 @@ static      NSMutableArray          *cellSource;
 
 - (id)initWithType:(InformationType)type
 {
+    cellSource = [NSMutableArray arrayWithArray:[CompanyDetail getCommentDataWithNum:7]];
+    self.dataSource = cellSource;
+    _type = type;
     self = [super init];
-    if (self) {
-        cellSource = [NSMutableArray arrayWithArray:[CompanyDetail getCommentDataWithNum:7]];
-        self.dataSource = cellSource;
-        _type = type;
-    }
     return self;
 }
 
@@ -65,7 +63,7 @@ static      NSMutableArray          *cellSource;
     [self.view addSubview:returnButton];
     
     if (_type == InformationOpportunityPage) {
-        [self setTitle:@"关注机遇"];
+        [self setTitle:@"机遇列表"];
         UIImageView *searchBarBackImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, controlYLength(self.topBar), self.view.frame.size.width, 35)];
         [searchBarBackImage setBackgroundColor:color(clearColor)];
         [searchBarBackImage setImage:imageNameAndType(@"searchBar", @"png")];

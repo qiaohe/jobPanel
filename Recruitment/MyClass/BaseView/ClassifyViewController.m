@@ -13,6 +13,7 @@
 #import "ContactsStatusViewController.h"
 #import "InformationViewController.h"
 #import "RecruitManagerViewController.h"
+#import "OpportunityViewController.h"
 
 @interface ClassifyViewController ()
 
@@ -119,8 +120,8 @@
             [self.navigationController pushViewController:informationView animated:YES];
             break;
         }case 104:{
-            InformationViewController *informationView = [[InformationViewController alloc]initWithType:InformationOpportunityPage];
-            [self.navigationController pushViewController:informationView animated:YES];
+            OpportunityViewController *opportunityView = [[OpportunityViewController alloc] init];
+            [self.navigationController pushViewController:opportunityView animated:YES];
             break;
         }case 105:{
             RecommendViewController *recommendView = [[RecommendViewController alloc]init];

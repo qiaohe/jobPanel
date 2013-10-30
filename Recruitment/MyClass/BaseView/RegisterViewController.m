@@ -65,18 +65,17 @@
          UIImagePickerControllerSourceTypePhotoLibrary]) {
         imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
         imagePicker.delegate = self;
-        [imagePicker setAllowsEditing:NO];
+        [imagePicker setAllowsEditing:YES];
         //imagePicker.allowsImageEditing = NO;
         [self presentViewController:imagePicker animated:YES completion:nil];
     }
 }
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo
 {
-    UIImage *image = [info objectForKey:UIImagePickerControllerOriginalImage];
-    [userPicture setImage:image forState:UIControlStateNormal];
-    [userPicture setImage:image forState:UIControlStateHighlighted];
-    [userPicture setImage:image forState:UIControlStateSelected];
+    [userPicture setBackgroundImage:image forState:UIControlStateNormal];
+    [userPicture setBackgroundImage:image forState:UIControlStateHighlighted];
+    [userPicture setBackgroundImage:image forState:UIControlStateSelected];
     
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
