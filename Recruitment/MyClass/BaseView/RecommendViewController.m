@@ -28,12 +28,12 @@
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        [self setSubviewFrame];
+        [self setCellSubviewFrame];
     }
     return self;
 }
 
-- (void)setSubviewFrame
+- (void)setCellSubviewFrame
 {
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     
@@ -121,14 +121,12 @@
     return self;
 }
 
+
+
 - (id)init
 {
+    self.dataSource = [NSMutableArray arrayWithArray:[RecommendJob getCommentDataWithNum:10]];
     self = [super init];
-    if (self) {
-        self.dataSource = [NSMutableArray arrayWithArray:[RecommendJob getCommentDataWithNum:10]];
-
-        [self setViewFrame];
-    }
     return self;
 }
 
@@ -208,7 +206,7 @@
     cell.selectStatus.highlighted = cell.selectStatus.highlighted?NO:YES;
 }
 
-- (void)setViewFrame
+- (void)setSubviewFrame
 {
     [self setBackGroundImage:imageNameAndType(@"classify_backimage", @"png")];
     [self setTitle:@"精选职位"];

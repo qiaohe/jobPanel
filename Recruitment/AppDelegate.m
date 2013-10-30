@@ -25,13 +25,12 @@
 
     self.window.rootViewController = navigationController;
     self.window.backgroundColor = [UIColor whiteColor];
-    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7) {
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 7.0) {
+        UIView *addStatusBar = [[UIView alloc] init];
+        addStatusBar.frame = CGRectMake(0, 0, 320, 20);
+        addStatusBar.backgroundColor = [UIColor colorWithRed:0.973 green:0.973 blue:0.973 alpha:1]; //change this to match your navigation bar
+        [self.window.rootViewController.view addSubview:addStatusBar];
         
-        [application setStatusBarStyle:UIStatusBarStyleLightContent];
-        
-        self.window.clipsToBounds =YES;
-        
-        self.window.frame =  CGRectMake(0,20,self.window.frame.size.width,self.window.frame.size.height-20);
     }
 
     [self.window makeKeyAndVisible];

@@ -50,6 +50,8 @@ typedef NS_OPTIONS(NSInteger, adaptType){
 - (void)keyBoardWillHide:(NSNotification *)notification;
 - (void)keyBoardChangeFrame:(NSNotification *)notification;
 
+- (void)setSubviewFrame;
+
 - (UIView *)findKeyboard;
 
 - (CGRect)frameWithRect:(CGRect)rect adaptWidthOrHeight:(adaptType)adapt;

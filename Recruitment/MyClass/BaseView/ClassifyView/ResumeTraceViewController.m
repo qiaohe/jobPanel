@@ -30,13 +30,9 @@
 
 - (id)init
 {
+    self.dataSource = [NSMutableArray array];
+    [self tabBar:_theTabBar didSelectItem:[_theTabBar.items objectAtIndex:0]];
     self = [super init];
-    if (self) {
-        self.dataSource = [NSMutableArray array];
-        [self setSubviewFrame];
-        
-        [self tabBar:_theTabBar didSelectItem:[_theTabBar.items objectAtIndex:0]];
-    }
     return self;
 }
 

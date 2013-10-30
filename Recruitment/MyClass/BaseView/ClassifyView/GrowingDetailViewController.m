@@ -27,37 +27,22 @@
     return self;
 }
 
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        [self setSubviewFrame];
-    }
-    return self;
-}
-
 - (id)initWithGrowDetail:(MyGrowing*)grow
 {
+    _growDetail = grow;
     self = [super init];
-    if (self) {
-        _growDetail = grow;
-        [self setSubviewFrame];
-    }
     return self;
 }
 
 - (id)initWithData:(NSMutableDictionary*)data
 {
-    self = [super init];
-    if (self) {
-        _dataSource = [NSMutableArray array];
-        NSMutableArray *array = [NSMutableArray arrayWithArray:[data allValues]];
-        for (NSArray *object in array) {
-            [_dataSource addObjectsFromArray:object];
-        }
-        NSLog(@" count = %u",[_dataSource count]);
-        [self setSubviewFrame];
+    _dataSource = [NSMutableArray array];
+    NSMutableArray *array = [NSMutableArray arrayWithArray:[data allValues]];
+    for (NSArray *object in array) {
+        [_dataSource addObjectsFromArray:object];
     }
+    NSLog(@" count = %u",[_dataSource count]);
+    self = [super init];
     return self;
 }
 

@@ -36,14 +36,11 @@
 
 - (id)init
 {
+    _alertShow = NO;
+    
+    subDataSource = [NSMutableDictionary dictionaryWithDictionary:[self getGrowingDataFromArray:[MyGrowing getMyGrowsWithNum:12]]];
+    
     self = [super init];
-    if (self) {
-        _alertShow = NO;
-        
-        subDataSource = [NSMutableDictionary dictionaryWithDictionary:[self getGrowingDataFromArray:[MyGrowing getMyGrowsWithNum:12]]];
-        
-        [self setSubviewFrame];
-    }
     return self;
 }
 
@@ -272,17 +269,8 @@
     [rightButton setImage:imageNameAndType(@"growing_add_press", @"png") forState:UIControlStateNormal];
     [rightButton addTarget:self action:@selector(pressRightButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:rightButton];
-<<<<<<< HEAD
-    NSLog(@"version = %f",deviceVersion);
-    UIImageView *searchBarBackImage = [[UIImageView alloc]initWithFrame:
-                                       CGRectMake(0,
-                                                  controlYLength(self.topBar) - (deviceVersion > 7.0?20:0),
-                                                  self.view.frame.size.width,
-                                                  35)];
-=======
     
-    UIImageView *searchBarBackImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, controlYLength(self.topBar) - 20, self.view.frame.size.width, 35)];
->>>>>>> c4803c56fc74a6a38479f2624543cb33140a49cd
+    UIImageView *searchBarBackImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, controlYLength(self.topBar) - (deviceVersion >= 7.0f ? 20.0f : 0.0f), self.view.frame.size.width, 35)];
     [searchBarBackImage setBackgroundColor:color(clearColor)];
     [searchBarBackImage setImage:imageNameAndType(@"searchBar", @"png")];
     [self.contentView addSubview:searchBarBackImage];

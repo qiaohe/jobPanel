@@ -23,15 +23,6 @@
     return self;
 }
 
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        [self setSubviewFrame];
-    }
-    return self;
-}
-
 - (void)setSubviewFrame
 {
     [self setBackGroundImage:imageNameAndType(@"subview_backimage", @"png")];

@@ -34,10 +34,17 @@
     if (self) {
         
         self.view.frame = CGRectMake(0, 0, appFrame.size.width, appFrame.size.height);
-        _contentView = [[BaseContentView alloc]initWithFrame:self.view.frame];
+        _contentView = [[BaseContentView alloc]initWithFrame: self.view.frame];
         _contentView.superResponder = self;
         [self.view addSubview:_contentView];
         _responderArray = [NSMutableArray array];
+        
+        [self setSubviewFrame];
+        
+        NSLog(@"%f", deviceVersion);
+        for (UIView *sv in self.view.subviews) {
+            sv.frame = CGRectMake(sv.frame.origin.x, sv.frame.origin.y + (deviceVersion >= 7.0f ? 20.0f : 0.0f), sv.frame.size.width, sv.frame.size.height);
+        }
     }
     return self;
 }
@@ -60,6 +67,10 @@
             [_backGroundImageView removeFromSuperview];
         }
     }
+}
+
+- (void)setSubviewFrame{
+    //set up subview element
 }
 
 - (void)setTopBarBackGroundImage:(UIImage*)image
@@ -165,21 +176,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-<<<<<<< HEAD
-//    
-//    if (deviceVersion >= 7.0) {
-//        if (self.navigationController) {
-//            [self.navigationController setEdgesForExtendedLayout:UIRectEdgeNone];
-//        }else if (self.tabBarController){
-//            [self.tabBarController setEdgesForExtendedLayout:UIRectEdgeNone];
-//        }else{
-//            [self setEdgesForExtendedLayout:UIRectEdgeNone];
-//        }
-//    }
-	// Do any additional setup after loading the view.
-=======
-   	// Do any additional setup after loading the view.
->>>>>>> c4803c56fc74a6a38479f2624543cb33140a49cd
+    
+    
 }
 
 - (void)didReceiveMemoryWarning

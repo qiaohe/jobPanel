@@ -29,16 +29,7 @@
     return self;
 }
 
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        [self setViewFrame];
-    }
-    return self;
-}
-
-- (void)setViewFrame
+- (void)setSubviewFrame
 {
     [self setBackGroundImage:imageNameAndType(@"classify_backimage", @"png")];
     

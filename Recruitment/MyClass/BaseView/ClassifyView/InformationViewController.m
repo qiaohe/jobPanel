@@ -37,21 +37,15 @@ static      NSMutableArray          *cellSource;
         cellSource = [NSMutableArray arrayWithArray:[CompanyDetail getCommentDataWithNum:7]];
         self.dataSource = cellSource;
         _type = type;
-        
-        [self setSubviewFrame];
     }
     return self;
 }
 
 - (id)init
 {
+    cellSource = [NSMutableArray arrayWithArray:[CompanyDetail getCommentDataWithNum:7]];
+    self.dataSource = cellSource;
     self = [super init];
-    if (self) {
-        cellSource = [NSMutableArray arrayWithArray:[CompanyDetail getCommentDataWithNum:7]];
-        self.dataSource = cellSource;
-        
-        [self setSubviewFrame];
-    }
     return self;
 }
 

@@ -27,15 +27,6 @@
     return self;
 }
 
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        [self setViewFrame];
-    }
-    return self;
-}
-
 - (void)pressBottomLeftView:(UIButton*)sender
 {
     //[[Model shareModel] showPromptText:@"prompt" model:YES];
@@ -91,7 +82,7 @@
     [self pushViewController:viewController transitionType:TransitionMoveIn Direction:direction completionHandler:nil];
 }
 
-- (void)setViewFrame
+- (void)setSubviewFrame
 {
     [self setBackGroundImage:imageNameAndType(@"home_blackback", @"png")];
     UIImageView *topImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0,

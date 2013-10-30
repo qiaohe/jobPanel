@@ -30,27 +30,14 @@
 
 - (id)initWithType:(MyResumeInitType)type
 {
-    self = [super init];
-    if (self) {
-        _type = type;
-        _dataSource = [NSMutableArray array];
-        for (int i = 0; i<8; i++) {
-            MyResumeDetail *detail = [[MyResumeDetail alloc]init];
-            [detail setTitle:@"resume_selectimage_normal"];
-            [_dataSource addObject:detail];
-        }
-        [self setSubviewFrame];
+    _type = type;
+    _dataSource = [NSMutableArray array];
+    for (int i = 0; i<8; i++) {
+        MyResumeDetail *detail = [[MyResumeDetail alloc]init];
+        [detail setTitle:@"resume_selectimage_normal"];
+        [_dataSource addObject:detail];
     }
-    return self;
-}
-
-- (id)init
-{
     self = [super init];
-    if (self) {
-        
-        [self setSubviewFrame];
-    }
     return self;
 }
 
@@ -187,12 +174,12 @@
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
         _cellType = [self.reuseIdentifier integerValue];
-        [self setSubviewFrame];
+        [self setCellSubviewFrame];
     }
     return self;
 }
 
-- (void)setSubviewFrame
+- (void)setCellSubviewFrame
 {
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     

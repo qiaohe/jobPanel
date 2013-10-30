@@ -26,15 +26,6 @@
     return self;
 }
 
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        [self setSubviewFrame];
-    }
-    return self;
-}
-
 - (void)pressButton:(UIButton*)sender
 {
     switch (sender.tag) {

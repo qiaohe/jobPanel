@@ -41,11 +41,9 @@
 
 - (id)init
 {
-    if (self = [super init]) {
-        _dataSource = [NSMutableArray arrayWithArray:@[@"欧美公司",@"国有企业",@"管理职位",@"技术职位",@"要创业",@"有激情"]];
-        _selectDataSource = [NSMutableArray array];
-        [self setViewFrame];
-    }
+    _dataSource = [NSMutableArray arrayWithArray:@[@"欧美公司",@"国有企业",@"管理职位",@"技术职位",@"要创业",@"有激情"]];
+    _selectDataSource = [NSMutableArray array];
+    self = [super init];
     return self;
 }
 
@@ -84,7 +82,7 @@
 }
 
 #pragma mark - view init
-- (void)setViewFrame
+- (void)setSubviewFrame
 {
     [self setBackGroundImage:imageNameAndType(@"register_back", @"png")];
     

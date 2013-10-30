@@ -35,7 +35,6 @@ static      NSMutableArray      *cellSource;
     if (self) {
         cellSource = [NSMutableArray arrayWithArray:[Contacts getContactsWithNum:7]];
         _dataSource = cellSource;
-        [self setSubviewFrame];
     }
     return self;
 }
@@ -219,12 +218,12 @@ static      NSMutableArray      *cellSource;
 {
     self = [super initWithStyle:style reuseIdentifier:reuseIdentifier];
     if (self) {
-        [self setSubviewFrame];
+        [self setCellSubviewFrame];
     }
     return self;
 }
 
-- (void)setSubviewFrame
+- (void)setCellSubviewFrame
 {
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     [self.contentView setBackgroundColor:color(clearColor)];

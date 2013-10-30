@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "-[MyGrowingViewController setSubviewFrame]:MyGrowingViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.topBar">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[BaseUIViewController setTopBarBackGroundImage:]:BaseUIViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[BaseUIViewController viewDidLoad]:BaseUIViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.view">
+            </PersistentString>
+            <PersistentString
+               value = "self.view.frame">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[BaseUIViewController init]:BaseUIViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "appTopOffset">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[RegisterViewController setSubviewFrame]:RegisterViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "self.contentView">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

@@ -24,22 +24,10 @@
     return self;
 }
 
-- (id)init
-{
-    self = [super init];
-    if (self) {
-        [self setSubviewFrame];
-    }
-    return self;
-}
-
 - (id)initWithObject:(CompanyDetail*)object
 {
+    _companyDetail = object;
     self = [super init];
-    if (self) {
-        _companyDetail = object;
-        [self setSubviewFrame];
-    }
     return self;
 }
 
