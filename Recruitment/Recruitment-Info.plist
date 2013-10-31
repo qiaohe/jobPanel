@@ -15,7 +15,7 @@
 		<string>icon7.png</string>
 	</array>
 	<key>CFBundleIdentifier</key>
-	<string>cn.mobiledaily.jobpanel</string>
+	<string>com.omniquestinternational.qchat</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>

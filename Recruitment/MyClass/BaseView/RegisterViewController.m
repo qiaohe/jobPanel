@@ -60,24 +60,39 @@
 
 - (void)pressUserPicture:(UIButton*)sender
 {
-    UIImagePickerController *imagePicker = [[UIImagePickerController alloc]init];
-    if ([UIImagePickerController isSourceTypeAvailable:
-         UIImagePickerControllerSourceTypePhotoLibrary]) {
-        imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    if(!imagePicker){
+        imagePicker = [[ImagePickerViewController alloc]init];
         imagePicker.delegate = self;
-        [imagePicker setAllowsEditing:YES];
-        //imagePicker.allowsImageEditing = NO;
-        [self presentViewController:imagePicker animated:YES completion:nil];
+        imagePicker.view.frame = CGRectMake(imagePicker.view.frame.origin.x, 20, appFrame.size.width, appFrame.size.height);
     }
+    
+    [self.view addSubview:imagePicker.view];
+    imagePicker.view.alpha = 0;
+    
+    [UIView transitionWithView:imagePicker.view
+                      duration:0.65f
+                       options:UIViewAnimationOptionCurveEaseIn
+                    animations:^{
+                        imagePicker.view.alpha = 1;
+                    }
+                    completion:^(BOOL finished){
+                        
+                    }];
+    
+    //[self presentViewController:imagePicker animated:YES completion:nil];
 }
 
-- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingImage:(UIImage *)image editingInfo:(NSDictionary *)editingInfo
+- (void)didFinishPickImage:(UIImage *)image;
 {
     [userPicture setBackgroundImage:image forState:UIControlStateNormal];
     [userPicture setBackgroundImage:image forState:UIControlStateHighlighted];
     [userPicture setBackgroundImage:image forState:UIControlStateSelected];
-    
-    [picker dismissViewControllerAnimated:YES completion:nil];
+    [imagePicker.view removeFromSuperview];
+}
+
+- (void)didCancel
+{
+    [imagePicker.view removeFromSuperview];
 }
 
 #pragma mark - view init

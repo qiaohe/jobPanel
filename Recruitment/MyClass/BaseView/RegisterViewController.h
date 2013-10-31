@@ -7,8 +7,11 @@
 //
 
 #import "BaseUIViewController.h"
+#import "ImagePickerViewController.h"
 
-@interface RegisterViewController : BaseUIViewController<UITextFieldDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIScrollViewDelegate>
+@interface RegisterViewController : BaseUIViewController<UITextFieldDelegate,UINavigationControllerDelegate,UIScrollViewDelegate, ImagePickerViewControllerDelegate>{
+    ImagePickerViewController *imagePicker;
+}
 
 @property (strong, nonatomic) UIButton              *userPicture;
 @property (strong, nonatomic) UIView                *currentSubview;

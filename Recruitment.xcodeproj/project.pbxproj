@@ -17,6 +17,14 @@
 		04D018E6182173200030119A /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D018E5182173200030119A /* AudioToolbox.framework */; };
 		04D018E81821733C0030119A /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 04D018E71821733C0030119A /* CoreFoundation.framework */; };
 		04D018EA182173CE0030119A /* message.wav in Resources */ = {isa = PBXBuildFile; fileRef = 04D018E9182173CD0030119A /* message.wav */; };
+		04E529AB1821E1DC0051E6E2 /* ImagePickerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 04E529A91821E1DC0051E6E2 /* ImagePickerViewController.m */; };
+		04E529AC1821E1DC0051E6E2 /* ImagePickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 04E529AA1821E1DC0051E6E2 /* ImagePickerViewController.xib */; };
+		04E529B31821E2850051E6E2 /* camera-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E529AD1821E2850051E6E2 /* camera-icon.png */; };
+		04E529B41821E2850051E6E2 /* camera-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E529AE1821E2850051E6E2 /* camera-icon@2x.png */; };
+		04E529B51821E2850051E6E2 /* close-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E529AF1821E2850051E6E2 /* close-icon.png */; };
+		04E529B61821E2850051E6E2 /* close-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E529B01821E2850051E6E2 /* close-icon@2x.png */; };
+		04E529BB1821E2C60051E6E2 /* photo-icon.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E529B91821E2C60051E6E2 /* photo-icon.png */; };
+		04E529BC1821E2C60051E6E2 /* photo-icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 04E529BA1821E2C60051E6E2 /* photo-icon@2x.png */; };
 		CE1663D81808DB5600559CA6 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE1663D71808DB5600559CA6 /* HomeViewController.m */; };
 		CE16640C1808E51600559CA6 /* home_backimage.png in Resources */ = {isa = PBXBuildFile; fileRef = CE1663F01808E51600559CA6 /* home_backimage.png */; };
 		CE16640D1808E51600559CA6 /* home_blackback.png in Resources */ = {isa = PBXBuildFile; fileRef = CE1663F11808E51600559CA6 /* home_blackback.png */; };
@@ -192,6 +200,15 @@
 		04D018E5182173200030119A /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		04D018E71821733C0030119A /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		04D018E9182173CD0030119A /* message.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = message.wav; sourceTree = "<group>"; };
+		04E529A81821E1DC0051E6E2 /* ImagePickerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImagePickerViewController.h; sourceTree = "<group>"; };
+		04E529A91821E1DC0051E6E2 /* ImagePickerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImagePickerViewController.m; sourceTree = "<group>"; };
+		04E529AA1821E1DC0051E6E2 /* ImagePickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImagePickerViewController.xib; sourceTree = "<group>"; };
+		04E529AD1821E2850051E6E2 /* camera-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera-icon.png"; sourceTree = "<group>"; };
+		04E529AE1821E2850051E6E2 /* camera-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "camera-icon@2x.png"; sourceTree = "<group>"; };
+		04E529AF1821E2850051E6E2 /* close-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close-icon.png"; sourceTree = "<group>"; };
+		04E529B01821E2850051E6E2 /* close-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "close-icon@2x.png"; sourceTree = "<group>"; };
+		04E529B91821E2C60051E6E2 /* photo-icon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo-icon.png"; sourceTree = "<group>"; };
+		04E529BA1821E2C60051E6E2 /* photo-icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "photo-icon@2x.png"; sourceTree = "<group>"; };
 		CE1663D61808DB5600559CA6 /* HomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HomeViewController.h; sourceTree = "<group>"; };
 		CE1663D71808DB5600559CA6 /* HomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HomeViewController.m; sourceTree = "<group>"; };
 		CE1663F01808E51600559CA6 /* home_backimage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = home_backimage.png; sourceTree = "<group>"; };
@@ -419,6 +436,12 @@
 		CE1663EF1808E51600559CA6 /* HomeResource */ = {
 			isa = PBXGroup;
 			children = (
+				04E529B91821E2C60051E6E2 /* photo-icon.png */,
+				04E529BA1821E2C60051E6E2 /* photo-icon@2x.png */,
+				04E529AD1821E2850051E6E2 /* camera-icon.png */,
+				04E529AE1821E2850051E6E2 /* camera-icon@2x.png */,
+				04E529AF1821E2850051E6E2 /* close-icon.png */,
+				04E529B01821E2850051E6E2 /* close-icon@2x.png */,
 				CE9AF293180D1DD30096E09D /* searchBar.png */,
 				CEB1EED9180B9EB700915213 /* bottombar.png */,
 				CEB1EEDB180BA2B700915213 /* share_normal.png */,
@@ -737,6 +760,9 @@
 		CE9DBC911808CE290055A7BE /* Element */ = {
 			isa = PBXGroup;
 			children = (
+				04E529A81821E1DC0051E6E2 /* ImagePickerViewController.h */,
+				04E529A91821E1DC0051E6E2 /* ImagePickerViewController.m */,
+				04E529AA1821E1DC0051E6E2 /* ImagePickerViewController.xib */,
 				CE9DBC921808CE290055A7BE /* Utils.h */,
 				CE9DBC931808CE290055A7BE /* Utils.m */,
 				CE1664591809462D00559CA6 /* CustomButton.h */,
@@ -838,6 +864,7 @@
 			files = (
 				CE9DBC781808CD700055A7BE /* InfoPlist.strings in Resources */,
 				CE9DBC801808CD700055A7BE /* Default.png in Resources */,
+				04E529B61821E2850051E6E2 /* close-icon@2x.png in Resources */,
 				04D018EA182173CE0030119A /* message.wav in Resources */,
 				CE9DBC821808CD700055A7BE /* Default@2x.png in Resources */,
 				CE9DBC841808CD700055A7BE /* Default-568h@2x.png in Resources */,
@@ -865,8 +892,10 @@
 				CE16641E1808E51600559CA6 /* classify_mygrew.png in Resources */,
 				CE16641F1808E51600559CA6 /* classify_opportunity.png in Resources */,
 				CE1664201808E51600559CA6 /* classify_recommend.png in Resources */,
+				04E529B51821E2850051E6E2 /* close-icon.png in Resources */,
 				CE1664211808E51600559CA6 /* classify_recruitmanager.png in Resources */,
 				CE1664221808E51600559CA6 /* classify_resource.png in Resources */,
+				04E529B31821E2850051E6E2 /* camera-icon.png in Resources */,
 				CE1664231808E51600559CA6 /* classify_topbar.png in Resources */,
 				CE1664241808E51600559CA6 /* setting_normal.png in Resources */,
 				CE1664251808E51600559CA6 /* setting_press.png in Resources */,
@@ -883,8 +912,10 @@
 				CEB1EED3180B9E1D00915213 /* deliver_normal.png in Resources */,
 				CEB1EED4180B9E1D00915213 /* deliver_press.png in Resources */,
 				CEB1EED7180B9E1D00915213 /* returnhome_normal.png in Resources */,
+				04E529BC1821E2C60051E6E2 /* photo-icon@2x.png in Resources */,
 				CEB1EED8180B9E1D00915213 /* returnhome_press.png in Resources */,
 				CEB1EEDA180B9EB700915213 /* bottombar.png in Resources */,
+				04E529BB1821E2C60051E6E2 /* photo-icon.png in Resources */,
 				CEB1EEDD180BA2B700915213 /* share_normal.png in Resources */,
 				CEB1EEDE180BA2B700915213 /* share_press.png in Resources */,
 				CEB1EEE5180BACF500915213 /* growing_add_normal.png in Resources */,
@@ -901,6 +932,7 @@
 				CEB1EF01180BF41900915213 /* resume_done_normal.png in Resources */,
 				CEB1EF02180BF41900915213 /* resume_done_press.png in Resources */,
 				CEB1EF03180BF41900915213 /* resume_item.png in Resources */,
+				04E529B41821E2850051E6E2 /* camera-icon@2x.png in Resources */,
 				CEB1EF04180BF41900915213 /* resume_line.png in Resources */,
 				CEB1EF05180BF41900915213 /* resume_textbackground.png in Resources */,
 				CEB1EF06180BF41900915213 /* resume_voice_normal.png in Resources */,
@@ -938,6 +970,7 @@
 				CE5EC3E7180FC4F1004E6924 /* resume_selectimage_normal.png in Resources */,
 				CE5EC3E8180FC4F1004E6924 /* resume_selectimage_press.png in Resources */,
 				CE5EC3E9180FC4F1004E6924 /* resume_time.png in Resources */,
+				04E529AC1821E1DC0051E6E2 /* ImagePickerViewController.xib in Resources */,
 				CE908B751810E5F300A1FA33 /* resume_detail_backimage.png in Resources */,
 				CE908B7A1811237600A1FA33 /* resume_line_vertical.png in Resources */,
 				CEAAD3091816270B00A33236 /* tipImage.png in Resources */,
@@ -1002,6 +1035,7 @@
 				CEA41CDB1814DB9800B7F190 /* CommentDetail.m in Sources */,
 				CEA41CE018150DFB00B7F190 /* JobInformation.m in Sources */,
 				CEAAD30C1816628800A33236 /* MyGrowing.m in Sources */,
+				04E529AB1821E1DC0051E6E2 /* ImagePickerViewController.m in Sources */,
 				CEABCA4C1818CB2E00BB9997 /* F3BarGauge.m in Sources */,
 				CEBA3917181A559B00BDC0A9 /* CompanyDetail.m in Sources */,
 				04D018DE182169B10030119A /* ShakeViewController.m in Sources */,
@@ -1084,12 +1118,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_IDENTITY = "iPhone Developer: jack wang (NY68FFNLFU)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Recruitment/Recruitment-Prefix.pch";
 				INFOPLIST_FILE = "Recruitment/Recruitment-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "F4F3DF87-2E6F-4D9E-A769-83F1F04EAF22";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1098,11 +1133,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer: jack wang (NY68FFNLFU)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Recruitment/Recruitment-Prefix.pch";
 				INFOPLIST_FILE = "Recruitment/Recruitment-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "F4F3DF87-2E6F-4D9E-A769-83F1F04EAF22";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
