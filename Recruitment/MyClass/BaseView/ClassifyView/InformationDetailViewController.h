@@ -15,7 +15,7 @@
 @property (strong, nonatomic) UITextView            *appraiseText;
 @property (strong, nonatomic) CompanyDetail         *companyDetail;
 
-- (id)initWithObject:(CompanyDetail*)object;
+- (id)initWithObject:(id)object;
 
 @end
 

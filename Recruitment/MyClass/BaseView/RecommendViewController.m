@@ -8,9 +8,11 @@
 
 #import "RecommendViewController.h"
 #import "InformationViewController.h"
+#import "JobDetailViewController.h"
 #import "MyResumeViewController.h"
 #import "CustomButton.h"
-#import "RecommendJob.h"
+#import "CompanyDetail.h"
+#import "JobInformation.h"
 
 @interface RecommendViewCell ()
 
@@ -46,9 +48,15 @@
     [selectStatus setImage:imageNameAndType(@"recommend_item_normal", @"png")];
     [selectStatus setHighlightedImage:imageNameAndType(@"recommend_item_select", @"png")];
     [self.detailView addSubview:selectStatus];
+
+    _leftItem = [CustomButton buttonWithType:UIButtonTypeCustom];
+    [_leftItem setFrame:CGRectMake(0, 0, RecommendViewCellHeight, RecommendViewCellHeight)];
+    [_leftItem setCenter:selectStatus.center];
+    [_leftItem setBackgroundColor:color(clearColor)];
+    [self.contentView addSubview:_leftItem];
     
     _leftImage = [[UIImageView alloc]initWithFrame:CGRectMake(controlXLength(selectStatus), 0, RecommendViewCellHeight, RecommendViewCellHeight)];
-    [_leftImage setBounds:CGRectMake(0, 0, _leftImage.frame.size.width * 0.7, _leftImage.frame.size.height * 0.7)];
+    [_leftImage setBounds:CGRectMake(0, 0, _leftItem.frame.size.width * 0.7, _leftItem.frame.size.height * 0.7)];
     [_leftImage setBackgroundColor:color(clearColor)];
     [self.contentView addSubview:_leftImage];
     
@@ -78,13 +86,25 @@
     [progressBar setBackgroundColor:[UIColor clearColor]];
     [progressBar setImage:imageNameAndType(@"recommend_compatibility", @"png")];
     [self.detailView addSubview:progressBar];
+    
+    _salaryLabel = [[UILabel alloc]initWithFrame:CGRectMake(0, 0, progressBar.frame.size.width, 20)];
+    [_salaryLabel setBackgroundColor:color(clearColor)];
+    [_salaryLabel setCenter:CGPointMake(progressBar.center.x, progressBar.frame.origin.y - _salaryLabel.frame.size.height/2 + 5)];
+    [_salaryLabel setTextAlignment:NSTextAlignmentCenter];
+    [_salaryLabel setFont:[UIFont systemFontOfSize:12]];
+    [_salaryLabel setAdjustsFontSizeToFitWidth:YES];
+    [_salaryLabel setAdjustsLetterSpacingToFitWidth:YES];
+    [_salaryLabel setBaselineAdjustment:UIBaselineAdjustmentAlignBaselines];
+    [_salaryLabel setMinimumScaleFactor:0.5];
+    [self.detailView addSubview:_salaryLabel];
+
 }
 
 - (void)setBackgroundImage:(UIImage*)image
 {
     if (image) {
         if (!_backgroundImageView) {
-            _backgroundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, appFrame.size.width, RecommendViewCellHeight)];
+            _backgroundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, appFrame.size.width, RecommendViewCellHeight + 1)];
             [_backgroundImageView setBackgroundColor:[UIColor clearColor]];
             if (_detailView) {
                 [self.contentView insertSubview:_backgroundImageView belowSubview:_detailView];
@@ -125,8 +145,11 @@
 
 - (id)init
 {
-    self.dataSource = [NSMutableArray arrayWithArray:[RecommendJob getCommentDataWithNum:10]];
     self = [super init];
+    if (self) {
+        self.dataSource = [NSMutableArray arrayWithArray:[JobInformation getRecommendDataWithNum:10]];
+        [self setSubviewFrame];
+    }
     return self;
 }
 
@@ -188,24 +211,38 @@
     if (cell == nil) {
         cell = [[RecommendViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifierStr];
     }
-    RecommendJob *jobDetail = [dataSource objectAtIndex:indexPath.row];
-    [cell.leftImage setImage:imageNameAndType(jobDetail.companyLogo, nil)];
-    NSString *text = [jobDetail.jobArray componentsJoinedByString:@"+"];
-    text = jobDetail.title?[NSString stringWithFormat:@"%@:%@",jobDetail.title,text]:text;
+    JobInformation *jobDetail = [dataSource objectAtIndex:indexPath.row];
+    [cell.leftImage setImage:imageNameAndType(jobDetail.jobIcon, nil)];
+    [cell.leftItem setIndexPath:indexPath];
+    [cell.leftItem addTarget:self action:@selector(pressCellLeftItem:) forControlEvents:UIControlEventTouchUpInside];
+    NSString *text = [NSString stringWithFormat:@"%@: %@",jobDetail.company,jobDetail.position];
     [cell.titleLabel setText:text];
-    [cell.detailLabel setText:jobDetail.detail];
     [cell.locationLabel setText:jobDetail.location];
-    [cell setBackgroundImage:imageNameAndType(@"information_textbackimage", nil)];
+    NSInteger microNum = arc4random()%100;
+    microNum = microNum - microNum%10 + 10;
+    
+    NSInteger largeNum = arc4random()%50;
+    largeNum = largeNum - largeNum%10 + microNum;
+    [cell.salaryLabel setText:[NSString stringWithFormat:@"%dW - %dW",microNum,largeNum]];
+    //[cell setBackgroundImage:imageNameAndType(@"information_textbackimage", nil)];
     
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    RecommendViewCell *cell = (RecommendViewCell*)[tableView cellForRowAtIndexPath:indexPath];
+    JobInformation *jobDetail = [dataSource objectAtIndex:indexPath.row];
+    JobDetailViewController *informationDetail = [[JobDetailViewController alloc]initWithDetail:jobDetail];
+    [self pushViewController:informationDetail transitionType:TransitionPush completionHandler:nil];
+}
+
+- (void)pressCellLeftItem:(CustomButton*)sender
+{
+    RecommendViewCell *cell = (RecommendViewCell*)[theTableView cellForRowAtIndexPath:sender.indexPath];
     cell.selectStatus.highlighted = cell.selectStatus.highlighted?NO:YES;
 }
 
+#pragma mark - view init
 - (void)setSubviewFrame
 {
     [self setBackGroundImage:imageNameAndType(@"classify_backimage", @"png")];
@@ -218,7 +255,7 @@
     [returnButton setImage:imageNameAndType(@"return_normal", @"png") forState:UIControlStateNormal];
     [returnButton setImage:imageNameAndType(@"return_press", @"png") forState:UIControlStateSelected];
     [returnButton setImage:imageNameAndType(@"return_press", @"png") forState:UIControlStateHighlighted];
-    [returnButton addTarget:self action:@selector(pressReturnButton:) forControlEvents:UIControlEventTouchUpInside];
+    [self setReturnButton:returnButton];
     [self.view addSubview:returnButton];
     
     scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, controlYLength(self.topBar), appFrame.size.width, 145)];
@@ -242,7 +279,8 @@
     theTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, controlYLength(scrollView), appFrame.size.width, appFrame.size.height - controlYLength(scrollView))];
     [theTableView setDelegate:self];
     [theTableView setDataSource:self];
-    [theTableView setBackgroundColor:[UIColor clearColor]];
+    [theTableView setBackgroundColor:[UIColor whiteColor]];
+    [theTableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
     [self.view addSubview:theTableView];
     
     [self createTheBottomBar];
@@ -280,16 +318,13 @@
     [collectButton  addTarget:self action:@selector(pressBottomBarItem:) forControlEvents:UIControlEventTouchUpInside];
     [deliverButton  addTarget:self action:@selector(pressBottomBarItem:) forControlEvents:UIControlEventTouchUpInside];
     [shareButton    addTarget:self action:@selector(pressBottomBarItem:) forControlEvents:UIControlEventTouchUpInside];
+    
+    [NSTimer scheduledTimerWithTimeInterval:2.50f target:self selector:@selector(playImage:) userInfo:nil repeats:YES];
 }
 
 - (void)pressReturnButton:(UIButton*)sender
 {
     [self.navigationController popViewControllerAnimated:YES];
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
-    [NSTimer scheduledTimerWithTimeInterval:2.50f target:self selector:@selector(playImage:) userInfo:nil repeats:YES];
 }
 
 - (void)playImage:(NSTimer*)timer
@@ -299,6 +334,13 @@
         point.x = 0;
     }
     [scrollView setContentOffset:point animated:YES];
+}
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    [super viewDidDisappear:animated];
+    CGPoint point = CGPointMake(0, scrollView.contentOffset.y);
+    [scrollView setContentOffset:point animated:NO];
 }
 
 - (void)viewDidLoad

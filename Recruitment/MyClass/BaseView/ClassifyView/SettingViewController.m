@@ -7,6 +7,8 @@
 //
 
 #import "SettingViewController.h"
+#import "MyResumeViewController.h"
+#import "AccountMaintainViewController.h"
 
 @interface SettingViewController ()
 
@@ -21,6 +23,35 @@
         // Custom initialization
     }
     return self;
+}
+
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        [self setSubviewFrame];
+    }
+    return self;
+}
+
+- (void)pressButton:(UIButton*)sender
+{
+    switch (sender.tag) {
+        case 100:{
+            AccountMaintainViewController *accountView = [[AccountMaintainViewController alloc]init];
+            [self pushViewController:accountView transitionType:TransitionMoveIn completionHandler:nil];
+            break;
+        }case 101:{
+            MyResumeViewController *resumeView = [[MyResumeViewController alloc]initWithType:MyResumeEdit];
+            [self pushViewController:resumeView transitionType:TransitionMoveIn completionHandler:nil];
+            break;
+        }case 102:{
+            [[Model shareModel] showPromptText:@"导入成功" model:YES];
+            break;
+        }
+        default:
+            break;
+    }
 }
 
 - (void)setSubviewFrame
@@ -48,6 +79,8 @@
     [accountManager setTitleColor:color(blackColor) forState:UIControlStateNormal];
     [accountManager setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     [accountManager setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
+    [accountManager setTag:100];
+    [accountManager addTarget:self action:@selector(pressButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:accountManager];
     
     UIButton *resumeManager = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -60,6 +93,8 @@
     [resumeManager setTitleColor:color(blackColor) forState:UIControlStateNormal];
     [resumeManager setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     [resumeManager setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
+    [resumeManager setTag:101];
+    [resumeManager addTarget:self action:@selector(pressButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:resumeManager];
     
     UIButton *inputContacts = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -72,6 +107,8 @@
     [inputContacts setTitleColor:color(blackColor) forState:UIControlStateNormal];
     [inputContacts setContentHorizontalAlignment:UIControlContentHorizontalAlignmentLeft];
     [inputContacts setTitleEdgeInsets:UIEdgeInsetsMake(0, 10, 0, 0)];
+    [inputContacts setTag:102];
+    [inputContacts addTarget:self action:@selector(pressButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.contentView addSubview:inputContacts];
     
     UIButton *jobNotification = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -93,6 +130,17 @@
     //[sch setOffImage:imageNameAndType(@"setting_switch_off", @"png")];
     [sch setOn:YES];
     [self.contentView addSubview:sch];
+    
+    UIButton *homeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [homeButton setBackgroundColor:color(clearColor)];
+    [homeButton setTag:102];
+    [homeButton setImage:imageNameAndType(@"returnhome_normal", @"png")
+                forState:UIControlStateNormal];
+    [homeButton setImage:imageNameAndType(@"returnhome_press", @"png")
+                forState:UIControlStateHighlighted];
+    [self setPopToMainViewButton:homeButton];
+    [self setBottomBarItems:@[homeButton]];
+    [self setBottomBarBackGroundImage:imageNameAndType(@"bottombar", @"png")];
 }
 
 - (void)viewDidLoad

@@ -26,12 +26,16 @@
 
 - (id)init
 {
-    self.dataSource = [NSMutableArray arrayWithArray:[CompanyDetail getCommentDataWithNum:7]];
-    
-    NSString *soundPath = [[NSBundle mainBundle] pathForResource:@"message" ofType:@"wav"];
-    AudioServicesCreateSystemSoundID((__bridge CFURLRef)[NSURL fileURLWithPath: soundPath], &messageSound);
+
     
     self = [super init];
+    if (self) {
+        self.dataSource = [NSMutableArray arrayWithArray:[CompanyDetail getRecommendDataWithNum:7]];
+        
+        NSString *soundPath = [[NSBundle mainBundle] pathForResource:@"message" ofType:@"wav"];
+        AudioServicesCreateSystemSoundID((__bridge CFURLRef)[NSURL fileURLWithPath: soundPath], &messageSound);
+        [self setSubviewFrame];
+    }
     return self;
 }
 
@@ -53,13 +57,24 @@
     UIImageView *shakeImage = [[UIImageView alloc]initWithFrame:CGRectMake(109, (appFrame.size.height - 180)/2, 102, 180)];
     [shakeImage setBackgroundColor:color(clearColor)];
     [shakeImage setImage:imageNameAndType(@"shake_img", @"png")];
-    [self.view addSubview:shakeImage];
+    [self.contentView addSubview:shakeImage];
     
     
     //[self updateRandomCompany];
     
     
     [self.view addSubview:cell];
+    
+    UIButton *homeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [homeButton setBackgroundColor:color(clearColor)];
+    [homeButton setTag:102];
+    [homeButton setImage:imageNameAndType(@"returnhome_normal", @"png")
+                forState:UIControlStateNormal];
+    [homeButton setImage:imageNameAndType(@"returnhome_press", @"png")
+                forState:UIControlStateHighlighted];
+    [self setPopToMainViewButton:homeButton];
+    [self setBottomBarItems:@[homeButton]];
+    [self setBottomBarBackGroundImage:imageNameAndType(@"bottombar", @"png")];
     
 }
 
@@ -86,23 +101,24 @@
     text = jobDetail.title?[NSString stringWithFormat:@"%@:%@",jobDetail.title,text]:text;
     [cell.titleLabel setText:text];
     [cell.detailLabel setText:jobDetail.detail];
-    [cell.locationLabel setText:jobDetail.location];
+    [cell.locationLabel setText:[NSString stringWithFormat:@"距离%d米",arc4random()%500 + 20]];
     [cell setBackGroundImage:imageNameAndType(@"information_textbackimage", nil)];
     
-    cell.frame = CGRectMake(10, appFrame.size.height + ContactsStatusCellHeight, 300, ContactsStatusCellHeight);
+    cell.frame = CGRectMake(10, appFrame.size.height + ContactsStatusCellHeight, self.view.frame.size.width - 20, ContactsStatusCellHeight);
+    [cell.backGroundImageView setFrame:CGRectMake(0, 0, cell.frame.size.width, cell.frame.size.height)];
     [cellButton setFrame:cell.bounds];
     [UIView transitionWithView:cell
                       duration:0.65f
                        options:UIViewAnimationOptionTransitionNone
                     animations:^{
-                        cell.frame = CGRectMake(10, appFrame.size.height - ContactsStatusCellHeight - 20, 300, ContactsStatusCellHeight);
+                        cell.frame = CGRectMake(10, appFrame.size.height - ContactsStatusCellHeight - 40 - 20, self.view.frame.size.width - 20, ContactsStatusCellHeight);
                     }
                     completion:^(BOOL finished){
                         
                     }];
     
-    
 }
+
 - (void)pressButton:(UIButton*)sender
 {
     InformationDetailViewController *informationDetail = [[InformationDetailViewController alloc]initWithObject:jobDetail];

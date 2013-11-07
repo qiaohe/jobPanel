@@ -18,8 +18,10 @@
 @property (strong, nonatomic) UIImageView               *selectStatus;
 
 @property (strong, nonatomic) UIImageView               *leftImage;
+@property (strong, nonatomic) CustomButton              *leftItem;
 @property (strong, nonatomic) UILabel                   *titleLabel;
 @property (strong, nonatomic) UILabel                   *detailLabel;
+@property (strong, nonatomic) UILabel                   *salaryLabel;
 @property (strong, nonatomic) UILabel                   *locationLabel;
 @property (strong, nonatomic) UIImageView               *rightImage;
 

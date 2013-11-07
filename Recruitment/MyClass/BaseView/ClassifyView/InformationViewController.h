@@ -11,6 +11,7 @@
 typedef NS_OPTIONS(NSInteger, InformationType){
     InformationOpportunityPage,
     InformationIndustryPage,
+    InformationNearPage,
     Informationcollect
 };
 

@@ -8,8 +8,9 @@
 
 #import "BaseUIViewController.h"
 #import "ClassifyViewController.h"
+#import "HomeViewController.h"
 
-@interface BaseUIViewController ()
+@interface BaseUIViewController ()<UIGestureRecognizerDelegate>
 
 @property (strong, nonatomic) UIImageView           *backGroundImageView;
 @property (strong, nonatomic) NSMutableArray        *responderArray;
@@ -33,18 +34,18 @@
     self = [super init];
     if (self) {
         
-        self.view.frame = CGRectMake(0, 0, appFrame.size.width, appFrame.size.height);
-        _contentView = [[BaseContentView alloc]initWithFrame: self.view.frame];
+        //self.view.frame = CGRectMake(0, 0, appFrame.size.width, appFrame.size.height);
+        _contentView = [[BaseContentView alloc]initWithFrame: CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height)];
         _contentView.superResponder = self;
         [self.view addSubview:_contentView];
         _responderArray = [NSMutableArray array];
         
-        [self setSubviewFrame];
+        //[self setSubviewFrame];
         
-        NSLog(@"%f", deviceVersion);
+        /*
         for (UIView *sv in self.view.subviews) {
             sv.frame = CGRectMake(sv.frame.origin.x, sv.frame.origin.y + (deviceVersion >= 7.0f ? 20.0f : 0.0f), sv.frame.size.width, sv.frame.size.height);
-        }
+        }*/
     }
     return self;
 }
@@ -77,12 +78,16 @@
 {
     if (!_topBar) {
         _topBar = [[UIImageView alloc]init];
+        [_topBar setUserInteractionEnabled:YES];
         [_topBar setFrame:CGRectMake(0, 0, appFrame.size.width, 40)];
         [_topBar setBackgroundColor:[UIColor clearColor]];
         if (_titleLabel) {
             [self.view insertSubview:_topBar belowSubview:_titleLabel];
         }else
             [self.view addSubview:_topBar];
+        UIGestureRecognizer *gestureRecognizer = [[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(clearKeyBoard)];
+        [gestureRecognizer setDelegate:self];
+        [_topBar addGestureRecognizer:gestureRecognizer];
     }
     if (image) {
         [_topBar setImage:image];
@@ -169,7 +174,10 @@
             [self.navigationController popToViewController:[Model shareModel].mainView animated:YES];
         }
     }else{
-        [self dismissViewControllerAnimated:YES completion:nil];
+        if (![Model shareModel].mainView) {
+            [Model shareModel].mainView = [[ClassifyViewController alloc]init];
+        }
+        [self presentViewController:[Model shareModel].mainView animated:YES completion:nil];
     }
 }
 
@@ -380,7 +388,7 @@
     }
     if (controlXLength(_largeWidth) < controlXLength(view)) {
         [self setXSize];
-    }if (controlYLength(_largeHeight) < controlYLength(view)) {
+    }if (controlYLength(_largeHeight)  - 40< controlYLength(view)) {
         [self setYSize];
     }
 }
@@ -422,7 +430,7 @@
         
         _largeWidth = [array lastObject];
         
-        CGFloat contentWidth = controlXLength(_largeWidth) > self.frame.size.width?controlXLength(_largeWidth) + 10:self.frame.size.width;
+        CGFloat contentWidth = controlXLength(_largeWidth) > self.frame.size.width?controlXLength(_largeWidth):self.frame.size.width;
         
         [self setContentSize:CGSizeMake(contentWidth,self.contentSize.height)];
     }else{
@@ -447,7 +455,9 @@
         
         _largeHeight = [array lastObject];
         
-        CGFloat contentHeight = controlYLength(_largeHeight) > self.frame.size.width?controlYLength(_largeHeight) + 40:self.frame.size.width;
+        NSLog(@"height = %f",controlYLength(_largeHeight) - self.frame.size.height - 40);
+        
+        CGFloat contentHeight = (controlYLength(_largeHeight) - self.frame.size.height > -40)?controlYLength(_largeHeight) + 40:self.frame.size.width;
         
         [self setContentSize:CGSizeMake(self.contentSize.width, contentHeight)];
     }else{

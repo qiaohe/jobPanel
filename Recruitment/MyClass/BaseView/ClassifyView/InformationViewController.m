@@ -10,6 +10,8 @@
 #import "ContactsStatusViewController.h"
 #import "InformationDetailViewController.h"
 #import "companyDetail.h"
+#import "CompanyDetailViewController.h"
+#import "IndustryInformation.h"
 
 static      NSMutableArray          *cellSource;
 
@@ -32,18 +34,28 @@ static      NSMutableArray          *cellSource;
 
 - (id)initWithType:(InformationType)type
 {
-    cellSource = [NSMutableArray arrayWithArray:[CompanyDetail getCommentDataWithNum:7]];
-    self.dataSource = cellSource;
-    _type = type;
     self = [super init];
+    if (self) {
+        if (type == InformationIndustryPage) {
+            cellSource = [NSMutableArray arrayWithArray:[IndustryInformation getRecommendDataWithNum:4]];
+        }else{
+            cellSource = [NSMutableArray arrayWithArray:[CompanyDetail getRecommendDataWithNum:7]];
+        }
+        self.dataSource = cellSource;
+        _type = type;
+        [self setSubviewFrame];
+    }
     return self;
 }
 
 - (id)init
 {
-    cellSource = [NSMutableArray arrayWithArray:[CompanyDetail getCommentDataWithNum:7]];
-    self.dataSource = cellSource;
     self = [super init];
+    if (self) {
+        cellSource = [NSMutableArray arrayWithArray:[CompanyDetail getRecommendDataWithNum:7]];
+        self.dataSource = cellSource;
+        [self setSubviewFrame];
+    }
     return self;
 }
 
@@ -85,25 +97,25 @@ static      NSMutableArray          *cellSource;
         [self.contentView addSubview:_searchBar];
     }else if (_type == Informationcollect){
         [self setTitle:@"收藏职位"];
+    }else if (_type == InformationNearPage){
+        [self setTitle:@"附近公司"];
     }
     
     _theTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, _searchBar?controlYLength(_searchBar):controlYLength(self.topBar), self.view.frame.size.width, self.view.frame.size.height - (_searchBar?controlYLength(_searchBar):controlYLength(self.topBar)))];
     [_theTableView setBackgroundColor:color(whiteColor)];
-    [_theTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    [_theTableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
     [_theTableView setDelegate:self];
     [_theTableView setDataSource:self];
     [self.contentView addSubview:_theTableView];
     
-    if (_type == Informationcollect) {
-        UIButton *homeButton = [UIButton buttonWithType:UIButtonTypeCustom];
-        [homeButton setBackgroundColor:color(clearColor)];
-        [homeButton setTag:102];
-        [homeButton setImage:imageNameAndType(@"returnhome_normal", @"png") forState:UIControlStateNormal];
-        [homeButton setImage:imageNameAndType(@"returnhome_press", @"png") forState:UIControlStateHighlighted];
-        [self setPopToMainViewButton:homeButton];
-        [self setBottomBarItems:@[homeButton]];
-        [self setBottomBarBackGroundImage:imageNameAndType(@"bottombar", @"png")];
-    }
+    UIButton *homeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [homeButton setBackgroundColor:color(clearColor)];
+    [homeButton setTag:102];
+    [homeButton setImage:imageNameAndType(@"returnhome_normal", @"png") forState:UIControlStateNormal];
+    [homeButton setImage:imageNameAndType(@"returnhome_press", @"png") forState:UIControlStateHighlighted];
+    [self setPopToMainViewButton:homeButton];
+    [self setBottomBarItems:@[homeButton]];
+    [self setBottomBarBackGroundImage:imageNameAndType(@"bottombar", @"png")];
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -123,14 +135,28 @@ static      NSMutableArray          *cellSource;
     if (cell == nil) {
         cell = [[ContactsStatusCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifierString];
     }
-    CompanyDetail *jobDetail = [_dataSource objectAtIndex:indexPath.row];
-    [cell.leftImage setImage:imageNameAndType(jobDetail.companyLogo, nil)];
-    NSString *text = [jobDetail.jobArray componentsJoinedByString:@"+"];
-    text = jobDetail.title?[NSString stringWithFormat:@"%@:%@",jobDetail.title,text]:text;
-    [cell.titleLabel setText:text];
-    [cell.detailLabel setText:jobDetail.detail];
-    [cell.locationLabel setText:jobDetail.location];
-    [cell setBackGroundImage:imageNameAndType(@"information_textbackimage", nil)];
+    if (_type == InformationIndustryPage) {
+        IndustryInformation *detail = [_dataSource objectAtIndex:indexPath.row];
+        [cell.leftImage setImage:imageNameAndType(detail.picture, nil)];
+
+        [cell.titleLabel setText:detail.title];
+        [cell.locationLabel setText:detail.location];
+    }else{
+        CompanyDetail *jobDetail = [_dataSource objectAtIndex:indexPath.row];
+        NSString *text = [jobDetail.jobArray componentsJoinedByString:@"+"];
+        text = jobDetail.title?[NSString stringWithFormat:@"%@:%@",jobDetail.title,text]:text;
+        [cell.titleLabel setText:text];
+        [cell.detailLabel setText:jobDetail.detail];
+        [cell.leftImage setImage:imageNameAndType(jobDetail.companyLogo, nil)];
+
+        if (_type == InformationNearPage) {
+            [cell.locationLabel setText:[NSString stringWithFormat:@"距离%d米",arc4random()%500 + 20]];
+        }else
+            [cell.locationLabel setText:jobDetail.location];
+    }
+    
+    
+    //[cell setBackGroundImage:stretchImage(@"information_textbackimage", nil)];
     
     return cell;
 }
@@ -138,9 +164,15 @@ static      NSMutableArray          *cellSource;
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (![self clearKeyBoard]) {
-        CompanyDetail *information = [_dataSource objectAtIndex:indexPath.row];
-        InformationDetailViewController *informationDetail = [[InformationDetailViewController alloc]initWithObject:information];
-        [self.navigationController pushViewController:informationDetail animated:YES];
+        if (_type == InformationIndustryPage) {
+            IndustryInformation *detail = [_dataSource objectAtIndex:indexPath.row];
+            CompanyDetailViewController *companyDetail = [[CompanyDetailViewController alloc]initWithIndustryInformation:detail];
+            [self.navigationController pushViewController:companyDetail animated:YES];
+        }else{
+            CompanyDetail *information = [_dataSource objectAtIndex:indexPath.row];
+            InformationDetailViewController *informationDetail = [[InformationDetailViewController alloc]initWithObject:information];
+            [self.navigationController pushViewController:informationDetail animated:YES];
+        }
     }
 }
 

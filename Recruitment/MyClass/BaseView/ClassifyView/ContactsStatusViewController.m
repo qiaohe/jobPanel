@@ -33,8 +33,9 @@ static      NSMutableArray      *cellSource;
 {
     self = [super init];
     if (self) {
-        cellSource = [NSMutableArray arrayWithArray:[Contacts getContactsWithNum:7]];
+        cellSource = [NSMutableArray arrayWithArray:[Contacts getContactsWithNum:4]];
         _dataSource = cellSource;
+        [self setSubviewFrame];
     }
     return self;
 }
@@ -43,7 +44,7 @@ static      NSMutableArray      *cellSource;
 {
     Contacts *imageName = [_dataSource objectAtIndex:indexPath.row];
     if (imageName.isUnfold) {
-        return ContactsUnfoldCellHeight;
+        return ContactsUnfoldCellHeight(imageName);
     }else
         return ContactsStatusCellHeight;
 }
@@ -61,14 +62,14 @@ static      NSMutableArray      *cellSource;
         cell = [[ContactsStatusCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifierString];
     }
     Contacts *contact = [_dataSource objectAtIndex:indexPath.row];
-    NSLog(@"icon name = %@",contact.userPicture);
+    
     [cell.leftImage setImage:imageNameAndType(contact.userPicture, nil)];
-    NSString *text = [contact.jobArray componentsJoinedByString:@"+"];
-    text = contact.title?[NSString stringWithFormat:@"%@:%@",contact.title,text]:text;
-    [cell.titleLabel setText:text];
+    [cell.titleLabel setText:contact.contactName];
     [cell.locationLabel setText:contact.location];
     [cell subjoinviewShow:contact];
-    [cell setBackGroundImage:imageNameAndType(@"information_textbackimage", nil)];
+    NSLog(@"trends count = %u",[contact.trends count]);
+    [cell.rightImage setImage:imageNameAndType(@"arrow_down", nil)];
+    [cell.rightImage setHighlightedImage:imageNameAndType(@"arrow_up", nil)];
     
     return cell;
 }
@@ -78,6 +79,7 @@ static      NSMutableArray      *cellSource;
     if (![self clearKeyBoard]) {
         Contacts *imageName = [_dataSource objectAtIndex:indexPath.row];
         imageName.isUnfold = imageName.isUnfold?NO:YES;
+
         [tableView reloadRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationNone];
     }
 }
@@ -128,10 +130,10 @@ static      NSMutableArray      *cellSource;
                                 controlYLength(searchBar),
                                 self.contentView.frame.size.width,
                                 self.contentView.frame.size.height - controlYLength(searchBar))];
-    [_theTableView setBackgroundColor:color(clearColor)];
+    [_theTableView setBackgroundColor:color(whiteColor)];
     [_theTableView setDelegate:self];
     [_theTableView setDataSource:self];
-    [_theTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    [_theTableView setSeparatorStyle:UITableViewCellSeparatorStyleSingleLine];
     [self.contentView addSubview:_theTableView];
     
     UIButton *homeButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -208,8 +210,6 @@ static      NSMutableArray      *cellSource;
 
 @interface ContactsStatusCell ()
 
-@property (strong, nonatomic) UIImageView               *backGroundImageView;
-
 @end
 
 @implementation ContactsStatusCell
@@ -223,21 +223,29 @@ static      NSMutableArray      *cellSource;
     return self;
 }
 
+- (void) setFrame:(CGRect)frame
+{
+    [super setFrame:frame];
+    CGAffineTransform currentTransform = self.transform;
+    CGAffineTransform newTransform = CGAffineTransformScale(currentTransform, frame.size.width / self.frame.size.width, frame.size.height/self.frame.size.height);
+    [self setTransform:newTransform];
+}
+
 - (void)setCellSubviewFrame
 {
     [self setSelectionStyle:UITableViewCellSelectionStyleNone];
     [self.contentView setBackgroundColor:color(clearColor)];
     
-    _backGroundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, appFrame.size.width, ContactsStatusCellHeight + 1)];
-    [_backGroundImageView setBackgroundColor:color(clearColor)];
-    [self.contentView addSubview:_backGroundImageView];
+//    _backGroundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, appFrame.size.width, ContactsStatusCellHeight)];
+//    [_backGroundImageView setBackgroundColor:color(clearColor)];
+//    [self.contentView addSubview:_backGroundImageView];
     
     _leftImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, ContactsStatusCellHeight, ContactsStatusCellHeight)];
     [_leftImage setBounds:CGRectMake(0, 0, _leftImage.frame.size.width * 0.7, _leftImage.frame.size.height * 0.7)];
     [_leftImage setBackgroundColor:color(clearColor)];
     [self.contentView addSubview:_leftImage];
     
-    _titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(controlXLength(_leftImage), 10, appFrame.size.width - controlXLength(_leftImage) - 10, (ContactsStatusCellHeight - 20)*2/3)];
+    _titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(ContactsStatusCellHeight, 10, appFrame.size.width - ContactsStatusCellHeight * 2, (ContactsStatusCellHeight - 20)*2/3)];
     [_titleLabel setBackgroundColor:color(clearColor)];
     [_titleLabel setNumberOfLines:0];
     [_titleLabel setLineBreakMode:NSLineBreakByWordWrapping];
@@ -252,7 +260,7 @@ static      NSMutableArray      *cellSource;
     UIImageView *locationLeftImage = [[UIImageView alloc]initWithFrame:
                                       CGRectMake(_titleLabel.frame.origin.x,
                                                  controlYLength(_titleLabel),
-                                                 15,
+                                                 17,
                                                  15)];
     [locationLeftImage setImage:imageNameAndType(@"resume_location", @"png")];
     [self.contentView addSubview:locationLeftImage];
@@ -266,12 +274,18 @@ static      NSMutableArray      *cellSource;
     [_locationLabel setTextColor:color(darkGrayColor)];
     [self.contentView addSubview:_locationLabel];
     
+    _rightImage = [[UIImageView alloc]initWithFrame:CGRectMake(controlXLength(_locationLabel), 0, ContactsStatusCellHeight, ContactsStatusCellHeight)];
+    [_rightImage setBounds:CGRectMake(0, 0, _leftImage.frame.size.width * 0.7, _leftImage.frame.size.height * 0.7)];
+    [_rightImage setBackgroundColor:color(clearColor)];
+    
+    [self.contentView addSubview:_rightImage];
+    
     [self setSubjoinviewFrame];
 }
 
 - (void)setSubjoinviewFrame
 {
-    UIView *subjoinView = [[UIView alloc]initWithFrame:CGRectMake(0, ContactsStatusCellHeight, appFrame.size.width, ContactsUnfoldCellHeight - ContactsStatusCellHeight)];
+    UIView *subjoinView = [[UIView alloc]initWithFrame:CGRectMake(0, ContactsStatusCellHeight, appFrame.size.width, 30)];
     [subjoinView setBackgroundColor:color(clearColor)];
     [subjoinView setTag:100];
     [subjoinView setHidden:YES];
@@ -279,46 +293,86 @@ static      NSMutableArray      *cellSource;
     
     UILabel *promptLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, subjoinView.frame.size.width - 10, 25)];
     [promptLabel setBackgroundColor:color(clearColor)];
-    [promptLabel setText:@"我的作品:"];
+    [promptLabel setText:@"最新动态:"];
     [promptLabel setFont:[UIFont systemFontOfSize:13]];
     [subjoinView addSubview:promptLabel];
         
-    BaseContentView *subjoinScorllView = [[BaseContentView alloc]initWithFrame:CGRectMake(0, controlYLength(promptLabel), subjoinView.frame.size.width, subjoinView.frame.size.height - controlYLength(promptLabel))];
-    [subjoinScorllView setSuperResponder:self];
-    [subjoinScorllView setPagingEnabled:NO];
-    [subjoinScorllView setShowsHorizontalScrollIndicator:NO];
-    [subjoinScorllView setShowsVerticalScrollIndicator:NO];
-    [subjoinScorllView setTag:101];
-    [subjoinScorllView setBackgroundColor:color(clearColor)];
-    [subjoinView addSubview:subjoinScorllView];
+    _theTableView = [[UITableView alloc]initWithFrame:CGRectMake(25, controlYLength(promptLabel) + 5, appFrame.size.width - 35, 0)];
+    [_theTableView setDelegate:self];
+    [_theTableView setDataSource:self];
+    [_theTableView setBackgroundColor:color(clearColor)];
+    [_theTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    [subjoinView addSubview:_theTableView];
 }
 
 - (void)subjoinviewShow:(Contacts *)param
 {
     UIView *tempView = [self.contentView viewWithTag:100];
-    BaseContentView *subjoinView = (BaseContentView*)[tempView viewWithTag:101];
-    [subjoinView removeAllSubview];
-    
-    if ([param.myGrowings count] != 0) {
-        for (int i = 0;i<[param.myGrowings count];i++) {
-            MyGrowing *growing = [param.myGrowings objectAtIndex:i];
-            UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(appFrame.size.width*i/2, 0, appFrame.size.width/2, ContactsUnfoldCellHeight - ContactsStatusCellHeight - 35)];
-            [imageView setBounds:CGRectMake(0, 0, imageView.frame.size.width*0.8, imageView.frame.size.height)];
-            [imageView setImage:growing.image];
-            [subjoinView addSubview:imageView];
-        }
-    }
+    _dataSource = param.trends;
+    [tempView setFrame:CGRectMake(tempView.frame.origin.x, tempView.frame.origin.y, tempView.frame.size.width, 30 + ContactsUnfoldItemHeight * [_dataSource count])];
+    [_theTableView setFrame:CGRectMake(_theTableView.frame.origin.x, _theTableView.frame.origin.y, _theTableView.frame.size.width, ContactsUnfoldItemHeight * [_dataSource count])];
+    [_theTableView reloadData];
     tempView.hidden = !param.isUnfold;
+    _rightImage.highlighted = !tempView.hidden;
+}
+
+- (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return ContactsUnfoldItemHeight;
+}
+
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
+{
+    return [_dataSource count];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    static NSString *identifierString = @"cell";
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifierString];
+    if (cell == nil) {
+        cell = [[UITableViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifierString];
+        [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
+        [cell.imageView setBounds:CGRectMake(0, 0, cell.imageView.frame.size.width * 0.5, cell.imageView.frame.size.height * 0.5)];
+        CGAffineTransform currentTransform = cell.imageView.transform;
+        CGAffineTransform newTransform = CGAffineTransformScale(currentTransform, 0.6, 0.6);
+        [cell.imageView setTransform:newTransform];
+        UIImage *star = imageNameAndType(@"star_light", nil);
+        //star = [star resizableImageWithCapInsets:UIEdgeInsetsMake(10, 10, -10, -10) ];
+        [cell.imageView setImage:star];
+        UIGraphicsEndImageContext();
+        [cell.textLabel setFont:[UIFont systemFontOfSize:13]];
+        [cell.textLabel setAdjustsFontSizeToFitWidth:YES];
+        [cell.textLabel setAdjustsLetterSpacingToFitWidth:YES];
+        [cell.textLabel setBaselineAdjustment:UIBaselineAdjustmentAlignBaselines];
+        [cell.textLabel setMinimumScaleFactor:0.5];
+    }
+    ContactTrends *contact = [_dataSource objectAtIndex:indexPath.row];
+    [cell.textLabel setText:[NSString stringWithFormat:@"%@: %@",contact.trendsTitle,contact.trendsDetail]];
+    
+    return cell;
 }
 
 - (void)setBackGroundImage:(UIImage*)image
 {
     if (!_backGroundImageView) {
-        _backGroundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, appFrame.size.width, ContactsStatusCellHeight + 1)];
+        _backGroundImageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, -1, appFrame.size.width, ContactsStatusCellHeight + 1)];
         [_backGroundImageView setBackgroundColor:color(clearColor)];
         [self insertSubview:_backGroundImageView belowSubview:self.contentView];
     }
     [_backGroundImageView setImage:image];
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated
+{
+    [super setSelected:selected animated:animated];
+   // [_rightImage setHighlighted:selected];
+}
+
+- (void)setHighlighted:(BOOL)highlighted animated:(BOOL)animated
+{
+    [super setHighlighted:highlighted animated:animated];
+    //[_rightImage setHighlighted:highlighted];
 }
 
 @end

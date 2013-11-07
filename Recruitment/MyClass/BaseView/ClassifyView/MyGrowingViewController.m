@@ -36,11 +36,15 @@
 
 - (id)init
 {
-    _alertShow = NO;
     
-    subDataSource = [NSMutableDictionary dictionaryWithDictionary:[self getGrowingDataFromArray:[MyGrowing getMyGrowsWithNum:12]]];
     
     self = [super init];
+    
+    if (self) {
+        _alertShow = NO;
+        subDataSource = [NSMutableDictionary dictionaryWithDictionary:[self getGrowingDataFromArray:[MyGrowing getMyGrowsWithNum:12]]];
+        [self setSubviewFrame];
+    }
     return self;
 }
 
@@ -75,7 +79,10 @@
 {
     if (!_alertShow) {
         _alertShow = YES;
+        //UIButton *statusButton = (UIButton*)[longPress.button viewWithTag:100];
+        //statusButton.highlighted = YES;
         CustomAlertView *alertView = [[CustomAlertView alloc]initWithTitle:nil message:@"删除内容?" delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"确定", nil];
+        [alertView setButton:longPress.button];
         [alertView setTag:102];
         [alertView setIndexPath:longPress.indexPath];
         [alertView show];
@@ -86,9 +93,11 @@
 {
     _alertShow = NO;
     if (alertView.tag == 102) {
+        CustomAlertView *customAlert = (CustomAlertView*)alertView;
+        //UIButton *statusButton = (UIButton*)[customAlert.button viewWithTag:100];
+        //statusButton.highlighted = NO;
         switch (buttonIndex) {
             case 1:{
-                CustomAlertView *customAlert = (CustomAlertView*)alertView;
                 NSMutableArray *array = [subDataSource objectForKey:[dataSource objectAtIndex:customAlert.indexPath.section]];
                 if ([array count] > customAlert.indexPath.row) {
                     [array removeObjectAtIndex:customAlert.indexPath.row];
@@ -146,19 +155,25 @@
     NSArray *array = [subDataSource objectForKey:[dataSource objectAtIndex:indexPath.section]];
     [cell createSubviewWithParams:array indexPath:indexPath];
     CustomButton *button1 = (CustomButton*)cell.cellItem1;
-    [button1 addTarget:self action:@selector(pressCellItem:) forControlEvents:UIControlEventTouchUpInside];
+    CustomButton *responder1 = (CustomButton*)[button1 viewWithTag:100];
+    [responder1 addTarget:self action:@selector(pressCellItem:) forControlEvents:UIControlEventTouchUpInside];
     CustomLongPressGestureRecognizer *longPress1 = [[CustomLongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPress:)];
     [longPress1 setMinimumPressDuration:1.0f];
     [longPress1 setDelegate:self];
     [longPress1 setIndexPath:button1.indexPath];
+    [longPress1 setButton:button1];
+    [responder1 setIndexPath:indexPath];
     [button1 addGestureRecognizer:longPress1];
     if (cell.cellItem2) {
         CustomButton *button2 = (CustomButton*)cell.cellItem2;
-        [button2 addTarget:self action:@selector(pressCellItem:) forControlEvents:UIControlEventTouchUpInside];
+        CustomButton *responder2 = (CustomButton*)[button2 viewWithTag:100];
+        [responder2 addTarget:self action:@selector(pressCellItem:) forControlEvents:UIControlEventTouchUpInside];
         CustomLongPressGestureRecognizer *longPress2 = [[CustomLongPressGestureRecognizer alloc]initWithTarget:self action:@selector(longPress:)];
         [longPress2 setMinimumPressDuration:1.0f];
         [longPress2 setDelegate:self];
         [longPress2 setIndexPath:button2.indexPath];
+        [longPress2 setIndexPath:button2.indexPath];
+        [longPress2 setButton:button2];
         [button2 addGestureRecognizer:longPress2];
     }
     
@@ -270,7 +285,8 @@
     [rightButton addTarget:self action:@selector(pressRightButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:rightButton];
     
-    UIImageView *searchBarBackImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, controlYLength(self.topBar) - (deviceVersion >= 7.0f ? 20.0f : 0.0f), self.view.frame.size.width, 35)];
+    //CGFloat baseHeight = (deviceVersion >= 7.0 ? 20.0f : 0.0f);
+    UIImageView *searchBarBackImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, controlYLength(self.topBar), self.view.frame.size.width, 35)];
     [searchBarBackImage setBackgroundColor:color(clearColor)];
     [searchBarBackImage setImage:imageNameAndType(@"searchBar", @"png")];
     [self.contentView addSubview:searchBarBackImage];
@@ -361,14 +377,13 @@
         }
         
         for (MyGrowing *grow in tempArray) {
-            NSLog(@"title = %@",grow.title);
             if ([grow.title rangeOfString:searchBar.text].length != 0 || [grow.date rangeOfString:searchBar.text].length != 0) {
                 [dataSource addObject:grow];
             }
         }
-        for (MyGrowing *grow in dataSource) {
-            NSLog(@"data title = %@",grow.title);
-        }
+//        for (MyGrowing *grow in dataSource) {
+//            NSLog(@"data title = %@",grow.title);
+//        }
         
         [self getGrowingDataFromArray:dataSource];
         [self.theTableView reloadData];
@@ -491,12 +506,22 @@
     [subview setFrame:CGRectMake(0, 0, appFrame.size.width/2, appFrame.size.width/2)];
     [subview setBackgroundColor:color(clearColor)];
     
-    UIImageView *backImage = [[UIImageView alloc]initWithFrame:CGRectMake(5, 0, subview.frame.size.width - 10, subview.frame.size.height - 10)];
+    CustomButton *backImage = [[CustomButton alloc]initWithFrame:CGRectMake(5,
+                                                                    0,
+                                                                    subview.frame.size.width - 10,
+                                                                    subview.frame.size.height - 10)];
     [backImage setBackgroundColor:color(clearColor)];
-    [backImage setImage:imageNameAndType(@"growing_item", @"png")];
+    [backImage setTag:100];
+    [backImage setImage:imageNameAndType(@"growing_item_normal", @"png")
+               forState:UIControlStateNormal];
+    [backImage setImage:imageNameAndType(@"growing_item_press", @"png")
+               forState:UIControlStateHighlighted];
     [subview addSubview:backImage];
     
-    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15, 15, backImage.frame.size.width - 30, 30)];
+    UILabel *titleLabel = [[UILabel alloc]initWithFrame:CGRectMake(15,
+                                                                   15,
+                                                                   backImage.frame.size.width - 30,
+                                                                   30)];
     [titleLabel setBackgroundColor:color(clearColor)];
     //[titleLabel setText:[Utils stringWithDate:[NSDate date] withFormat:@"yyyy年MM月  我的成长"]];
     [titleLabel setAdjustsFontSizeToFitWidth:YES];
@@ -507,7 +532,12 @@
     [titleLabel setTag:101];
     [subview addSubview:titleLabel];
     
-    UIImageView *detailImage = [[UIImageView alloc]initWithFrame:CGRectMake(titleLabel.frame.origin.x + 1.0f, controlYLength(titleLabel), titleLabel.frame.size.width+ 3.0f, subview.frame.size.height*2/5)];
+    UIImageView *detailImage = [[UIImageView alloc]initWithFrame:
+                                CGRectMake(titleLabel.frame.origin.x + 1.0f,
+                                           controlYLength(titleLabel),
+                                           titleLabel.frame.size.width+ 3.0f,
+                                           subview.frame.size.height*2/5)];
+    [detailImage setContentMode:UIViewContentModeScaleAspectFit];
     [detailImage setBackgroundColor:color(clearColor)];
     [detailImage setTag:102];
     [subview addSubview:detailImage];

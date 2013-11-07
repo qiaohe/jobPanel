@@ -25,6 +25,8 @@
 @property (assign, nonatomic) NSInteger                 collectNum;
 @property (strong, nonatomic) NSMutableDictionary       *appraise;
 
-+(NSArray*)getCommentDataWithNum:(NSInteger)num;
++(NSArray*)getRecommendDataWithNum:(NSInteger)num;
+
+- (id)initWithCompanyDetail:(RecommendJob*)detail;
 
 @end

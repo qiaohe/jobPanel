@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class RecommendJob;
+
 @interface CompanyDetail : NSObject
 
 @property (strong, nonatomic) NSMutableArray            *jobArray;
@@ -25,6 +27,8 @@
 @property (assign, nonatomic) NSInteger                 collectNum;
 @property (strong, nonatomic) NSMutableDictionary       *appraise;
 
-+(NSArray*)getCommentDataWithNum:(NSInteger)num;
++(NSArray*)getRecommendDataWithNum:(NSInteger)num;
+
+- (id)initWithRecommendJob:(RecommendJob*)detail;
 
 @end

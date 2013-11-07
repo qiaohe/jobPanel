@@ -26,6 +26,15 @@
     return self;
 }
 
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        [self setSubviewFrame];
+    }
+    return self;
+}
+
 - (void)pressButton:(UIButton*)sender
 {
     switch (sender.tag) {
@@ -115,6 +124,16 @@
     [recruitTrace addTarget:self action:@selector(pressButton:) forControlEvents:UIControlEventTouchUpInside];
     [recruitTrace addSubview:traceLeft];
     [self.contentView addSubview:recruitTrace];
+    
+    [self setBottomBarBackGroundImage:imageNameAndType(@"bottombar", @"png")];
+    
+    UIButton *homeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [homeButton setBackgroundColor:color(clearColor)];
+    [homeButton setTag:101];
+    [homeButton setImage:imageNameAndType(@"returnhome_normal", @"png") forState:UIControlStateNormal];
+    [homeButton setImage:imageNameAndType(@"returnhome_press", @"png") forState:UIControlStateHighlighted];
+    [self setPopToMainViewButton:homeButton];
+    [self setBottomBarItems:@[homeButton]];
 }
 
 - (void)viewDidLoad

@@ -10,7 +10,7 @@
 
 @implementation RecommendJob
 
-+(NSArray*)getCommentDataWithNum:(NSInteger)num
++(NSArray*)getRecommendDataWithNum:(NSInteger)num
 {
     NSMutableArray *array = [NSMutableArray array];
     for (int i = 0; i<num; i++) {
@@ -18,6 +18,28 @@
         [array addObject:detail];
     }
     return array;
+}
+
+- (id)initWithCompanyDetail:(RecommendJob*)detail
+{
+    self = [super init];
+    if (self) {
+        _jobArray       = detail.jobArray;
+        _companyLogo    = detail.companyLogo;
+        _title          = detail.title;
+        _detail         = detail.detail;
+        _location       = detail.location;
+        _creationTime   = detail.creationTime;
+        
+        _companyDetail          = detail.companyDetail;
+        _companyDescription     = detail.companyDescription;
+        _companyProperty        = detail.companyProperty;
+        _companySize            = detail.companySize;
+        _collectNum             = detail.collectNum;
+        _appraise               = detail.appraise;
+    }
+    
+    return self;
 }
 
 - (id)init

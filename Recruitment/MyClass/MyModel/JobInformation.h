@@ -12,11 +12,16 @@
 
 @property (strong, nonatomic) NSMutableArray            *jobArray;
 @property (strong, nonatomic) NSString                  *jobIcon;
+@property (strong, nonatomic) NSString                  *company;
+@property (strong, nonatomic) NSString                  *position;
+@property (strong, nonatomic) NSString                  *positionNum;
+@property (strong, nonatomic) NSString                  *positionDescription;
+@property (strong, nonatomic) NSString                  *salary;
+@property (strong, nonatomic) NSString                  *location;
 @property (strong, nonatomic) NSString                  *title;
 @property (strong, nonatomic) NSString                  *detail;
-@property (strong, nonatomic) NSString                  *location;
 @property (strong, nonatomic) NSString                  *creationTime;
 
-+(NSArray*)getCommentDataWithNum:(NSInteger)num;
++(NSArray*)getRecommendDataWithNum:(NSInteger)num;
 
 @end

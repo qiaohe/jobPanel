@@ -29,20 +29,25 @@
 
 - (id)initWithGrowDetail:(MyGrowing*)grow
 {
-    _growDetail = grow;
     self = [super init];
+    if (self) {
+        _growDetail = grow;
+        [self setSubviewFrame];
+    }
     return self;
 }
 
 - (id)initWithData:(NSMutableDictionary*)data
 {
-    _dataSource = [NSMutableArray array];
-    NSMutableArray *array = [NSMutableArray arrayWithArray:[data allValues]];
-    for (NSArray *object in array) {
-        [_dataSource addObjectsFromArray:object];
-    }
-    NSLog(@" count = %u",[_dataSource count]);
     self = [super init];
+    if (self) {
+        _dataSource = [NSMutableArray array];
+        NSMutableArray *array = [NSMutableArray arrayWithArray:[data allValues]];
+        for (NSArray *object in array) {
+            [_dataSource addObjectsFromArray:object];
+        }
+        [self setSubviewFrame];
+    }
     return self;
 }
 
@@ -130,6 +135,7 @@
     _userPicture = [UIButton buttonWithType:UIButtonTypeCustom];
     [_userPicture setFrame:CGRectMake(_dateLabel.frame.origin.x, controlYLength(line1) + 15, _dateLabel.frame.size.width, line1.frame.size.width * 3/5)];
     [_userPicture setBackgroundColor:color(clearColor)];
+    [_userPicture.imageView setContentMode:UIViewContentModeScaleAspectFit];
     [_userPicture addTarget:self action:@selector(pressUserPicture:) forControlEvents:UIControlEventTouchUpInside];
     UIImage *userImage = _growDetail?_growDetail.image:imageNameAndType(@"resume_item", @"png");
     [_userPicture setImage:userImage forState:UIControlStateNormal];
@@ -180,7 +186,7 @@
     [line2 setImage:imageNameAndType(@"resume_line", @"png")];
     [self.contentView addSubview:line2];
     
-    UIImageView *titleTextBackImage = [[UIImageView alloc]initWithFrame:CGRectMake(_dateLabel.frame.origin.x + 5, controlYLength(line2) + 10, self.view.frame.size.width/2, 35)];
+    UIImageView *titleTextBackImage = [[UIImageView alloc]initWithFrame:CGRectMake(_userPicture.frame.origin.x, controlYLength(line2) + 10, _userPicture.frame.size.width, 35)];
     [titleTextBackImage setBackgroundColor:color(clearColor)];
     [titleTextBackImage setImage:stretchImage(@"resume_field_backimage", @"png")];
     [self.contentView addSubview:titleTextBackImage];
@@ -190,7 +196,7 @@
     [_titleText setPlaceholder:@"标题"];
     [_titleText setText:_growDetail?_growDetail.title:nil];
     [_titleText setDelegate:self];
-    [_titleText setFont:[UIFont systemFontOfSize:14]];
+    [_titleText setFont:[UIFont systemFontOfSize:13]];
     [self.contentView addSubview:_titleText];
     
     UIImageView *detailTextBackImage = [[UIImageView alloc]initWithFrame:CGRectMake(titleTextBackImage.frame.origin.x, controlYLength(titleTextBackImage) + 15, self.view.frame.size.width - titleTextBackImage.frame.origin.x * 2, _titleText.frame.size.height * 2)];
@@ -198,11 +204,11 @@
     [detailTextBackImage setImage:stretchImage(@"resume_textbackground", @"png")];
     [self.contentView addSubview:detailTextBackImage];
     
-    _detailText = [[UITextView alloc]initWithFrame:CGRectMake(detailTextBackImage.frame.origin.x, detailTextBackImage.frame.origin.y, detailTextBackImage.frame.size.width, detailTextBackImage.frame.size.height)];
+    _detailText = [[UITextView alloc]initWithFrame:CGRectMake(detailTextBackImage.frame.origin.x, detailTextBackImage.frame.origin.y + 5, detailTextBackImage.frame.size.width, detailTextBackImage.frame.size.height - 5)];
     [_detailText setBackgroundColor:color(clearColor)];
-    [_detailText setFont:[UIFont systemFontOfSize:14]];
+    [_detailText setFont:[UIFont systemFontOfSize:13]];
     [_detailText setDelegate:self];
-    [_detailText setText:_growDetail?_growDetail.detail:nil];
+    [_detailText setText:_growDetail?_growDetail.detail:@"此刻的心情..."];
     [self.contentView addSubview:_detailText];
     
     UIButton *doneButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -252,45 +258,29 @@
 
 - (void)pressCameraButton:(UIButton*)sender
 {
-    UIAlertView *alertView = [[UIAlertView alloc]initWithTitle:nil message:nil delegate:self cancelButtonTitle:@"取消" otherButtonTitles:@"拍照",@"从相册中选择", nil];
-    alertView.tag = 301;
-    [alertView show];
+    if(!imagePicker){
+        imagePicker = [[ImagePickerViewController alloc]init];
+        imagePicker.delegate = self;
+        imagePicker.view.frame = CGRectMake(imagePicker.view.frame.origin.x, 0, appFrame.size.width, appFrame.size.height);
+    }
+    
+    [self.view addSubview:imagePicker.view];
+    imagePicker.view.alpha = 0;
+    
+    [UIView transitionWithView:imagePicker.view
+                      duration:0.35f
+                       options:UIViewAnimationOptionCurveEaseIn
+                    animations:^{
+                        imagePicker.view.alpha = 1;
+                    }
+                    completion:^(BOOL finished){
+                        
+                    }];
 }
 
 - (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex
 {
-    if (alertView.tag == 301) {
-        switch (buttonIndex) {
-            case 1:{
-                UIImagePickerController *imagePicker = [[UIImagePickerController alloc]init];
-                if ([UIImagePickerController isSourceTypeAvailable:
-                     UIImagePickerControllerSourceTypeCamera]) {
-                    imagePicker.sourceType = UIImagePickerControllerSourceTypeCamera;
-                    imagePicker.delegate = self;
-                    [imagePicker setAllowsEditing:NO];
-                    //imagePicker.allowsImageEditing = NO;
-                    [self presentViewController:imagePicker animated:YES completion:nil];
-                }
-
-                break;
-            }
-            case 2:{
-                UIImagePickerController *imagePicker = [[UIImagePickerController alloc]init];
-                if ([UIImagePickerController isSourceTypeAvailable:
-                     UIImagePickerControllerSourceTypePhotoLibrary]) {
-                    imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-                    imagePicker.delegate = self;
-                    [imagePicker setAllowsEditing:NO];
-                    //imagePicker.allowsImageEditing = NO;
-                    [self presentViewController:imagePicker animated:YES completion:nil];
-                }
-
-                break;
-            }
-            default:
-                break;
-        }
-    }else if (alertView.tag == 302){
+    if (alertView.tag == 302){
         switch (buttonIndex) {
             case 1:{
                 [[Model shareModel] showPromptText:@"录音中..." model:YES];
@@ -303,6 +293,20 @@
                 break;
         }
     }
+}
+
+
+- (void)didFinishPickImage:(UIImage *)image
+{
+    [_userPicture setImage:image forState:UIControlStateNormal];
+    [_userPicture setImage:image forState:UIControlStateHighlighted];
+    [_userPicture setImage:image forState:UIControlStateSelected];
+    [imagePicker.view removeFromSuperview];
+}
+
+- (void)didCancel
+{
+    [imagePicker.view removeFromSuperview];
 }
 
 - (void)pressVoiceButton:(UILongPressGestureRecognizer *)gesture

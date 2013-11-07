@@ -9,6 +9,7 @@
 #import "BaseUIViewController.h"
 #import <AVFoundation/AVFoundation.h>
 #import "F3BarGauge.h"
+#import "ImagePickerViewController.h"
 
 #define         DOCUMENTS_FOLDER_AUDIO          [[NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) objectAtIndex:0] stringByAppendingPathComponent:@"AudioDirectory"]
 
@@ -21,7 +22,7 @@
 
 @end
 
-@interface GrowingDetailViewController : BaseUIViewController<UITextFieldDelegate,UITextViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIAlertViewDelegate,UIGestureRecognizerDelegate>{
+@interface GrowingDetailViewController : BaseUIViewController<UITextFieldDelegate,UITextViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,UIAlertViewDelegate,UIGestureRecognizerDelegate,ImagePickerViewControllerDelegate>{
     AVAudioPlayer *audioPlayer;
     AVAudioRecorder *audioRecorder;
     int recordEncoding;
@@ -37,6 +38,8 @@
     
     float Pitch;
     NSTimer *timerForPitch;
+    
+    ImagePickerViewController *imagePicker;
 }
 
 @property (assign, nonatomic) id <GrowingDetailDelegate>    delegate;

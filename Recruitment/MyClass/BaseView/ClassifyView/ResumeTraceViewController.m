@@ -30,9 +30,12 @@
 
 - (id)init
 {
-    self.dataSource = [NSMutableArray array];
-    [self tabBar:_theTabBar didSelectItem:[_theTabBar.items objectAtIndex:0]];
     self = [super init];
+    if (self) {
+        self.dataSource = [NSMutableArray array];
+        [self tabBar:_theTabBar didSelectItem:[_theTabBar.items objectAtIndex:0]];
+        [self setSubviewFrame];
+    }
     return self;
 }
 
@@ -67,7 +70,7 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     CompanyDetail *information = [_dataSource objectAtIndex:indexPath.row];
-    InformationDetailViewController *informationDetail = [[InformationDetailViewController alloc]initWithObject:information];
+    InformationDetailViewController *informationDetail = [[InformationDetailViewController alloc]initWithObject:information ];
     [self.navigationController pushViewController:informationDetail animated:YES];
 }
 
@@ -203,7 +206,7 @@
     }
     [self.dataSource removeAllObjects];
     
-    [self.dataSource addObjectsFromArray:[CompanyDetail getCommentDataWithNum:itemNum]];
+    [self.dataSource addObjectsFromArray:[CompanyDetail getRecommendDataWithNum:itemNum]];
     
     [_theTableView reloadData];
 }

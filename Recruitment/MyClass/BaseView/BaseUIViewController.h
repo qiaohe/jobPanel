@@ -13,6 +13,7 @@
 #define                 footScreenSize                  CGSizeMake(320,460)
 #define                 rect(rect,adapt)                [self frameWithRect:rect adaptWidthOrHeight:adapt]
 
+
 @class BaseContentView;
 
 @protocol BaseContentViewDelegate <NSObject>

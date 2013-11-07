@@ -8,6 +8,7 @@
 
 #import "InformationDetailViewController.h"
 #import "CompanyDetail.h"
+#import "RecommendJob.h"
 
 @interface InformationDetailViewController ()
 
@@ -24,10 +25,20 @@
     return self;
 }
 
-- (id)initWithObject:(CompanyDetail*)object
+- (id)initWithObject:(id)object
 {
-    _companyDetail = object;
     self = [super init];
+    if (self) {
+        if ([object isMemberOfClass:[CompanyDetail class]]) {
+            _companyDetail = object;
+        }else if ([object isMemberOfClass:[RecommendJob class]]){
+            RecommendJob *detail = (RecommendJob*)object;
+            _companyDetail = [[CompanyDetail alloc]initWithRecommendJob:detail];
+        }else{
+            _companyDetail = [[CompanyDetail alloc]init];
+        }
+        [self setSubviewFrame];
+    }
     return self;
 }
 
@@ -100,7 +111,6 @@
                                            0,
                                            companyLogoImage.frame.size.width * 0.7,
                                            companyLogoImage.frame.size.height * 0.7)];
-    NSLog(@"imageName = %@",_companyDetail.companyLogo);
     [companyLogoImage setImage:imageNameAndType(_companyDetail.companyLogo, nil)];
     [self.contentView addSubview:companyLogoImage];
     
@@ -214,11 +224,12 @@
                                                  controlYLength(detailLine2) + 10,
                                                  jobs.frame.size.width,
                                                  [Utils heightForWidth:jobs.frame.size.width
-                                                                  text:_companyDetail.companyDescription
+                                                                  text:[NSString stringWithFormat:@"  %@",_companyDetail.companyDescription]
                                                                   font:[UIFont systemFontOfSize:14]])];
     [companyDescription setBackgroundColor:color(clearColor)];
     [companyDescription setFont:[UIFont systemFontOfSize:14]];
     [companyDescription setEditable:NO];
+    [companyDescription setScrollEnabled:NO];
     [companyDescription setText:[NSString stringWithFormat:@"  %@",_companyDetail.companyDescription]];
     [self.contentView addSubview:companyDescription];
     

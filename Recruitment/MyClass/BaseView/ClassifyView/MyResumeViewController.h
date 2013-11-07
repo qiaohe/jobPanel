@@ -7,6 +7,7 @@
 //
 
 #import "BaseUIViewController.h"
+#import "ImagePickerViewController.h"
 
 @class CustomButton;
 
@@ -17,7 +18,9 @@ typedef NS_OPTIONS(NSInteger, MyResumeInitType){
     MyResumeDeliver
 };
 
-@interface MyResumeViewController : BaseUIViewController<UITableViewDataSource,UITableViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate>
+@interface MyResumeViewController : BaseUIViewController<UITableViewDataSource,UITableViewDelegate,UIImagePickerControllerDelegate,UINavigationControllerDelegate,ImagePickerViewControllerDelegate>{
+    ImagePickerViewController *imagePicker;
+}
 
 @property (strong, nonatomic) CustomButton              *selectButton;
 @property (strong, nonatomic) UITableView               *theTableView;

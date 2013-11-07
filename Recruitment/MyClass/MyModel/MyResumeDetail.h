@@ -10,12 +10,17 @@
 
 @interface MyResumeDetail : NSObject
 
+@property (strong, nonatomic) NSString                  *resumeName;
 @property (strong, nonatomic) UIImage                   *userPicture;
-@property (strong, nonatomic) NSString                  *title;
-@property (strong, nonatomic) NSString                  *detail;
+@property (strong, nonatomic) NSString                  *name;
+@property (strong, nonatomic) NSString                  *currentJob;
+@property (strong, nonatomic) NSString                  *currentCompany;
+@property (strong, nonatomic) NSString                  *birthDate;
 @property (strong, nonatomic) NSMutableArray            *jobArray;
 @property (strong, nonatomic) NSString                  *location;
 @property (strong, nonatomic) NSString                  *creationTime;
 @property (strong, nonatomic) NSMutableArray            *commentDataSource;
+
++(NSArray*)getRecommendDataWithNum:(NSInteger)num;
 
 @end

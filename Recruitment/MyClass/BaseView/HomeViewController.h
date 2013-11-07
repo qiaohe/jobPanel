@@ -8,8 +8,15 @@
 
 #import "BaseUIViewController.h"
 
-@interface HomeViewController : BaseUIViewController<UIGestureRecognizerDelegate>
+#define             HomeViewCellHeight              50.0f
 
+@interface HomeViewController : BaseUIViewController<UIGestureRecognizerDelegate,UITableViewDataSource,UITableViewDelegate>
 
+@property (strong, nonatomic) UITableView               *bottomLeftContentView;
+@property (strong, nonatomic) UITableView               *bottomRightContentView;
+
+@property (strong, nonatomic) NSMutableArray            *recommendDataSource;
+@property (strong, nonatomic) NSMutableArray            *contactsStatusDataSource;
+@property (strong, nonatomic) NSMutableArray            *trendNotificationDataSource;
 
 @end

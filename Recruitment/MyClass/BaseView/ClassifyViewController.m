@@ -30,11 +30,26 @@
     return self;
 }
 
+- (id)init
+{
+    self = [super init];
+    if (self) {
+        [self setSubviewFrame];
+    }
+    return self;
+}
+
 - (void)setSubviewFrame
 {
     [self setBackGroundImage:imageNameAndType(@"classify_backimage", @"png")];
     
     [self setTopBarBackGroundImage:imageNameAndType(@"classify_topbar", @"png")];
+    
+    UIButton *returnButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [returnButton setBackgroundColor:[UIColor clearColor]];
+    [returnButton setFrame:CGRectMake(5, 0, 80, 40)];
+    [self setReturnButton:returnButton];
+    [self.view addSubview:returnButton];
     
     UIButton *rightButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [rightButton setBackgroundColor:[UIColor clearColor]];
@@ -59,6 +74,13 @@
     [myGrew setImage:imageNameAndType(@"classify_mygrew", @"png") forState:UIControlStateNormal];
     [scrollView addSubview:myGrew];
     
+    UILabel *growingLabel = [[UILabel alloc]initWithFrame:CGRectMake(10, 0, myGrew.frame.size.width - 20, 40)];
+    [growingLabel setBackgroundColor:color(clearColor)];
+    [growingLabel setFont:[UIFont systemFontOfSize:14]];
+    [growingLabel setText:@"我的成长"];
+    [growingLabel setTextColor:color(whiteColor)];
+    [myGrew addSubview:growingLabel];
+    
     UIButton *resource = [UIButton buttonWithType:UIButtonTypeCustom];
     [resource setFrame:CGRectMake(self.view.frame.size.width - 10 - myGrew.frame.size.width, myGrew.frame.origin.y, myGrew.frame.size.width, myGrew.frame.size.height)];
     [resource setBackgroundColor:[UIColor clearColor]];
@@ -66,6 +88,13 @@
     [resource addTarget:self action:@selector(pressButton:) forControlEvents:UIControlEventTouchUpInside];
     [resource setImage:imageNameAndType(@"classify_resource", @"png") forState:UIControlStateNormal];
     [scrollView addSubview:resource];
+    
+    UILabel *resourceLabel = [[UILabel alloc]initWithFrame:CGRectMake(growingLabel.frame.origin.x, growingLabel.frame.origin.y, growingLabel.frame.size.width, growingLabel.frame.size.height)];
+    [resourceLabel setBackgroundColor:color(clearColor)];
+    [resourceLabel setFont:[UIFont systemFontOfSize:14]];
+    [resourceLabel setText:@"资源人脉"];
+    [resourceLabel setTextColor:color(whiteColor)];
+    [resource addSubview:resourceLabel];
     
     UIButton *Industryinformation = [UIButton buttonWithType:UIButtonTypeCustom];
     [Industryinformation setFrame:CGRectMake(myGrew.frame.origin.x, controlYLength(myGrew) + 10, myGrew.frame.size.width, myGrew.frame.size.height)];
@@ -75,6 +104,13 @@
     [Industryinformation setImage:imageNameAndType(@"classify_Industryinformation", @"png") forState:UIControlStateNormal];
     [scrollView addSubview:Industryinformation];
     
+    UILabel *IndustryinformationLabel = [[UILabel alloc]initWithFrame:CGRectMake(growingLabel.frame.origin.x, growingLabel.frame.origin.y, growingLabel.frame.size.width, growingLabel.frame.size.height)];
+    [IndustryinformationLabel setBackgroundColor:color(clearColor)];
+    [IndustryinformationLabel setFont:[UIFont systemFontOfSize:14]];
+    [IndustryinformationLabel setText:@"行业资讯"];
+    [IndustryinformationLabel setTextColor:color(whiteColor)];
+    [Industryinformation addSubview:IndustryinformationLabel];
+    
     UIButton *opportunity = [UIButton buttonWithType:UIButtonTypeCustom];
     [opportunity setFrame:CGRectMake(resource.frame.origin.x, Industryinformation.frame.origin.y, myGrew.frame.size.width, myGrew.frame.size.height)];
     [opportunity setBackgroundColor:[UIColor clearColor]];
@@ -82,6 +118,13 @@
     [opportunity addTarget:self action:@selector(pressButton:) forControlEvents:UIControlEventTouchUpInside];
     [opportunity setImage:imageNameAndType(@"classify_opportunity", @"png") forState:UIControlStateNormal];
     [scrollView addSubview:opportunity];
+    
+    UILabel *opportunityLabel = [[UILabel alloc]initWithFrame:CGRectMake(growingLabel.frame.origin.x, growingLabel.frame.origin.y, growingLabel.frame.size.width, growingLabel.frame.size.height)];
+    [opportunityLabel setBackgroundColor:color(clearColor)];
+    [opportunityLabel setFont:[UIFont systemFontOfSize:14]];
+    [opportunityLabel setText:@"关注机遇"];
+    [opportunityLabel setTextColor:color(whiteColor)];
+    [opportunity addSubview:opportunityLabel];
     
     UIButton *recommend = [UIButton buttonWithType:UIButtonTypeCustom];
     [recommend setFrame:CGRectMake(myGrew.frame.origin.x, controlYLength(Industryinformation) + 10, myGrew.frame.size.width, myGrew.frame.size.height)];
@@ -91,6 +134,13 @@
     [recommend setImage:imageNameAndType(@"classify_recommend", @"png") forState:UIControlStateNormal];
     [scrollView addSubview:recommend];
     
+    UILabel *recommendLabel = [[UILabel alloc]initWithFrame:CGRectMake(growingLabel.frame.origin.x, growingLabel.frame.origin.y, growingLabel.frame.size.width, growingLabel.frame.size.height)];
+    [recommendLabel setBackgroundColor:color(clearColor)];
+    [recommendLabel setFont:[UIFont systemFontOfSize:14]];
+    [recommendLabel setText:@"精选职位"];
+    [recommendLabel setTextColor:color(whiteColor)];
+    [recommend addSubview:recommendLabel];
+    
     UIButton *recruitmanager = [UIButton buttonWithType:UIButtonTypeCustom];
     [recruitmanager setFrame:CGRectMake(opportunity.frame.origin.x, recommend.frame.origin.y, myGrew.frame.size.width, myGrew.frame.size.height)];
     [recruitmanager setBackgroundColor:[UIColor clearColor]];
@@ -98,6 +148,13 @@
     [recruitmanager addTarget:self action:@selector(pressButton:) forControlEvents:UIControlEventTouchUpInside];
     [recruitmanager setImage:imageNameAndType(@"classify_recruitmanager", @"png") forState:UIControlStateNormal];
     [scrollView addSubview:recruitmanager];
+    
+    UILabel *recruitmanagerLabel = [[UILabel alloc]initWithFrame:CGRectMake(growingLabel.frame.origin.x, growingLabel.frame.origin.y, growingLabel.frame.size.width, growingLabel.frame.size.height)];
+    [recruitmanagerLabel setBackgroundColor:color(clearColor)];
+    [recruitmanagerLabel setFont:[UIFont systemFontOfSize:14]];
+    [recruitmanagerLabel setText:@"应聘管理"];
+    [recruitmanagerLabel setTextColor:color(whiteColor)];
+    [recruitmanager addSubview:recruitmanagerLabel];
 }
 
 - (void)pressButton:(UIButton*)sender

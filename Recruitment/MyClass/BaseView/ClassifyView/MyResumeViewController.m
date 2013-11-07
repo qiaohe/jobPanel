@@ -30,14 +30,13 @@
 
 - (id)initWithType:(MyResumeInitType)type
 {
-    _type = type;
-    _dataSource = [NSMutableArray array];
-    for (int i = 0; i<8; i++) {
-        MyResumeDetail *detail = [[MyResumeDetail alloc]init];
-        [detail setTitle:@"resume_selectimage_normal"];
-        [_dataSource addObject:detail];
-    }
     self = [super init];
+    if (self) {
+        _type = type;
+        _dataSource = [NSMutableArray arrayWithArray:[MyResumeDetail getRecommendDataWithNum:4]];
+        
+        [self setSubviewFrame];
+    }
     return self;
 }
 
@@ -59,60 +58,84 @@
     if (cell == nil) {
         cell = [[MyResumeViewCell alloc]initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifierString];
     }
+    MyResumeDetail *detail = [_dataSource objectAtIndex:indexPath.row];
     [cell.leftButton removeTarget:self action:NULL forControlEvents:UIControlEventTouchUpInside];
     [cell.leftButton addTarget:self action:@selector(pressUserPicture:) forControlEvents:UIControlEventTouchUpInside];
     [cell.rightButton addTarget:self action:@selector(pressRightButton:) forControlEvents:UIControlEventTouchUpInside];
     [cell.leftButton setIndexPath:indexPath];
     [cell.rightButton setIndexPath:indexPath];
     
+    [cell.titleLabel setText:detail.resumeName];
+    [cell.locationLabel setText:detail.location];
+    [cell.timeLabel setText:detail.creationTime];
+    
     return cell;
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    MyResumeDetailViewController *resumeDetailView = [[MyResumeDetailViewController alloc]init];
+    MyResumeDetail *detail = [_dataSource objectAtIndex:indexPath.row];
+    MyResumeDetailViewController *resumeDetailView = [[MyResumeDetailViewController alloc]initWithResumeDetail:detail];
     [self.navigationController pushViewController:resumeDetailView animated:YES];
+}
+
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+        [_dataSource removeObjectAtIndex:indexPath.row];
+        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
+    }
+}
+
+- (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return UITableViewCellEditingStyleDelete;
+}
+
+- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    return YES;
 }
 
 - (void)pressUserPicture:(CustomButton*)sender
 {
     _selectButton = sender;
-    UIImagePickerController *imagePicker = [[UIImagePickerController alloc]init];
-    if ([UIImagePickerController isSourceTypeAvailable:
-         UIImagePickerControllerSourceTypePhotoLibrary]) {
-        imagePicker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    if(!imagePicker){
+        imagePicker = [[ImagePickerViewController alloc]init];
         imagePicker.delegate = self;
-        [imagePicker setAllowsEditing:NO];
-        //imagePicker.allowsImageEditing = NO;
-        [self presentViewController:imagePicker animated:YES completion:nil];
+        imagePicker.view.frame = CGRectMake(imagePicker.view.frame.origin.x, 0, appFrame.size.width, appFrame.size.height);
     }
+    
+    [self.view addSubview:imagePicker.view];
+    imagePicker.view.alpha = 0;
+    
+    [UIView transitionWithView:imagePicker.view
+                      duration:0.35f
+                       options:UIViewAnimationOptionCurveEaseIn
+                    animations:^{
+                        imagePicker.view.alpha = 1;
+                    }
+                    completion:^(BOOL finished){
+                        
+                    }];
 }
 
-- (void)pressRightButton:(CustomButton*)sender
+
+- (void)didFinishPickImage:(UIImage *)image
 {
-    MyResumeViewCell *cell = (MyResumeViewCell*)[_theTableView cellForRowAtIndexPath:sender.indexPath];
-
-    if (_type == MyResumeDeliver) {
-        if (![cell.rightButton.titleLabel.text isEqualToString:@"已投递"]) {
-            [[Model shareModel] showPromptText:@"投递成功" model:YES];
-            [cell.rightButton setTitle:@"已投递" forState:UIControlStateNormal];
-        }else{
-            [[Model shareModel] showPromptText:@"您已投递过" model:YES];
-        }
-    }else if (_type == MyResumeEdit){
-        [cell.titleLabel setEnabled:!cell.titleLabel.enabled];
-        if (cell.titleLabel.enabled) {
-            [cell.rightButton setTitle:@"确认" forState:UIControlStateNormal];
-            if ([cell.titleLabel canBecomeFirstResponder]) {
-                [cell.titleLabel becomeFirstResponder];
-            }
-        }else{
-            [cell.rightButton setTitle:@"修改名称" forState:UIControlStateNormal];
-        }
-    }else {
-        [[Model shareModel] showPromptText:@"错误！！！" model:YES];
-    }
+    MyResumeDetail *detail = [_dataSource objectAtIndex:_selectButton.indexPath.row];
+    [detail setUserPicture:image];
+    [_selectButton setImage:image forState:UIControlStateNormal];
+    [_selectButton setImage:image forState:UIControlStateHighlighted];
+    [_selectButton setImage:image forState:UIControlStateSelected];
+    [imagePicker.view removeFromSuperview];
 }
+
+- (void)didCancel
+{
+    [imagePicker.view removeFromSuperview];
+}
+
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
@@ -122,6 +145,44 @@
     [_selectButton setImage:image forState:UIControlStateSelected];
     
     [picker dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (void)pressRightButton:(CustomButton*)sender
+{
+    if (sender.tag == 100) {
+        static BOOL edit = NO;
+        edit = edit?NO:YES;
+        [_theTableView setEditing:edit animated:YES];
+    }else if (sender.tag == 101){
+        MyResumeDetailViewController *myresumeDetailView = [[MyResumeDetailViewController alloc]init];
+        [self pushViewController:myresumeDetailView transitionType:TransitionPush completionHandler:nil];
+    }else{
+        MyResumeViewCell *cell = (MyResumeViewCell*)[_theTableView cellForRowAtIndexPath:sender.indexPath];
+        MyResumeDetail *detail = [_dataSource objectAtIndex:sender.indexPath.row];
+        
+        if (_type == MyResumeDeliver) {
+            if (![cell.rightButton.titleLabel.text isEqualToString:@"已投递"]) {
+                [[Model shareModel] showPromptText:@"投递成功" model:YES];
+                [cell.rightButton setTitle:@"已投递" forState:UIControlStateNormal];
+            }else{
+                [[Model shareModel] showPromptText:@"您已投递过" model:YES];
+            }
+        }else if (_type == MyResumeEdit){
+            [cell.titleLabel setEnabled:!cell.titleLabel.enabled];
+            if (cell.titleLabel.enabled) {
+                [cell.rightButton setTitle:@"确认" forState:UIControlStateNormal];
+                if ([cell.titleLabel canBecomeFirstResponder]) {
+                    [cell.titleLabel becomeFirstResponder];
+                }
+            }else{
+                [cell.rightButton setTitle:@"修改名称" forState:UIControlStateNormal];
+                detail.resumeName = cell.titleLabel.text;
+                [_theTableView reloadRowsAtIndexPaths:@[sender.indexPath] withRowAnimation:UITableViewRowAnimationFade];
+            }
+        }else {
+            [[Model shareModel] showPromptText:@"错误！！！" model:YES];
+        }
+    }
 }
 
 - (void)setSubviewFrame
@@ -139,12 +200,40 @@
     [self setReturnButton:returnButton];
     [self.view addSubview:returnButton];
     
+    UIButton *deleteButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [deleteButton setBackgroundColor:color(clearColor)];
+    [deleteButton setFrame:CGRectMake(self.view.frame.size.width - returnButton.frame.size.width * 2 - 5, returnButton.frame.origin.y, returnButton.frame.size.width, returnButton.frame.size.height)];
+    [deleteButton setTag:100];
+    [deleteButton setImage:imageNameAndType(@"home_delete", @"png") forState:UIControlStateNormal];
+    [deleteButton addTarget:self action:@selector(pressRightButton:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:deleteButton];
+    
+    UIButton *addButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [addButton setBackgroundColor:color(clearColor)];
+    [addButton setFrame:CGRectMake(controlXLength(deleteButton), returnButton.frame.origin.y, returnButton.frame.size.width, returnButton.frame.size.height)];
+    [addButton setTag:101];
+    [addButton setImage:imageNameAndType(@"growing_add_normal", @"png") forState:UIControlStateNormal];
+    [addButton setImage:imageNameAndType(@"growing_add_press", @"png") forState:UIControlStateHighlighted];
+    [addButton setImage:imageNameAndType(@"growing_add_press", @"png") forState:UIControlStateSelected];
+    [addButton addTarget:self action:@selector(pressRightButton:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:addButton];
+    
     _theTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, controlYLength(self.topBar), self.contentView.frame.size.width, self.contentView.frame.size.height - controlYLength(self.topBar))];
     [_theTableView setDelegate:self];
     [_theTableView setDataSource:self];
     [_theTableView setBackgroundColor:color(clearColor)];
     [_theTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
     [self.contentView addSubview:_theTableView];
+    
+    [self setBottomBarBackGroundImage:imageNameAndType(@"bottombar", @"png")];
+    
+    UIButton *homeButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [homeButton setBackgroundColor:color(clearColor)];
+    [homeButton setTag:101];
+    [homeButton setImage:imageNameAndType(@"returnhome_normal", @"png") forState:UIControlStateNormal];
+    [homeButton setImage:imageNameAndType(@"returnhome_press", @"png") forState:UIControlStateHighlighted];
+    [self setPopToMainViewButton:homeButton];
+    [self setBottomBarItems:@[homeButton]];
 }
 
 - (void)viewDidLoad
@@ -196,48 +285,24 @@
     [_leftButton setBackgroundColor:color(clearColor)];
     _leftButton.layer.masksToBounds = YES;
     _leftButton.layer.cornerRadius = _leftButton.frame.size.width/2;
+    [_leftButton.imageView setContentMode:UIViewContentModeScaleAspectFit];
     [self.contentView addSubview:_leftButton];
-    
-    NSInteger random = arc4random()%3;
-    
+        
     _titleLabel =[[UITextField alloc]initWithFrame:CGRectMake(controlXLength(_leftButton) + 5, _leftButton.frame.origin.y, _backGroundImage.frame.size.width - controlXLength(_leftButton) * 2, _leftButton.frame.size.height/4)];
     [_titleLabel setBackgroundColor:color(clearColor)];
     [_titleLabel setEnabled:NO];
     [_titleLabel setDelegate:self];
     [_titleLabel setReturnKeyType:UIReturnKeyDone];
     [_titleLabel setFont:[UIFont systemFontOfSize:14]];
-    switch (random) {
-        case 0:
-            [_titleLabel setText:@"UI设计师"];
-            break;
-        case 1:
-            [_titleLabel setText:@"平面设计师"];
-            break;
-        case 2:
-            [_titleLabel setText:@"前端开发工程师"];
-            break;
-        default:
-            break;
-    }
+    [_titleLabel setAdjustsFontSizeToFitWidth:YES];
+    [_titleLabel setMinimumFontSize:0.5];
+
     [_backGroundImage addSubview:_titleLabel];
     
     _detailLabel = [[UILabel alloc]initWithFrame:CGRectMake(_titleLabel.frame.origin.x, controlYLength(_titleLabel) + 2.50f, _titleLabel.frame.size.width, _titleLabel.frame.size.height*2/3)];
     [_detailLabel setBackgroundColor:color(clearColor)];
     [_detailLabel setFont:[UIFont systemFontOfSize:10]];
     [_detailLabel setTextColor:color(darkGrayColor)];
-    switch (random) {
-        case 0:
-            [_detailLabel setText:@"郑爽"];
-            break;
-        case 1:
-            [_detailLabel setText:@"赵军"];
-            break;
-        case 2:
-            [_detailLabel setText:@"李杰"];
-            break;
-        default:
-            break;
-    }
     [_backGroundImage addSubview:_detailLabel];
     
     _locationImage = [[UIImageView alloc]initWithFrame:CGRectMake(_titleLabel.frame.origin.x, controlYLength(_detailLabel) + 8.5, 25, 20)];
@@ -247,19 +312,6 @@
     _locationLabel = [[UILabel alloc]initWithFrame:CGRectMake(controlXLength(_locationImage) + 5, _locationImage.frame.origin.y, _detailLabel.frame.size.width/2 - _locationImage.frame.size.width - 5, _locationImage.frame.size.height)];
     [_locationLabel setBackgroundColor:color(clearColor)];
     [_locationLabel setFont:[UIFont systemFontOfSize:11]];
-    switch (random) {
-        case 0:
-            [_locationLabel setText:@"普陀区"];
-            break;
-        case 1:
-            [_locationLabel setText:@"浦东新区"];
-            break;
-        case 2:
-            [_locationLabel setText:@"海淀区"];
-            break;
-        default:
-            break;
-    }
     
     [_backGroundImage addSubview:_locationLabel];
     
@@ -270,7 +322,7 @@
     _timeLabel = [[UILabel alloc]initWithFrame:CGRectMake(controlXLength(_timeImage) + 5, _locationLabel.frame.origin.y, appFrame.size.width - controlXLength(_timeImage) - 10, _locationLabel.frame.size.height)];
     [_timeLabel setBackgroundColor:color(clearColor)];
     [_timeLabel setFont:[UIFont systemFontOfSize:11]];
-    [_timeLabel setText:[Utils stringWithDate:[NSDate date] withFormat:@"yyyy/MM/dd"]];
+    //[_timeLabel setText:[Utils stringWithDate:[NSDate date] withFormat:@"yyyy/MM/dd"]];
     [_backGroundImage addSubview:_timeLabel];
     
     NSString *rightButtonTitle = nil;

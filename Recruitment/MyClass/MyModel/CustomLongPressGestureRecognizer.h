@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+@class CustomButton;
+
 @interface CustomLongPressGestureRecognizer : UILongPressGestureRecognizer
 
 @property (strong, nonatomic) NSIndexPath               *indexPath;
+@property (assign, nonatomic) CustomButton              *button;
 
 @end

@@ -13,6 +13,7 @@
 @interface RegisterViewController ()
 
 @property (strong, nonatomic) UIView            *detailView;
+@property (assign, nonatomic) BOOL              isScroll;
 
 @end
 
@@ -41,20 +42,24 @@
 
 - (id)init
 {
-    _dataSource = [NSMutableArray arrayWithArray:@[@"欧美公司",@"国有企业",@"管理职位",@"技术职位",@"要创业",@"有激情"]];
-    _selectDataSource = [NSMutableArray array];
     self = [super init];
+    if (self) {
+        _isScroll = NO;
+        _dataSource = [NSMutableArray arrayWithArray:@[@"欧美公司",@"国有企业",@"管理职位",@"技术职位",@"要创业",@"有激情",@"工资高",@"环境好",@"高评价"]];
+        _selectDataSource = [NSMutableArray array];
+        [self setSubviewFrame];
+    }
     return self;
 }
 
 - (void)pressNextButton:(UIButton*)sender
 {
-    sender.enabled = NO;
+    [self.view setUserInteractionEnabled:NO];
     if (currentSubview.tag != 302) {
         [_scrollView setContentOffset:CGPointMake(_scrollView.contentOffset.x + _scrollView.frame.size.width, _scrollView.contentOffset.y) animated:YES];
     }else {
         HomeViewController *homeView = [[HomeViewController alloc]init];
-        [self pushViewController:homeView transitionType:TransitionPush completionHandler:nil];
+        [self pushViewController:homeView transitionType:TransitionMoveIn completionHandler:nil];
     }
 }
 
@@ -63,14 +68,14 @@
     if(!imagePicker){
         imagePicker = [[ImagePickerViewController alloc]init];
         imagePicker.delegate = self;
-        imagePicker.view.frame = CGRectMake(imagePicker.view.frame.origin.x, 20, appFrame.size.width, appFrame.size.height);
+        imagePicker.view.frame = CGRectMake(imagePicker.view.frame.origin.x, 0, appFrame.size.width, appFrame.size.height);
     }
     
     [self.view addSubview:imagePicker.view];
     imagePicker.view.alpha = 0;
     
     [UIView transitionWithView:imagePicker.view
-                      duration:0.65f
+                      duration:0.35f
                        options:UIViewAnimationOptionCurveEaseIn
                     animations:^{
                         imagePicker.view.alpha = 1;
@@ -82,11 +87,11 @@
     //[self presentViewController:imagePicker animated:YES completion:nil];
 }
 
-- (void)didFinishPickImage:(UIImage *)image;
+- (void)didFinishPickImage:(UIImage *)image
 {
-    [userPicture setBackgroundImage:image forState:UIControlStateNormal];
-    [userPicture setBackgroundImage:image forState:UIControlStateHighlighted];
-    [userPicture setBackgroundImage:image forState:UIControlStateSelected];
+    [userPicture setImage:image forState:UIControlStateNormal];
+    [userPicture setImage:image forState:UIControlStateHighlighted];
+    [userPicture setImage:image forState:UIControlStateSelected];
     [imagePicker.view removeFromSuperview];
 }
 
@@ -100,16 +105,21 @@
 {
     [self setBackGroundImage:imageNameAndType(@"register_back", @"png")];
     
+    UIImageView *userPictureBackImage = [[UIImageView alloc]initWithFrame:CGRectMake(self.view.frame.size.width/2 - 50, 40, 100, 100)];
+    [userPictureBackImage setBackgroundColor:color(clearColor)];
+    [userPictureBackImage setTag:400];
+    [userPictureBackImage setImage:imageNameAndType(@"selectimage_background", nil)];
+    [self.contentView addSubview:userPictureBackImage];
+    
     userPicture = [UIButton buttonWithType:UIButtonTypeCustom];
-    [userPicture setFrame:rect(CGRectMake(self.view.frame.size.width/2 - 50, 40, 100, 100), adaptWidth)];
+    [userPicture setFrame:userPictureBackImage.frame];
     [userPicture setBackgroundColor:[UIColor clearColor]];
-    [userPicture setContentEdgeInsets:UIEdgeInsetsMake(10, 10, 0, 0)];
-    [userPicture setBackgroundImage:imageNameAndType(@"register_selectpicture_normal", @"png") forState:UIControlStateNormal];
-    [userPicture setBackgroundImage:imageNameAndType(@"register_selectpicture_press", @"png") forState:UIControlStateHighlighted];
-    [userPicture setBackgroundImage:imageNameAndType(@"register_selectpicture_press", @"png") forState:UIControlStateSelected];
+    [userPicture setImage:imageNameAndType(@"register_selectpicture_normal", nil) forState:UIControlStateNormal];
+    [userPicture setBounds:CGRectMake(0, 0, userPicture.frame.size.width - 11, userPicture.frame.size.height - 11)];
     [userPicture addTarget:self action:@selector(pressUserPicture:) forControlEvents:UIControlEventTouchUpInside];
     userPicture.layer.masksToBounds = YES;
     userPicture.layer.cornerRadius = userPicture.frame.size.width/2;
+    [userPicture.imageView setContentMode:UIViewContentModeScaleAspectFit];
     [self.contentView addSubview:userPicture];
     
     _scrollView = [[UIScrollView alloc]initWithFrame:CGRectMake(0, controlYLength(userPicture) + 35, self.view.frame.size.width, self.view.frame.size.height - 45 - controlYLength(userPicture))];
@@ -159,11 +169,12 @@
     [nextButton setImage:imageNameAndType(@"register_next_press", @"png") forState:UIControlStateHighlighted];
     [nextButton setImage:imageNameAndType(@"register_next_press", @"png") forState:UIControlStateDisabled];
     [nextButton addTarget:self action:@selector(pressNextButton:) forControlEvents:UIControlEventTouchUpInside];
-    [self.contentView addSubview:nextButton];
+    [self.view addSubview:nextButton];
 }
 
 - (void)scrollViewDidEndDecelerating:(UIScrollView *)scrollView
 {
+    [self.view setUserInteractionEnabled:NO];
     [self scrollViewDidEndScroll:scrollView];
 }
 
@@ -174,11 +185,10 @@
 
 - (void)scrollViewDidEndScroll:(UIScrollView*)scrollView
 {
-    UIButton *button = (UIButton*)[self.contentView viewWithTag:103];
+    UIButton *button = (UIButton*)[self.view viewWithTag:103];
     
     NSInteger currentViewTag = scrollView.contentOffset.x / scrollView.frame.size.width + 300;
     currentSubview = [_scrollView viewWithTag:currentViewTag];
-    NSLog(@"tag = %d",currentSubview.tag);
     
     if (scrollView.contentOffset.x >= scrollView.contentSize.width - scrollView.frame.size.width) {
         if (button) {
@@ -193,7 +203,8 @@
         [button setImage:imageNameAndType(@"register_next_press", @"png") forState:UIControlStateHighlighted];
         [button setImage:imageNameAndType(@"register_next_press", @"png") forState:UIControlStateDisabled];
     }
-    button.enabled = YES;
+    NSLog(@"end");
+    [self.view setUserInteractionEnabled:YES];
 }
 
 - (UIView*)createRegisterView1
@@ -254,14 +265,13 @@
     [email setLeftView:emailLeft];
     [email setLeftViewMode:UITextFieldViewModeAlways];
     [email setReturnKeyType:UIReturnKeyNext];
-    [email setKeyboardType:UIKeyboardTypeEmailAddress];
+    [email setKeyboardType:UIKeyboardTypeDefault];
     [email setDelegate:self];
     [subview addSubview:email];
     
     password = [[UITextField alloc]initWithFrame:CGRectMake(email.frame.origin.x, email.frame.origin.y + email.frame.size.height + 1, email.frame.size.width, email.frame.size.height)];
     [password setBackgroundColor:[UIColor clearColor]];
     [password setTag:203];
-    [password setSecureTextEntry:YES];
     [password setContentVerticalAlignment:UIControlContentVerticalAlignmentCenter];
     [password setBackground:imageNameAndType(@"register_textback", @"png")];
     UIButton *passwordLeft = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -273,8 +283,9 @@
     [passwordLeft setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [password setLeftView:passwordLeft];
     [password setLeftViewMode:UITextFieldViewModeAlways];
+    [password setKeyboardType:UIKeyboardTypeDefault];
     [password setReturnKeyType:UIReturnKeyDone];
-    [password setKeyboardType:UIKeyboardTypeNamePhonePad];
+    [password setSecureTextEntry:YES];
     [password setDelegate:self];
     [subview addSubview:password];
     
@@ -330,15 +341,15 @@
 
 - (UIView*)createRegisterView3
 {
-    UIView *subview = [[UIView alloc]initWithFrame:[self frameWithRect:CGRectMake(0, 165, 320, 45 * 2+ 4 + 20 + 45) adaptWidthOrHeight:adaptWidth]];
+    NSInteger lineNum = [_dataSource count]/3 + ([_dataSource count]%3 > 0?1:0);
+
+    UIView *subview = [[UIView alloc]initWithFrame:[self frameWithRect:CGRectMake(0, 165, 320, 45 * lineNum + 4 + 20 + 45) adaptWidthOrHeight:adaptWidth]];
     [subview setBackgroundColor:[UIColor clearColor]];
-    subview.tag = 103;
-    
-    for (int i = 0; i<6; i++) {
+    for (int i = 0; i<[_dataSource count]; i++) {
         NSInteger x = i%3;
         NSInteger y = i/3;
         UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(0, 0, (subview.frame.size.width  - 20)/3, 45)];
-        [imageView setCenter:CGPointMake(subview.frame.size.width/6 + (subview.frame.size.width/3) * x, (subview.frame.size.height - 20 - 45)/4 + ((subview.frame.size.height - 20 - 45)/2) * y)];
+        [imageView setCenter:CGPointMake(subview.frame.size.width/6 + (subview.frame.size.width/3) * x, (subview.frame.size.height - 20 - 45)/(lineNum * 2) + ((subview.frame.size.height - 20 - 45)/lineNum) * y)];
         [imageView setImage:imageNameAndType(@"register_item_select", nil)];
         [imageView setHighlightedImage:imageNameAndType(@"register_item_normal", nil)];
         [imageView setTag:400 + i];
@@ -362,7 +373,7 @@
     [goalCompany setBackground:imageNameAndType(@"register_textback", @"png")];
     UIButton *goalCompanyLeft = [UIButton buttonWithType:UIButtonTypeCustom];
     [goalCompanyLeft setBackgroundColor:[UIColor clearColor]];
-    [goalCompanyLeft setFrame:CGRectMake(0, 0, goalCompany.frame.size.width/4 + 15, goalCompany.frame.size.height)];
+    [goalCompanyLeft setFrame:CGRectMake(0, 0, goalCompany.frame.size.width/3, goalCompany.frame.size.height)];
     [goalCompanyLeft setTitle:@"我的职位期望" forState:UIControlStateNormal];
     [goalCompanyLeft.titleLabel setFont:[UIFont systemFontOfSize:13]];
     [goalCompanyLeft addTarget:self action:@selector(clearKeyBoard) forControlEvents:UIControlEventTouchUpInside];
@@ -370,7 +381,6 @@
     goalCompanyLeft.titleLabel.adjustsLetterSpacingToFitWidth = YES;
     goalCompanyLeft.titleLabel.baselineAdjustment = UIBaselineAdjustmentNone;
     goalCompanyLeft.titleLabel.minimumScaleFactor = 0.5;
-    [goalCompanyLeft setContentHorizontalAlignment:UIControlContentHorizontalAlignmentRight];
     [goalCompanyLeft setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [goalCompany setLeftView:goalCompanyLeft];
     [goalCompany setLeftViewMode:UITextFieldViewModeAlways];
@@ -408,6 +418,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
 	// Do any additional setup after loading the view.
 }
 
@@ -417,6 +428,7 @@
     
     if (keyBoard) {
         CGRect frame = keyBoard.frame;
+        //CGFloat baseHeight = (deviceVersion >= 7.0)?23:0;
         CGFloat changeY = _scrollView.frame.origin.y + controlYLength(textField) + 1 - (self.view.frame.size.height - frame.size.height);
         changeY = changeY >= 0?changeY:0;
         [UIView animateWithDuration:0.35f
@@ -528,21 +540,22 @@
     UITextField *responder = nil;
     if ([userName isFirstResponder]) {
         responder = userName;
-    }if ([phoneNum isFirstResponder]) {
+    }else if ([phoneNum isFirstResponder]) {
         responder = phoneNum;
-    }if ([email isFirstResponder]) {
+    }else if ([email isFirstResponder]) {
         responder = email;
-    }if ([password isFirstResponder]) {
+    }else if ([password isFirstResponder]) {
         responder = password;
-    }if ([currentPosition isFirstResponder]) {
+    }else if ([currentPosition isFirstResponder]) {
         responder = currentPosition;
-    }if ([currentCompany isFirstResponder]) {
+    }else if ([currentCompany isFirstResponder]) {
         responder = currentCompany;
-    }if ([goalCompany isFirstResponder]) {
+    }else if ([goalCompany isFirstResponder]) {
         responder = goalCompany;
     }
     if (responder) {
-        if (_scrollView.frame.origin.y + controlYLength(responder) + 1.0f> self.view.frame.size.height - frame.size.height) {
+        //CGFloat baseHeight = (deviceVersion >= 7.0)?23:0;
+        if (_scrollView.frame.origin.y + controlYLength(responder) + 1.0f > self.view.frame.size.height - frame.size.height) {
             CGFloat changeY = _scrollView.frame.origin.y + controlYLength(responder) + 1 - (self.view.frame.size.height - frame.size.height);
             changeY = changeY >= 0?changeY:0;
             [UIView animateWithDuration:duration
@@ -561,17 +574,17 @@
     UITextField *responder = nil;
     if ([userName isFirstResponder]) {
         responder = userName;
-    }if ([phoneNum isFirstResponder]) {
+    }else if ([phoneNum isFirstResponder]) {
         responder = phoneNum;
-    }if ([email isFirstResponder]) {
+    }else if ([email isFirstResponder]) {
         responder = email;
-    }if ([password isFirstResponder]) {
+    }else if ([password isFirstResponder]) {
         responder = password;
-    }if ([currentPosition isFirstResponder]) {
+    }else if ([currentPosition isFirstResponder]) {
         responder = currentPosition;
-    }if ([currentCompany isFirstResponder]) {
+    }else if ([currentCompany isFirstResponder]) {
         responder = currentCompany;
-    }if ([goalCompany isFirstResponder]) {
+    }else if ([goalCompany isFirstResponder]) {
         responder = goalCompany;
     }
     if (responder) {
