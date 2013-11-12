@@ -11,6 +11,7 @@
 #import "InformationViewController.h"
 #import "MyResumeViewController.h"
 #import "JobInformation.h"
+#import "CompanyDetail.h"
 
 @interface JobDetailViewController ()
 
@@ -36,6 +37,13 @@
     }
 
     return self;
+}
+
+- (void)pressCompanyLogoBtn:(UIButton*)sender
+{
+    CompanyDetail *detail = [[CompanyDetail alloc]initWithJobInformation:_jobInformation];
+    InformationDetailViewController *detailView = [[InformationDetailViewController alloc]initWithObject:detail];
+    [self pushViewController:detailView transitionType:TransitionPush completionHandler:nil];
 }
 
 - (void)setSubviewFrame
@@ -66,24 +74,25 @@
     [companyDetailImage setBackgroundColor:color(clearColor)];
     [self.contentView addSubview:companyDetailImage];
     
-    UIImageView *companyLogoImage = [[UIImageView alloc]initWithFrame:
+    UIButton *companyLogoBtn = [[UIButton alloc]initWithFrame:
                                      CGRectMake(0,
                                                 controlYLength(companyDetailImage),
                                                 80,
                                                 80)];
-    [companyLogoImage setBackgroundColor:color(clearColor)];
-    [companyLogoImage setBounds:CGRectMake(0,
+    [companyLogoBtn setBackgroundColor:color(clearColor)];
+    [companyLogoBtn setBounds:CGRectMake(0,
                                            0,
-                                           companyLogoImage.frame.size.width * 0.7,
-                                           companyLogoImage.frame.size.height * 0.7)];
-    [companyLogoImage setImage:imageNameAndType(_jobInformation.jobIcon, nil)];
-    [self.contentView addSubview:companyLogoImage];
+                                           companyLogoBtn.frame.size.width * 0.7,
+                                           companyLogoBtn.frame.size.height * 0.7)];
+    [companyLogoBtn setImage:imageNameAndType(_jobInformation.jobIcon, nil) forState:UIControlStateNormal];
+    [companyLogoBtn addTarget:self action:@selector(pressCompanyLogoBtn:) forControlEvents:UIControlEventTouchUpInside];
+    [self.contentView addSubview:companyLogoBtn];
     
     UILabel     *companyNameLabel = [[UILabel alloc]initWithFrame:
-                                     CGRectMake(controlXLength(companyLogoImage) + 5,
-                                                companyLogoImage.frame.origin.y + 5,
-                                                self.contentView.frame.size.width - controlXLength(companyLogoImage) - 5,
-                                                (companyLogoImage.frame.size.height - 5)/3)];
+                                     CGRectMake(controlXLength(companyLogoBtn) + 5,
+                                                companyLogoBtn.frame.origin.y + 5,
+                                                self.contentView.frame.size.width - controlXLength(companyLogoBtn) - 5,
+                                                (companyLogoBtn.frame.size.height - 5)/3)];
     [companyNameLabel setBackgroundColor:color(clearColor)];
     [companyNameLabel setText:_jobInformation.company];
     [companyNameLabel setFont:[UIFont boldSystemFontOfSize:14]];

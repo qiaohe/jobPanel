@@ -285,8 +285,9 @@
     [rightButton addTarget:self action:@selector(pressRightButton:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:rightButton];
     
-    //CGFloat baseHeight = (deviceVersion >= 7.0 ? 20.0f : 0.0f);
-    UIImageView *searchBarBackImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, controlYLength(self.topBar), self.view.frame.size.width, 35)];
+    CGFloat baseHeight = (deviceVersion >= 7.0 ? -20.0f : 0.0f);
+    NSLog(@"top height = %f",controlYLength(self.topBar));
+    UIImageView *searchBarBackImage = [[UIImageView alloc]initWithFrame:CGRectMake(0, controlYLength(self.topBar) + baseHeight, self.view.frame.size.width, 35)];
     [searchBarBackImage setBackgroundColor:color(clearColor)];
     [searchBarBackImage setImage:imageNameAndType(@"searchBar", @"png")];
     [self.contentView addSubview:searchBarBackImage];

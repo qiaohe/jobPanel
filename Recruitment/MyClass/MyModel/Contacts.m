@@ -23,7 +23,7 @@ static NSInteger indexNum = 0;
 
         NSLog(@"indexNum = %d",indexNum);
         
-        _trends = [NSMutableArray arrayWithArray:[ContactTrends getCommendData:indexNum]];
+        _trends = [NSMutableArray arrayWithArray:[ContactTrends getCommendData:indexNum + 1]];
 
         switch (indexNum) {
             case 0:{

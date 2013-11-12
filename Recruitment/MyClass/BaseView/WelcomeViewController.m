@@ -42,6 +42,8 @@
         _imageSource = @[@"leadImage1",@"leadImage2",@"leadImage3"];
         _promptDataSource = @[[NSString stringWithFormat:@""],@"",@""];
         [self setSubviewFrame];
+        
+        NSLog(@"view y = %f,content view y = %f",self.view.frame.origin.y,self.contentView.frame.origin.y)   ;
     }
     return self;
 }
@@ -55,7 +57,7 @@
     
     for (int i = 0; i<[_imageSource count]; i++) {
         NSString *imageName = [_imageSource objectAtIndex:i];
-        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(self.view.frame.size.width * i, 0, self.contentView.frame.size.width, self.contentView.frame.size.height)];
+        UIImageView *imageView = [[UIImageView alloc]initWithFrame:CGRectMake(self.contentView.frame.size.width * i, 0, self.contentView.frame.size.width, self.contentView.frame.size.height)];
         [imageView setBackgroundColor:color(clearColor)];
         [imageView setImage:[UIImage imageWithData:UIImageJPEGRepresentation(imageNameAndType(imageName, @"png"), 0.5) scale:0.5]];
         

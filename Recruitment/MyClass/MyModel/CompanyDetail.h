@@ -9,6 +9,7 @@
 #import <Foundation/Foundation.h>
 
 @class RecommendJob;
+@class JobInformation;
 
 @interface CompanyDetail : NSObject
 
@@ -30,5 +31,6 @@
 +(NSArray*)getRecommendDataWithNum:(NSInteger)num;
 
 - (id)initWithRecommendJob:(RecommendJob*)detail;
+- (id)initWithJobInformation:(JobInformation*)detail;
 
 @end

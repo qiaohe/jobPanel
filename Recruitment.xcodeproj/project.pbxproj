@@ -65,7 +65,6 @@
 		CE166450180935DE00559CA6 /* RecommendViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE16644F180935DE00559CA6 /* RecommendViewController.m */; };
 		CE166452180939BF00559CA6 /* topImage.png in Resources */ = {isa = PBXBuildFile; fileRef = CE166451180939BF00559CA6 /* topImage.png */; };
 		CE16645B1809462D00559CA6 /* CustomButton.m in Sources */ = {isa = PBXBuildFile; fileRef = CE16645A1809462D00559CA6 /* CustomButton.m */; };
-		CE2216371823287E00DAD9FC /* ImagePickerViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = CE2216361823287E00DAD9FC /* ImagePickerViewController.xib */; };
 		CE22316E18232F94009CF0CB /* CompanyDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = CE22316D18232F93009CF0CB /* CompanyDetailViewController.m */; };
 		CE2D85E4181DEF3000A76CB3 /* RecommendJob.m in Sources */ = {isa = PBXBuildFile; fileRef = CE2D85E3181DEF3000A76CB3 /* RecommendJob.m */; };
 		CE4C22F71828F48F0097877F /* experience_item_normal.png in Resources */ = {isa = PBXBuildFile; fileRef = CE4C22F41828F48F0097877F /* experience_item_normal.png */; };
@@ -296,7 +295,6 @@
 		CE166451180939BF00559CA6 /* topImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = topImage.png; sourceTree = "<group>"; };
 		CE1664591809462D00559CA6 /* CustomButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CustomButton.h; sourceTree = "<group>"; };
 		CE16645A1809462D00559CA6 /* CustomButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CustomButton.m; sourceTree = "<group>"; };
-		CE2216361823287E00DAD9FC /* ImagePickerViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ImagePickerViewController.xib; sourceTree = "<group>"; };
 		CE22316C18232F93009CF0CB /* CompanyDetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CompanyDetailViewController.h; sourceTree = "<group>"; };
 		CE22316D18232F93009CF0CB /* CompanyDetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CompanyDetailViewController.m; sourceTree = "<group>"; };
 		CE2D85E2181DEF3000A76CB3 /* RecommendJob.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RecommendJob.h; sourceTree = "<group>"; };
@@ -788,7 +786,6 @@
 		CE9DBC611808CD6F0055A7BE = {
 			isa = PBXGroup;
 			children = (
-				CEABCA4D1818F79A00BB9997 /* AVFoundation.framework */,
 				CEAAD3081816270B00A33236 /* tipImage.png */,
 				CE9DBC8C1808CD990055A7BE /* Resource */,
 				CE9DBC8A1808CD990055A7BE /* Library */,
@@ -810,6 +807,7 @@
 		CE9DBC6C1808CD700055A7BE /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CEABCA4D1818F79A00BB9997 /* AVFoundation.framework */,
 				04D018E71821733C0030119A /* CoreFoundation.framework */,
 				04D018E5182173200030119A /* AudioToolbox.framework */,
 				CE9DBC951808CF9E0055A7BE /* QuartzCore.framework */,
@@ -904,7 +902,6 @@
 			children = (
 				04E529A81821E1DC0051E6E2 /* ImagePickerViewController.h */,
 				04E529A91821E1DC0051E6E2 /* ImagePickerViewController.m */,
-				CE2216361823287E00DAD9FC /* ImagePickerViewController.xib */,
 				CE9DBC921808CE290055A7BE /* Utils.h */,
 				CE9DBC931808CE290055A7BE /* Utils.m */,
 				CE1664591809462D00559CA6 /* CustomButton.h */,
@@ -1148,7 +1145,6 @@
 				CE5448E618224FD800EF9727 /* home_treelogo.png in Resources */,
 				CEBA3914181A438200BDC0A9 /* star_light.png in Resources */,
 				CE725A46181D055A00ADC7CB /* information_collect.png in Resources */,
-				CE2216371823287E00DAD9FC /* ImagePickerViewController.xib in Resources */,
 				CED7551218233E6C00C12676 /* company_detail_item.jpg in Resources */,
 				CED1D8561827519F0077E0A2 /* home_bottomItem.png in Resources */,
 				CED1D8571827519F0077E0A2 /* home_bottomline.png in Resources */,
@@ -1311,7 +1307,7 @@
 				INFOPLIST_FILE = "Recruitment/Recruitment-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "F0A51662-B1A6-4509-BFBB-49B931806B99";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -1326,7 +1322,7 @@
 				INFOPLIST_FILE = "Recruitment/Recruitment-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 6.1;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "F0A51662-B1A6-4509-BFBB-49B931806B99";
+				PROVISIONING_PROFILE = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

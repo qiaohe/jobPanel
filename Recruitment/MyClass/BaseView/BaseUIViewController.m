@@ -40,12 +40,6 @@
         [self.view addSubview:_contentView];
         _responderArray = [NSMutableArray array];
         
-        //[self setSubviewFrame];
-        
-        /*
-        for (UIView *sv in self.view.subviews) {
-            sv.frame = CGRectMake(sv.frame.origin.x, sv.frame.origin.y + (deviceVersion >= 7.0f ? 20.0f : 0.0f), sv.frame.size.width, sv.frame.size.height);
-        }*/
     }
     return self;
 }
